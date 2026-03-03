@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- ⚠️ PENTING: Prevent Cache untuk halaman auth -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    
     <title>@yield('title', 'Autentikasi') - Ukir</title>
     <style>
         :root {
@@ -40,7 +43,7 @@
             gap: 1rem;
         }
 
-            .breadcrumb {
+        .breadcrumb {
             font-size: 0.9rem;
             color: var(--text-muted);
         }
@@ -177,5 +180,25 @@
             @yield('content')
         </div>
     </main>
+
+    @stack('scripts')
+    
+    <!--  PENTING: JavaScript Detect Back Navigation -->
+    <script>
+        // Reload page jika navigasi via back/forward button (BFCache)
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+        
+        // Alternatif: detect navigation type
+        if (window.performance && window.performance.getEntriesByType) {
+            const navEntries = window.performance.getEntriesByType('navigation');
+            if (navEntries.length > 0 && navEntries[0].type === 'back_forward') {
+                window.location.reload();
+            }
+        }
+    </script>
 </body>
 </html>

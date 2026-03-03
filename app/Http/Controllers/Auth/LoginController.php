@@ -64,11 +64,18 @@ class LoginController extends Controller
      */
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect()->route('login.show');
+        try {
+            Auth::logout();
+            
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            return redirect()->route('login.show')
+                ->with('success', 'Anda telah logout.');
+        } catch (\Exception $e) {
+            // Jika session sudah invalid, tetap redirect ke login
+            return redirect()->route('login.show')
+                ->with('success', 'Anda telah logout.');
+        }
     }
 }
