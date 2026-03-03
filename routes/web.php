@@ -1,0 +1,39 @@
+<?php
+
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Public\BlogController as PublicBlogController; 
+use Illuminate\Support\Facades\Route;
+
+// Root
+Route::get('/', [PublicBlogController::class, 'index'])->name('home');
+
+// Public Blog Routes
+Route::get('/blog', [PublicBlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [PublicBlogController::class, 'show'])->name('blog.show');
+
+// Public Auth Routes
+Route::middleware(['guest', 'no.auth.cache'])->group(function () {
+    Route::get('/login', [LoginController::class, 'show'])->name('login.show');
+    Route::post('/login', [LoginController::class, 'login'])->name('login');
+    Route::get('/register', [RegisterController::class, 'show'])->name('register.show');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register');
+});
+
+// Authenticated Routes
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', function () {
+        return redirect()->route('admin.dashboard');
+    })->name('dashboard');
+
+    // Admin & Author Only
+   Route::middleware('role:admin,author')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // Blog Resource Routes
+        Route::resource('blog', AdminBlogController::class);
+    });
+});
