@@ -31,7 +31,7 @@ class LoginController extends Controller
 
         $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-        if (!$user || !$user->aktif) {
+        if (!$user || !$user->is_active) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);

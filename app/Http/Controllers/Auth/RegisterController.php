@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
@@ -18,23 +19,35 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'required|email|unique:user,email',
-            'password' => ['required', 'confirmed', Password::min(8)],
-            'nomor' => 'nullable|string|max:15',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => ['required', 'confirmed', Password::min(8)],
+                'phone' => 'nullable|string|max:20',
+            ]);
 
-        User::create([
-            'id' => Str::uuid()->toString(),
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'nomor' => $request->nomor,
-            'password' => Hash::make($request->password),
-            'role' => 'user', // Force role user
-            'aktif' => true,
-        ]);
+            Log::info('Register attempt', ['email' => $request->email]);
 
-        return redirect('/login')->with('success', 'Registrasi berhasil. Silakan login.');
+            $user = User::create([
+                'id' => Str::uuid()->toString(),
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'password' => Hash::make($request->password),
+                'role' => 'user',
+                'is_active' => true,
+            ]);
+
+            Log::info('User registered successfully', ['user_id' => $user->id]);
+
+            return redirect('/login')->with('success', 'Registrasi berhasil. Silakan login.');
+        } catch (\Exception $e) {
+            Log::error('Register failed', ['error' => $e->getMessage()]);
+            
+            return back()
+                ->withErrors(['email' => 'Registrasi gagal: ' . $e->getMessage()])
+                ->withInput();
+        }
     }
 }

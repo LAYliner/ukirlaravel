@@ -13,7 +13,7 @@ class BlogController extends Controller
 {
     public function index(Request $request): View
     {
-        $blogs = Blog::with('admin')
+        $blogs = Blog::with('user')
             ->latest('created_at')
             ->paginate(10);
 
@@ -28,25 +28,37 @@ class BlogController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'judul' => ['required', 'string', 'max:200'],
-            'isi' => ['required', 'string'],
-            'thumbnail' => ['nullable', 'image', 'max:2048'],
-            'status_blog' => ['required', 'in:draft,publish'],
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'thumbnail_path' => ['nullable', 'image', 'max:2048'],
+            'status' => ['required', 'in:draft,published,rejected'],
+            'category_id' => ['nullable', 'exists:categories,id'],
         ]);
 
+        // Fix: Generate unique slug
+        $slug = Str::slug($request->title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        // Check if slug exists, add counter if needed
+        while (Blog::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
         $data = [
-            'id_blog' => Str::uuid()->toString(),
-            'judul' => $request->judul,
-            'isi' => $request->isi,
-            'slug' => Str::slug($request->judul),
-            'status_blog' => $request->status_blog,
-            'id_admin' => auth()->id(),
+            'id' => Str::uuid()->toString(),
+            'title' => $request->title,
+            'content' => $request->content,
+            'slug' => $slug,
+            'status' => $request->status,
+            'user_id' => auth()->id(),
+            'category_id' => $request->category_id,
+            'thumbnail_path' => null,
         ];
 
-        if ($request->hasFile('thumbnail')) {
-            $data['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
-        } else {
-            $data['thumbnail'] = '';
+        if ($request->hasFile('thumbnail_path')) {
+            $data['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
         }
 
         Blog::create($data);
@@ -66,21 +78,33 @@ class BlogController extends Controller
         $blog = Blog::findOrFail($id);
 
         $request->validate([
-            'judul' => ['required', 'string', 'max:200'],
-            'isi' => ['required', 'string'],
-            'thumbnail' => ['nullable', 'image', 'max:2048'],
-            'status_blog' => ['required', 'in:draft,publish'],
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'thumbnail_path' => ['nullable', 'image', 'max:2048'],
+            'status' => ['required', 'in:draft,published,rejected'],
+            'category_id' => ['nullable', 'exists:categories,id'],
         ]);
 
+        // Fix: Generate unique slug (exclude current blog)
+        $slug = Str::slug($request->title);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (Blog::where('slug', $slug)->where('id', '!=', $blog->id)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+
         $data = [
-            'judul' => $request->judul,
-            'isi' => $request->isi,
-            'slug' => Str::slug($request->judul),
-            'status_blog' => $request->status_blog,
+            'title' => $request->title,
+            'content' => $request->content,
+            'slug' => $slug,
+            'status' => $request->status,
+            'category_id' => $request->category_id,
         ];
 
-        if ($request->hasFile('thumbnail')) {
-            $data['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
+        if ($request->hasFile('thumbnail_path')) {
+            $data['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
         }
 
         $blog->update($data);

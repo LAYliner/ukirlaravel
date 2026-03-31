@@ -5,69 +5,57 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
-    /**
-     * The table associated with the model.
-     */
-    protected $table = 'user';
-
-    /**
-     * The primary key associated with the table.
-     */
+    protected $table = 'users';
     protected $primaryKey = 'id';
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     */
     public $incrementing = false;
-
-    /**
-     * The "type" of the auto-incrementing ID.
-     */
     protected $keyType = 'string';
 
-    /**
-     * The name of the "created at" column.
-     */
-    const CREATED_AT = 'dibuat';
-
-    /**
-     * The name of the "updated at" column.
-     */
-    const UPDATED_AT = 'diperbarui';
-
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
         'id',
-        'nama',
+        'name',
         'email',
-        'nomor',
         'password',
+        'phone',
         'role',
-        'aktif',
+        'is_active',
+        'remember_token',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     */
     protected $casts = [
-        'aktif' => 'boolean',
-        'dibuat' => 'datetime',
-        'diperbarui' => 'datetime',
+        'is_active' => 'boolean',
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
+
+    // ==================== RELASI ====================
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'user_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id');
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class, 'user_id');
+    }
+
+    // ==================== ROLE HELPERS ====================
 
     /**
      * Check if user has admin role.
@@ -83,5 +71,21 @@ class User extends Authenticatable
     public function isAuthor(): bool
     {
         return $this->role === 'author';
+    }
+
+    /**
+     * Check if user has user role (optional).
+     */
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
+    /**
+     * Check if user is active (optional helper).
+     */
+    public function isActive(): bool
+    {
+        return $this->is_active === true;
     }
 }

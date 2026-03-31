@@ -54,7 +54,7 @@
         <!-- Header -->
         <header class="top-header">
             <div class="user-info">
-                <span>Halo, <strong>{{ auth()->user()->nama }}</strong></span>
+                <span>Halo, <strong>{{ auth()->user()->name }}</strong></span>
             </div>
             <div>
                 <form method="POST" action="{{ route('logout') }}" class="logout-form">

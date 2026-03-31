@@ -12,19 +12,19 @@
         <div class="blog-grid">
             @forelse($blogs as $blog)
                 <article class="blog-card">
-                    @if($blog->thumbnail)
-                        <img src="{{ asset('storage/' . $blog->thumbnail) }}" alt="{{ $blog->judul }}" class="blog-card-img">
+                    @if($blog->thumbnail_path)
+                        <img src="{{ asset('storage/' . $blog->thumbnail_path) }}" alt="{{ $blog->title }}" class="blog-card-img">
                     @else
                         <div class="blog-card-img" style="display:flex;align-items:center;justify-content:center;color:#999;">No Image</div>
                     @endif
                     <div class="blog-card-body">
-                        <h2 class="blog-card-title">{{ $blog->judul }}</h2>
+                        <h2 class="blog-card-title">{{ $blog->title }}</h2>
                         <div class="blog-card-meta">
                             <span>📅 {{ $blog->created_at->format('d M Y') }}</span>
                             <span> • </span>
-                            <span>✍️ {{ $blog->admin->nama ?? 'Admin' }}</span>
+                            <span>✍️ {{ $blog->user->name ?? 'Admin' }}</span>
                         </div>
-                        <p class="blog-card-excerpt">{{ Str::limit(strip_tags($blog->isi), 150) }}</p>
+                        <p class="blog-card-excerpt">{{ Str::limit(strip_tags($blog->content), 150) }}</p>
                         <a href="{{ route('blog.show', $blog->slug) }}" class="blog-card-link">Baca Selengkapnya →</a>
                     </div>
                 </article>

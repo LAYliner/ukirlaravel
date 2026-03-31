@@ -4,38 +4,33 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use App\Models\User;
 use Illuminate\View\View;
 
 class BlogController extends Controller
 {
-    /**
-     * Show public blog list (only published).
-     */
     public function index(): View
     {
-        $blogs = Blog::with('admin')
-            ->where('status_blog', 'publish')
+        // Fix: Relation 'user', Enum 'published'
+        $blogs = Blog::with('user')
+            ->where('status', 'published')
             ->latest('created_at')
             ->paginate(9);
 
         return view('public.blog.index', compact('blogs'));
     }
 
-    /**
-     * Show single blog post by slug.
-     */
     public function show(string $slug): View
     {
-        $blog = Blog::with('admin')
+        // Fix: Relation 'user', Enum 'published'
+        $blog = Blog::with('user')
             ->where('slug', $slug)
-            ->where('status_blog', 'publish')
+            ->where('status', 'published')
             ->firstOrFail();
 
-        // Get related posts (same category or recent)
-        $relatedPosts = Blog::with('admin')
-            ->where('status_blog', 'publish')
-            ->where('id_blog', '!=', $blog->id_blog)
+        // Fix: Column 'id', Relation 'user', Enum 'published'
+        $relatedPosts = Blog::with('user')
+            ->where('status', 'published')
+            ->where('id', '!=', $blog->id)
             ->latest('created_at')
             ->limit(3)
             ->get();
