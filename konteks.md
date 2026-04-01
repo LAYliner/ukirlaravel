@@ -53,6 +53,40 @@
           - path: /app/Http/Controllers/Public/BlogController.php
             type: file
 
+  - `storage` :
+  - path: /storage
+    type: directory
+    contents:
+    - path: /storage/framework
+      type: directory
+      contents:
+      - path: /storage/framework/views
+        type: directory
+        contents:
+      - path: /storage/framework/testing
+        type: directory
+        contents:
+      - path: /storage/framework/sessions
+        type: directory
+        contents:
+      - path: /storage/framework/cache
+        type: directory
+        contents:
+        - path: /storage/framework/cache/data
+          type: directory
+          contents:
+    - path: /storage/logs
+      type: directory
+      contents:
+    - path: /storage/app
+      type: directory
+      contents:
+      - path: /storage/app/private
+        type: directory
+        contents:
+      - path: /storage/app/public
+        type: directory
+        contents:
   - `app/Services`: Belum ada saat ini
   - `database/migrations`: Tidak digunakan untuk schema existing untuk `saat ini`
 - **Database Management**: phpMyAdmin (Manual)
@@ -159,7 +193,7 @@
 
 ## 4. STATUS IMPLEMENTASI
 - **Selesai:** Penyesuaian kode dengan skema database yang baru sudah selesai, registrasi, login, admin membuat blog dalam status `'draft', ''rejected', dan 'published'
-- **Dalam Pengerjaan:** 
+- **Dalam Pengerjaan:** -
 - **Pending:** Belum ada.
 
 ## 5. RIWAYAT MASALAH & KONFIGURASI
@@ -181,8 +215,7 @@
 - **Collation**: utf8mb4_0900_ai_ci (konsisten semua tabel)
 
 ## 7. INSTRUKSI SESI INI
-- Fokus pada: Menyesuaikan kode untuk user dengan skema database baru.
-  - setelah perubahan skema database admin tidak dapat melakukan login. Meski menggunakan kredensial yang benar. Setiap login mengeluarkan `These credentials do not match our records.`
-  - setelah perubahan skema database, user tidak dapat melakukan register, dengan error:
-    SQLSTATE[42S02]: Base table or view not found: 1146 Table 'ukiran.user' doesn't exist (Connection: mysql, Host: 127.0.0.1, Port: 3306, Database: ukiran, SQL: select count(*) as aggregate from `user` where `email` = a@min.net) 
+- Fokus pada: Memperbaiki thumbnail dari blog yang tidak muncul di halaman utama. Ketika di cek di developer tools Mozilla Firefox, `blog-card-img` muncul keterangan "could not load image", dan di menu `Network` Developer Tools,GET
+http://ukir.test/storage/thumbnails/yStHWSV6vSX3lS9AG6jxMdhJGmjlEETQUqX0YPTV.png
+[HTTP/1.1 403 Forbidden 26ms]
 - Output yang diharapkan: -

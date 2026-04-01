@@ -8,8 +8,6 @@
     - path: /bootstrap/cache
       type: directory
       contents:
-  - path: /repo_structure_20260309.yaml
-    type: file
   - path: /jamu.txt
     type: file
   - path: /composer.lock

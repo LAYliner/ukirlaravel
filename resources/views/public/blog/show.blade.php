@@ -10,12 +10,12 @@
                 <div class="blog-single-meta">
                     <span>{{ $blog->created_at->format('d M Y, H:i') }}</span>
                     <span> • </span>
-                    <span>{{ $blog->admin->nama ?? 'Admin' }}</span>
+                    <span>{{ $blog->user->name ?? 'Admin' }}</span>
                 </div>
             </header>
 
-            @if($blog->thumbnail)
-                <img src="{{ asset('storage/' . $blog->thumbnail) }}" alt="{{ $blog->title }}" class="blog-single-img">
+            @if($blog->thumbnail_path)
+                <img src="{{ asset('storage/' . $blog->thumbnail_path) }}" alt="{{ $blog->title }}" class="blog-single-img">
             @endif
 
             <div class="blog-single-content">
