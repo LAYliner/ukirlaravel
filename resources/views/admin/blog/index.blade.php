@@ -2,8 +2,9 @@
 @section('title', 'Manajemen Blog')
 @section('content')
 <div style="max-width: 1200px; margin: 0 auto;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h1>📝 Daftar Blog</h1>
+      <!-- Header Section -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <h1>Daftar Blog</h1>
         <a href="{{ route('admin.blog.create') }}" style="padding: 0.5rem 1rem; background: var(--accent-color); color: #fff; border-radius: 4px; text-decoration: none;">
             + Buat Baru
         </a>

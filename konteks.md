@@ -199,8 +199,10 @@
 ## 5. RIWAYAT MASALAH & KONFIGURASI
 - **Error Terakhir:** 
   - Error terkait Blog yang masih menggunakan skema database lama
+  - Thumbnail blog tidak muncul
 - **Solusi Diterapkan:** -
   - Melakkukan penyesuaian di file kode yang berkaitan dengan Blog seperti `app/Models/Blog.php, app/Http/Controllers/Public/BlogController.php, app/Http/Controllers/Admin/BlogController.php, resources/views/admin/blog/create.blade.php, resources/views/admin/blog/edit.blade.php, resources/views/admin/blog/index.blade.php, 
+  - Menjalankan perintah `php artisan storage:link` untuk membuat symbolic link
 - **Konfigurasi Kritis:**
   - `DB_CONNECTION=mysql`
   - `APP_ENV=local`
@@ -215,7 +217,5 @@
 - **Collation**: utf8mb4_0900_ai_ci (konsisten semua tabel)
 
 ## 7. INSTRUKSI SESI INI
-- Fokus pada: Memperbaiki thumbnail dari blog yang tidak muncul di halaman utama. Ketika di cek di developer tools Mozilla Firefox, `blog-card-img` muncul keterangan "could not load image", dan di menu `Network` Developer Tools,GET
-http://ukir.test/storage/thumbnails/yStHWSV6vSX3lS9AG6jxMdhJGmjlEETQUqX0YPTV.png
-[HTTP/1.1 403 Forbidden 26ms]
+- Fokus pada: Membuat tombol 'Kategori' dan Halaman untuk CRUD Kategori di halaman dashboard admin. Pastikan menggunakan tabel `categories`
 - Output yang diharapkan: -

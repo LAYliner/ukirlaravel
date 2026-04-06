@@ -1,10 +1,10 @@
 :root {
     --sidebar-width: 250px;
     --header-height: 60px;
-    --primary-color: #2c3e50;
-    --accent-color: #3498db;
+    --primary-color: #885007;
+    --accent-color: #dda45a;
     --text-light: #ecf0f1;
-    --text-dark: #333;
+    --text-dark: #100e0c;
     --bg-light: #f4f6f9;
     --border-color: #ddd;
 }
@@ -85,7 +85,7 @@ body {
 /* Header */
 .top-header {
     height: var(--header-height);
-    background-color: #fff;
+    background-color: #fdfcfb;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -154,4 +154,36 @@ body {
         margin-left: 0;
         width: 100%;
     }
+}
+
+/* Fix Pagination SVG Size */
+.pagination svg {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Optional: Style pagination container */
+.pagination {
+    margin-top: 1rem;
+}
+
+.pagination a, .pagination span {
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #3498db;
+    display: inline-block;
+}
+
+.pagination a:hover {
+    background: #f8f9fa;
+}
+
+.pagination .active {
+    background: #3498db;
+    color: white;
 }

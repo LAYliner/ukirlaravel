@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\Category; 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -22,7 +23,8 @@ class BlogController extends Controller
 
     public function create(): View
     {
-        return view('admin.blog.create');
+        $categories = Category::all(); 
+        return view('admin.blog.create', compact('categories'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -67,10 +69,11 @@ class BlogController extends Controller
             ->with('success', 'Blog berhasil dibuat.');
     }
 
-    public function edit(string $id): View
+    public function edit(string $id)//: View
     {
         $blog = Blog::findOrFail($id);
-        return view('admin.blog.edit', compact('blog'));
+        $categories = Category::all();
+        return view('admin.blog.edit', compact('blog', 'categories'));
     }
 
     public function update(Request $request, string $id): RedirectResponse

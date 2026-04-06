@@ -47,7 +47,7 @@
                 style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
                 <option value="">Pilih Kategori</option>
                 @foreach($categories ?? [] as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id', $blog->category_id) == $category->id ? 'selected' : '' }}>
+                    <option value="{{ $category->id }}" {{ old('category_id', $blog->category_id ?? '') == $category->id ? 'selected' : '' }}>
                         {{ $category->name }}
                     </option>
                 @endforeach

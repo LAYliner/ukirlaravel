@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Public\BlogController as PublicBlogController; 
@@ -35,5 +36,8 @@ Route::middleware('auth')->group(function () {
         
         // Blog Resource Routes
         Route::resource('blog', AdminBlogController::class);
+        // Category Resource Routes
+        Route::resource('categories', CategoryController::class);
+
     });
 });
