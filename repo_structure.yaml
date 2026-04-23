@@ -1,3 +1,5 @@
+  - path: /package-lock.json
+    type: file
   - path: /bootstrap
     type: directory
     contents:
@@ -103,6 +105,8 @@
         type: file
   - path: /composer.json
     type: file
+  - path: /log.txt
+    type: file
   - path: /app
     type: directory
     contents:
@@ -136,13 +140,24 @@
           type: file
         - path: /app/Http/Middleware/CheckRole.php
           type: file
+      - path: /app/Http/Requests
+        type: directory
+        contents:
+        - path: /app/Http/Requests/StoreProjectRequest.php
+          type: file
+        - path: /app/Http/Requests/UpdateProjectRequest.php
+          type: file
       - path: /app/Http/Controllers
         type: directory
         contents:
         - path: /app/Http/Controllers/Admin
           type: directory
           contents:
+          - path: /app/Http/Controllers/Admin/ProjectController.php
+            type: file
           - path: /app/Http/Controllers/Admin/AdminDashboardController.php
+            type: file
+          - path: /app/Http/Controllers/Admin/CategoryController.php
             type: file
           - path: /app/Http/Controllers/Admin/BlogController.php
             type: file
@@ -166,6 +181,14 @@
     - path: /resources/views
       type: directory
       contents:
+      - path: /resources/views/vendor
+        type: directory
+        contents:
+        - path: /resources/views/vendor/pagination
+          type: directory
+          contents:
+          - path: /resources/views/vendor/pagination/simple.blade.php
+            type: file
       - path: /resources/views/auth
         type: directory
         contents:
@@ -190,6 +213,15 @@
       - path: /resources/views/admin
         type: directory
         contents:
+        - path: /resources/views/admin/categories
+          type: directory
+          contents:
+          - path: /resources/views/admin/categories/create.blade.php
+            type: file
+          - path: /resources/views/admin/categories/edit.blade.php
+            type: file
+          - path: /resources/views/admin/categories/index.blade.php
+            type: file
         - path: /resources/views/admin/blog
           type: directory
           contents:
@@ -198,6 +230,15 @@
           - path: /resources/views/admin/blog/edit.blade.php
             type: file
           - path: /resources/views/admin/blog/index.blade.php
+            type: file
+        - path: /resources/views/admin/projects
+          type: directory
+          contents:
+          - path: /resources/views/admin/projects/create.blade.php
+            type: file
+          - path: /resources/views/admin/projects/edit.blade.php
+            type: file
+          - path: /resources/views/admin/projects/index.blade.php
             type: file
         - path: /resources/views/admin/dashboard.blade.php
           type: file

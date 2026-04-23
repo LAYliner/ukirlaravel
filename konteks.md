@@ -1,14 +1,16 @@
 # KONTEKS PROJECT: UKIR (SKRIPSI)
 
 ## 1. STACK TEKNOLOGI
+- **Local Server:** FlyEnv Version 4.13.6
 - **Framework:** Laravel 12.53.0
 - **Database:** MySQL 8.4.8
 - **Backend Language:** PHP 8.5.3
-- **Frontend:** HTML+CSS
+- **Frontend:** HTML+CSS dan Migrasi ke Tailwind CSS
 - **Server:** Apache
 
 ## 2. ARSITEKTUR & STRUKTUR
 - **Pattern:** MVC
+- **Struktur Folder:** repo_structure.yaml
 - **Struktur Folder Kunci:**
   - `app/Models`: 
     - path: /app/Models
@@ -36,6 +38,8 @@
           contents:
           - path: /app/Http/Controllers/Admin/AdminDashboardController.php
             type: file
+          - path: /app/Http/Controllers/Admin/CategoryController.php
+            type: file
           - path: /app/Http/Controllers/Admin/BlogController.php
             type: file
         - path: /app/Http/Controllers/Auth
@@ -54,41 +58,110 @@
             type: file
 
   - `storage` :
-  - path: /storage
-    type: directory
-    contents:
-    - path: /storage/framework
+    - path: /storage
       type: directory
       contents:
-      - path: /storage/framework/views
+      - path: /storage/framework
         type: directory
         contents:
-      - path: /storage/framework/testing
-        type: directory
-        contents:
-      - path: /storage/framework/sessions
-        type: directory
-        contents:
-      - path: /storage/framework/cache
-        type: directory
-        contents:
-        - path: /storage/framework/cache/data
+        - path: /storage/framework/views
           type: directory
           contents:
-    - path: /storage/logs
-      type: directory
-      contents:
-    - path: /storage/app
-      type: directory
-      contents:
-      - path: /storage/app/private
+        - path: /storage/framework/testing
+          type: directory
+          contents:
+        - path: /storage/framework/sessions
+          type: directory
+          contents:
+        - path: /storage/framework/cache
+          type: directory
+          contents:
+          - path: /storage/framework/cache/data
+            type: directory
+            contents:
+      - path: /storage/logs
         type: directory
         contents:
-      - path: /storage/app/public
+      - path: /storage/app
         type: directory
         contents:
-  - `app/Services`: Belum ada saat ini
-  - `database/migrations`: Tidak digunakan untuk schema existing untuk `saat ini`
+        - path: /storage/app/private
+          type: directory
+          contents:
+        - path: /storage/app/public
+          type: directory
+          contents:
+  - `resources/views`:
+    - path: /resources/views
+      type: directory
+      contents:
+      - path: /resources/views/vendor
+        type: directory
+        contents:
+        - path: /resources/views/vendor/pagination
+          type: directory
+          contents:
+          - path: /resources/views/vendor/pagination/simple.blade.php
+            type: file
+      - path: /resources/views/auth
+        type: directory
+        contents:
+        - path: /resources/views/auth/register.blade.php
+          type: file
+        - path: /resources/views/auth/login.blade.php
+          type: file
+      - path: /resources/views/layouts
+        type: directory
+        contents:
+        - path: /resources/views/layouts/admin.blade.php
+          type: file
+        - path: /resources/views/layouts/public.blade.php
+          type: file
+        - path: /resources/views/layouts/auth.blade.php
+          type: file
+      - path: /resources/views/errors
+        type: directory
+        contents:
+        - path: /resources/views/errors/419.blade.php
+          type: file
+      - path: /resources/views/admin
+        type: directory
+        contents:
+        - path: /resources/views/admin/categories
+          type: directory
+          contents:
+          - path: /resources/views/admin/categories/create.blade.php
+            type: file
+          - path: /resources/views/admin/categories/edit.blade.php
+            type: file
+          - path: /resources/views/admin/categories/index.blade.php
+            type: file
+        - path: /resources/views/admin/blog
+          type: directory
+          contents:
+          - path: /resources/views/admin/blog/create.blade.php
+            type: file
+          - path: /resources/views/admin/blog/edit.blade.php
+            type: file
+          - path: /resources/views/admin/blog/index.blade.php
+            type: file
+        - path: /resources/views/admin/dashboard.blade.php
+          type: file
+      - path: /resources/views/welcome.blade.php
+        type: file
+      - path: /resources/views/public
+        type: directory
+        contents:
+        - path: /resources/views/public/blog
+          type: directory
+          contents:
+          - path: /resources/views/public/blog/show.blade.php
+            type: file
+          - path: /resources/views/public/blog/index.blade.php
+            type: file
+
+- `app/Services`: Belum ada saat ini
+- `database/migrations`: Tidak digunakan untuk schema existing untuk `saat ini`
 - **Database Management**: phpMyAdmin (Manual)
 - **Polymorphic Relations**: Tidak memiliki FK constraint di database level
 - **Traditional FK**: `uploaded_by`, `user_id`, `category_id`, `parent_id` memiliki constraint
@@ -151,6 +224,7 @@
   - `client_name` (varchar(255), nullable)
   - `project_date` (date, nullable)
   - `status` (enum: 'draft', 'published', default: 'draft')
+  - `is_visible` (tinyint(1): `0`, `1`, default: `1`) **Kolom database baru**
   - `views` (int, default: 0)
   - `created_at` (datetime)
   - `updated_at` (datetime)
@@ -192,9 +266,27 @@
   - `Media` belongsTo `User` (via uploaded_by) → `$media->uploader()`
 
 ## 4. STATUS IMPLEMENTASI
-- **Selesai:** Penyesuaian kode dengan skema database yang baru sudah selesai, registrasi, login, admin membuat blog dalam status `'draft', ''rejected', dan 'published'
-- **Dalam Pengerjaan:** -
-- **Pending:** Belum ada.
+- **Selesai:** 
+- Auth (Register, Login, Logout)
+- Admin Dashboard
+- Blog CRUD (Admin) + Thumbnail Upload
+- Blog Public View (Index, Show)
+- Category CRUD (Admin)
+- Category Integration di Blog (Create/Edit)
+- Search, Sort (A-Z/Z-A), Pagination (preserve params) di Categories (Index)
+- Sidebar Navigation + Responsive Toggle
+- **Dalam Pengerjaan:** 
+  - Module Projects (CRUD Admin)
+    - Search
+    - Sort (A-Z/Z-A, Latest/Oldest)
+    - Filter (Admin, Author, Rentang Waktu, )
+  - Module Projects (Show)
+- **Pending:** 
+- Comments System
+- Media/Upload Service (Polymorphic)
+- Site Settings (Identitas Situs)
+- User Management (Admin)
+- Tailwind CSS
 
 ## 5. RIWAYAT MASALAH & KONFIGURASI
 - **Error Terakhir:** 
@@ -212,10 +304,36 @@
 - **Style:** PSR-12
 - **Validasi:** Form Request Classes
 - **Keamanan:** Sanitasi input wajib, prepared statements (Eloquent ORM)
-- **Larangan:** Tidak ada hard-coded credentials, tidak ada `dd()` di production logic.
+- **Larangan:** 
+ - Tidak ada hard-coded credentials, tidak ada `dd()` di production logic.
+ - Tidak ada `emoji` di UI
 - **Foreign Keys**: Handle cascade di Model Observer (karena Soft Delete)
 - **Collation**: utf8mb4_0900_ai_ci (konsisten semua tabel)
 
 ## 7. INSTRUKSI SESI INI
-- Fokus pada: Membuat tombol 'Kategori' dan Halaman untuk CRUD Kategori di halaman dashboard admin. Pastikan menggunakan tabel `categories`
+- Fokus pada: 
+ - Membuat module backend `Project` 
+## Fitur Utama
+- CRUD untuk entitas **Project** (akses oleh admin).
+
+## Index / Pagination
+- Tampilkan **10 baris per halaman**.
+- Navigasi: **Next / Previous**.
+- Tombol **"..."** untuk lompat ke halaman tertentu saat dataset besar.
+
+## Kolom `views`
+- **Kombinasi IP + User-Agent + Time-window** — lebih akurat untuk mencegah over-count jangka pendek.
+
+## Kolom `client_name`
+- Field **nullable / optional** supaya klien dapat menyembunyikan namanya.
+- Tampilan frontend: gunakan fallback sembunyikan kolom bila kosong.
+
+## Kolom `project_date`
+- Input memilih **tanggal lengkap** (hari, bulan, tahun).
+- Pertimbangkan opsi **hari/bulan/tahun saja** jika diperlukan.
+- Terapkan validasi server-side untuk memastikan format/tanggal valid.
+
+## Catatan Implementasi Singkat
+- Tambahkan indeks pada kolom yang sering dipakai untuk pencarian/paginasi.
+- Pertimbangkan caching atau agregasi untuk perhitungan `views` bila trafik tinggi.
 - Output yang diharapkan: -

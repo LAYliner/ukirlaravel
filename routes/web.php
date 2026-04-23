@@ -1,11 +1,11 @@
 <?php
-
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Public\BlogController as PublicBlogController; 
+use App\Http\Controllers\Public\BlogController as PublicBlogController;
 use Illuminate\Support\Facades\Route;
 
 // Root
@@ -30,14 +30,26 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('admin.dashboard');
     })->name('dashboard');
 
+    // Comments (Public but requires Auth)
+    Route::post('/comments', [\App\Http\Controllers\Public\CommentController::class, 'store'])->name('comments.store');
+
     // Admin & Author Only
-   Route::middleware('role:admin,author')->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('role:admin,author')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
-        
+
         // Blog Resource Routes
         Route::resource('blog', AdminBlogController::class);
+
         // Category Resource Routes
         Route::resource('categories', CategoryController::class);
 
+        // Project Resource Routes
+        Route::resource('projects', ProjectController::class);
+        Route::patch('projects/{id}/status', [ProjectController::class, 'updateStatus'])
+     ->name('projects.update-status');
+
+        // Custom Project Route: Toggle Visibility
+        Route::patch('projects/{id}/toggle-visibility', [ProjectController::class, 'toggleVisibility'])
+             ->name('projects.toggle-visibility');
     });
 });

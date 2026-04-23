@@ -2,25 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
     use HasFactory, SoftDeletes;
 
-    // ==================== KONFIGURASI TABEL ====================
-
     protected $table = 'projects';
     protected $primaryKey = 'id';
-    public $incrementing = false; // UUID
+    public $incrementing = false;
     protected $keyType = 'string';
 
-    // ==================== FILLABLE ATTRIBUTES ====================
-
     protected $fillable = [
-        'id',
         'user_id',
         'title',
         'slug',
@@ -28,56 +27,84 @@ class Project extends Model
         'client_name',
         'project_date',
         'status',
+        'is_visible',
         'views',
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
-
-    // ==================== CASTS ====================
 
     protected $casts = [
+        'is_visible' => 'boolean',
         'project_date' => 'date',
         'views' => 'integer',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'deleted_at' => 'datetime',
     ];
 
-    // ==================== RELASI ====================
+    protected static function boot(): void
+    {
+        parent::boot();
 
-    /**
-     * Relasi ke User (Pemilik)
-     * Project belongsTo User
-     */
-    public function user()
+        static::creating(function (self $model): void {
+            if (empty($model->{$model->getKeyName()})) {
+                $model->{$model->getKeyName()} = Str::uuid()->toString();
+            }
+        });
+    }
+
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Relasi ke Comments (Polymorphic)
-     * Project hasMany Comment
-     */
-    public function comments()
+    public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    /**
-     * Relasi ke Media (Polymorphic)
-     * Project hasMany Media
-     */
-    public function media()
+    public function media(): MorphMany
     {
         return $this->morphMany(Media::class, 'mediable');
     }
 
-    // ==================== HELPERS ====================
+    public function scopeFilterByStatus(Builder $query, ?string $status): Builder
+    {
+        $allowed = ['draft', 'published'];
+        return $query->when(in_array($status, $allowed, true), fn(Builder $q) => $q->where('status', $status));
+    }
+
+    public function scopeFilterByDateRange(Builder $query, ?string $dateFrom, ?string $dateTo): Builder
+    {
+        return $query->when($dateFrom, fn(Builder $q) => $q->where('created_at', '>=', $dateFrom . ' 00:00:00'))
+                     ->when($dateTo, fn(Builder $q) => $q->where('created_at', '<=', $dateTo . ' 23:59:59'));
+    }
+
+    public function scopeFilterByAuthor(Builder $query, ?string $authorId): Builder
+    {
+        return $query->when($authorId, fn(Builder $q) => $q->where('user_id', $authorId));
+    }
+
+    public function scopeSearch(Builder $query, ?string $keyword): Builder
+    {
+        return $query->when($keyword, function (Builder $q, string $term) {
+            $q->where(function (Builder $sub) use ($term) {
+                $sub->where('title', 'like', "%{$term}%")
+                    ->orWhere('slug', 'like', "%{$term}%")
+                    ->orWhere('client_name', 'like', "%{$term}%");
+            });
+        });
+    }
+
+    public function scopeForAuthenticatedUser(Builder $query, User $user): Builder
+    {
+        return $user->role !== 'admin' ? $query->where('user_id', $user->id) : $query;
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('status', 'published')
+                     ->where('is_visible', true);
+    }
 
     public function isPublished(): bool
     {
-        return $this->status === 'published' && $this->deleted_at === null;
+        return $this->status === 'published' && $this->is_visible === true;
     }
 
     public function isDraft(): bool

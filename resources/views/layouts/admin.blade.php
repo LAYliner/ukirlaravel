@@ -310,6 +310,9 @@
                 <span class="icon">📝</span>
                 <span>Blog</span>
             </a>
+            <a href="{{ route('admin.projects.index') ?? '#' }}" class="nav-link {{ request()->routeIs('admin.projects.*') ? 'active' : '' }}">
+               <span>Projects</span>
+            </a>
             <a href="{{ route('admin.categories.index') ?? '#' }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                 <span class="icon">📁</span>
                 <span>Kategori</span>
