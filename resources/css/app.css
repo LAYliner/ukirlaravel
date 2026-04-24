@@ -7,12 +7,11 @@
 
 @theme {
   --color-primary: #885007;
+  --color-secondary: #e1c49d;
   --color-accent: #dda45a;
-  --color-text-light: #ecf0f1;
-  --color-text-dark: #100e0c;
-  --color-bg-light: #f4f6f9;
-  --color-border: #ddd;
-  
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+  --color-text: #100e0c;
+  --color-background: #fdfdfc;
+
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 }

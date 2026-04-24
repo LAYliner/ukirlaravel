@@ -8,12 +8,19 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Public\BlogController as PublicBlogController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\ProjectController as PublicProjectController;
+
 // Root
-Route::get('/', [PublicBlogController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Public Blog Routes
 Route::get('/blog', [PublicBlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [PublicBlogController::class, 'show'])->name('blog.show');
+
+// Public Project Routes
+Route::get('/projects', [PublicProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [PublicProjectController::class, 'show'])->name('projects.show');
 
 // Public Auth Routes
 Route::middleware(['guest', 'no.auth.cache'])->group(function () {
