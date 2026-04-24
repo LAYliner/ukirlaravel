@@ -56,6 +56,12 @@
           contents:
           - path: /app/Http/Controllers/Public/BlogController.php
             type: file
+          - path: /app/Http/Controllers/Public/CommentController.php
+            type: file
+          - path: /app/Http/Controllers/Public/ProjectController.php
+            type: file
+          - path: /app/Http/Controllers/Public/HomeController.php
+            type: file
 
   - `storage` :
     - path: /storage
@@ -115,8 +121,10 @@
         contents:
         - path: /resources/views/layouts/admin.blade.php
           type: file
+        - path: /resources/views/layouts/main.blade.php
+          type: file  # Layout utama seluruh halaman publik (nav + footer terpadu)
         - path: /resources/views/layouts/public.blade.php
-          type: file
+          type: file  # ⚠️ DEPRECATED — tidak dipakai oleh view manapun, kandidat hapus
         - path: /resources/views/layouts/auth.blade.php
           type: file
       - path: /resources/views/errors
@@ -158,6 +166,13 @@
           - path: /resources/views/public/blog/show.blade.php
             type: file
           - path: /resources/views/public/blog/index.blade.php
+            type: file
+        - path: /resources/views/public/projects
+          type: directory
+          contents:
+          - path: /resources/views/public/projects/show.blade.php
+            type: file
+          - path: /resources/views/public/projects/index.blade.php
             type: file
 
 - `app/Services`: Belum ada saat ini
@@ -270,31 +285,28 @@
 - Auth (Register, Login, Logout)
 - Admin Dashboard
 - Blog CRUD (Admin) + Thumbnail Upload
-- Blog Public View (Index, Show)
+- Blog Public View (Index, Show) — UI diperbarui ke Tailwind CSS (`layouts.main`)
 - Category CRUD (Admin)
 - Category Integration di Blog (Create/Edit)
 - Search, Sort (A-Z/Z-A), Pagination (preserve params) di Categories (Index)
 - Sidebar Navigation + Responsive Toggle
+- Module Projects (CRUD Admin) — termasuk Search, Sort, Filter, Pagination
+- Module Projects Public View (Index, Show) — UI Tailwind CSS
+- Comments System (Blog & Project) — hanya authenticated user, nested replies
+- `welcome.blade.php` di-refactor ke `layouts.main` (tidak ada lagi duplikasi nav/footer)
 - **Dalam Pengerjaan:** 
-  - Module Projects (CRUD Admin)
-    - Search
-    - Sort (A-Z/Z-A, Latest/Oldest)
-    - Filter (Admin, Author, Rentang Waktu, )
-  - Module Projects (Show)
+  - -
 - **Pending:** 
-- Comments System
 - Media/Upload Service (Polymorphic)
 - Site Settings (Identitas Situs)
 - User Management (Admin)
-- Tailwind CSS
 
 ## 5. RIWAYAT MASALAH & KONFIGURASI
-- **Error Terakhir:** 
-  - Error terkait Blog yang masih menggunakan skema database lama
-  - Thumbnail blog tidak muncul
-- **Solusi Diterapkan:** -
-  - Melakkukan penyesuaian di file kode yang berkaitan dengan Blog seperti `app/Models/Blog.php, app/Http/Controllers/Public/BlogController.php, app/Http/Controllers/Admin/BlogController.php, resources/views/admin/blog/create.blade.php, resources/views/admin/blog/edit.blade.php, resources/views/admin/blog/index.blade.php, 
-  - Menjalankan perintah `php artisan storage:link` untuk membuat symbolic link
+- **Riwayat Masalah & Solusi:**
+  - Error Blog menggunakan skema database lama → penyesuaian di `Blog.php`, `BlogController.php` (Admin & Public), dan semua view admin/blog
+  - Thumbnail blog tidak muncul → menjalankan `php artisan storage:link`
+  - Duplikasi `<nav>` dan `<footer>` antara `welcome.blade.php` dan `layouts/main.blade.php` → `welcome.blade.php` di-refactor menjadi `@extends('layouts.main')`, konten dideduksi menjadi `@section('content')` saja
+  - `layouts/public.blade.php` → **sudah tidak dipakai oleh file apapun** (orphan), kandidat untuk dihapus
 - **Konfigurasi Kritis:**
   - `DB_CONNECTION=mysql`
   - `APP_ENV=local`
@@ -311,29 +323,4 @@
 - **Collation**: utf8mb4_0900_ai_ci (konsisten semua tabel)
 
 ## 7. INSTRUKSI SESI INI
-- Fokus pada: 
- - Membuat module backend `Project` 
-## Fitur Utama
-- CRUD untuk entitas **Project** (akses oleh admin).
-
-## Index / Pagination
-- Tampilkan **10 baris per halaman**.
-- Navigasi: **Next / Previous**.
-- Tombol **"..."** untuk lompat ke halaman tertentu saat dataset besar.
-
-## Kolom `views`
-- **Kombinasi IP + User-Agent + Time-window** — lebih akurat untuk mencegah over-count jangka pendek.
-
-## Kolom `client_name`
-- Field **nullable / optional** supaya klien dapat menyembunyikan namanya.
-- Tampilan frontend: gunakan fallback sembunyikan kolom bila kosong.
-
-## Kolom `project_date`
-- Input memilih **tanggal lengkap** (hari, bulan, tahun).
-- Pertimbangkan opsi **hari/bulan/tahun saja** jika diperlukan.
-- Terapkan validasi server-side untuk memastikan format/tanggal valid.
-
-## Catatan Implementasi Singkat
-- Tambahkan indeks pada kolom yang sering dipakai untuk pencarian/paginasi.
-- Pertimbangkan caching atau agregasi untuk perhitungan `views` bila trafik tinggi.
-- Output yang diharapkan: -
+- *(Kosong — akan diisi saat memulai sesi kerja baru)*

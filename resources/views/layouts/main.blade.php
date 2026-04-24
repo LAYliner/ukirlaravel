@@ -50,12 +50,12 @@
     </nav>
 
     {{-- Main Content --}}
-    <main class="flex-grow pt-20">
+    <main class="flex-grow {{ request()->routeIs('home') ? '' : 'pt-20' }}">
         @yield('content')
     </main>
 
     {{-- Footer --}}
-    <footer class="bg-background border-t border-secondary/30 pt-16 pb-8 mt-20">
+    <footer class="bg-background border-t border-secondary/30 pt-16 pb-8 {{ request()->routeIs('home') ? '' : 'mt-20' }}">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="md:col-span-2">

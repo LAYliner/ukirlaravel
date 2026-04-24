@@ -173,6 +173,12 @@
         - path: /app/Http/Controllers/Public
           type: directory
           contents:
+          - path: /app/Http/Controllers/Public/ProjectController.php
+            type: file
+          - path: /app/Http/Controllers/Public/CommentController.php
+            type: file
+          - path: /app/Http/Controllers/Public/HomeController.php
+            type: file
           - path: /app/Http/Controllers/Public/BlogController.php
             type: file
   - path: /resources
@@ -204,6 +210,8 @@
         - path: /resources/views/layouts/public.blade.php
           type: file
         - path: /resources/views/layouts/auth.blade.php
+          type: file
+        - path: /resources/views/layouts/main.blade.php
           type: file
       - path: /resources/views/errors
         type: directory
@@ -253,6 +261,13 @@
           - path: /resources/views/public/blog/show.blade.php
             type: file
           - path: /resources/views/public/blog/index.blade.php
+            type: file
+        - path: /resources/views/public/projects
+          type: directory
+          contents:
+          - path: /resources/views/public/projects/show.blade.php
+            type: file
+          - path: /resources/views/public/projects/index.blade.php
             type: file
     - path: /resources/css
       type: directory
