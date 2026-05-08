@@ -2,6 +2,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -58,5 +59,13 @@ Route::middleware('auth')->group(function () {
         // Custom Project Route: Toggle Visibility
         Route::patch('projects/{id}/toggle-visibility', [ProjectController::class, 'toggleVisibility'])
              ->name('projects.toggle-visibility');
+             
+                // Comment Management Routes (Admin Only)
+        Route::middleware('role:admin')->group(function () {
+            Route::get('comments', [AdminCommentController::class, 'index'])->name('comments.index');
+            Route::delete('comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
+            Route::patch('comments/{id}/restore', [AdminCommentController::class, 'restore'])->name('comments.restore');
+            Route::delete('comments/{id}/force-delete', [AdminCommentController::class, 'forceDelete'])->name('comments.force-delete');
+        });
     });
 });
