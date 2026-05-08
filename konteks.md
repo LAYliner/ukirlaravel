@@ -308,11 +308,26 @@
   - View: `resources/views/admin/comments/index.blade.php`
   - Sidebar link "Komentar" ditambahkan di `layouts/admin.blade.php` (hanya untuk admin)
 - **Dalam Pengerjaan:** 
-  User Management
+  - User Management:
+    - View daftar user dengan kolom: Nama, Email, Role (Admin/Author/User), Status (Aktif/Tidak Aktif), Foto Profil, Timestamp (created_at, updated_at)
+    - Pagination (15 user/halaman)
+    - Sorting by nama, email, role, status, created_at, updated_at, ID (asc/desc)
+    - Search by nama, email
+    - Filter by role, status
+    - Toggle status (aktif/tidak aktif) dengan konfirmasi modal
+    - Soft-delete user dengan konfirmasi modal
+    - Restore soft-deleted user
+    - Force delete (permanent) user dengan konfirmasi modal
+    - Upload foto profil (resize otomatis ke 150x150px)
+    - Role management: ubah role user (Admin/Author/User)
+    - Route: `/admin/users` (admin only)
+    - Controller: `App\Http\Controllers\Admin\UserController`
+    - View: `resources/views/admin/users/index.blade.php`
+    - Sidebar link "User" ditambahkan di `layouts/admin.blade.php` (hanya untuk admin)
 - **Pending:** 
-- Media/Upload Service (Polymorphic)
-- Site Settings (Identitas Situs)
-- User Management (Admin)
+  - Media/Upload Service (Polymorphic)
+  - Site Settings (Identitas Situs)
+  - User Management (Admin)
 
 ## 5. RIWAYAT MASALAH & KONFIGURASI
 - **Riwayat Masalah & Solusi:**
