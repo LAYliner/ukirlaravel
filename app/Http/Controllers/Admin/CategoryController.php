@@ -64,7 +64,8 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        if (empty($validated['slug'])) {
+        // Selalu generate slug dari name jika slug tidak diisi manual atau name berubah
+        if (empty($validated['slug']) || $validated['name'] !== $category->name) {
             $validated['slug'] = Str::slug($validated['name']);
         }
 
