@@ -294,17 +294,21 @@
 - Module Projects Public View (Index, Show) — UI Tailwind CSS
 - Comments System (Blog & Project) — hanya authenticated user, nested replies
 - `welcome.blade.php` di-refactor ke `layouts.main` (tidak ada lagi duplikasi nav/footer)
+- Admin Comment Log & Moderation Module:
+  - View daftar komentar dengan kolom: Tipe (Blog/Project), Judul Blog/Project, Pengguna (nama + email), Isi Komentar, Status (Active/Deleted), Timestamp (created_at, updated_at)
+  - Pagination (15 item/halaman)
+  - Sorting by created_at, updated_at, ID (asc/desc)
+  - Search by content, user name, email
+  - Filter by type (blog/project), specific blog_id, specific project_id, status (active/deleted/all)
+  - Soft-delete comment dengan konfirmasi modal
+  - Restore soft-deleted comment
+  - Force delete (permanent) dengan konfirmasi modal
+  - Route: `/admin/comments` (admin only)
+  - Controller: `App\Http\Controllers\Admin\CommentController`
+  - View: `resources/views/admin/comments/index.blade.php`
+  - Sidebar link "Komentar" ditambahkan di `layouts/admin.blade.php` (hanya untuk admin)
 - **Dalam Pengerjaan:** 
-  - Migrasi UI — dari HTML/CSS murni ke Tailwind sesuai gaya UI FE + Responsif (Admin & Author)
-   - Tujuan Utama
-    - Ganti styling inline/kelas CSS custom dengan utility Tailwind.
-    - Buat komponen UI yang dapat dipakai ulang (Header, Sidebar, Form, Table, Card, Modal, Pagination, Alert, Avatar).
-    - Pastikan aksesibilitas dasar (focus states, aria-labels, keyboard navigation).
-    - Pertahankan tampilan dan perilaku fungsional existing (kecuali bila ada perbaikan UX yang disetujui).
-   - Ruang Lingkup
-    - Halaman Admin: Dashboard, Users, Roles/Permissions, Content Management, Settings, Logs.
-    - Komponen global: layout grid, responsive sidebar, top nav, footers, form controls, data tables, toasts/modals, file-upload UI.
-    - Tidak termasuk refactor backend atau API (kecuali minor markup data-binding).
+  User Management
 - **Pending:** 
 - Media/Upload Service (Polymorphic)
 - Site Settings (Identitas Situs)
