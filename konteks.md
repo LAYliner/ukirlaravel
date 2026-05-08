@@ -330,6 +330,7 @@
  - Tidak ada `emoji` di UI
 - **Foreign Keys**: Handle cascade di Model Observer (karena Soft Delete)
 - **Collation**: utf8mb4_0900_ai_ci (konsisten semua tabel)
+- **Database**: Manual Schema Management & Database-First Approach
 
 ## 7. INSTRUKSI SESI INI
 - *(Kosong — akan diisi saat memulai sesi kerja baru)*

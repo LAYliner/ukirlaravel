@@ -64,7 +64,7 @@ class CategoryController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        if (empty($validated['slug'])) {
+        if (empty($validated['slug']) || $validated['name'] !== $category->name) {
             $validated['slug'] = Str::slug($validated['name']);
         }
 
