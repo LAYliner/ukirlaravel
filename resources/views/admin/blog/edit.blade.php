@@ -1,80 +1,96 @@
 @extends('layouts.admin')
+
 @section('title', 'Edit Blog')
+@section('page-title', 'Edit Blog')
+
 @section('content')
-<div style="max-width: 800px; margin: 0 auto;">
-    <h1 style="margin-bottom: 1.5rem;">📝 Edit Blog</h1>
+<div class="max-w-3xl mx-auto">
+    <div class="bg-white rounded-lg border border-secondary/30 shadow-sm p-6">
+        <form action="{{ route('admin.blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-    <form action="{{ route('admin.blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
+            {{-- Judul --}}
+            <div class="mb-5">
+                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Judul <span class="text-red-500">*</span></label>
+                <input type="text" name="title" id="title" value="{{ old('title', $blog->title) }}" required
+                       class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('title') border-red-500 focus:ring-red-500 @enderror"
+                       placeholder="Masukkan judul artikel">
+                @error('title')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="title" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Judul</label>
-            <input type="text" name="title" id="title" value="{{ old('title', $blog->title) }}" required
-                style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
-            @error('title')
-                <small style="color: #dc3545;">{{ $message }}</small>
-            @enderror
-        </div>
+            {{-- Isi Konten --}}
+            <div class="mb-5">
+                <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Isi Konten <span class="text-red-500">*</span></label>
+                <textarea name="content" id="content" rows="10" required
+                          class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('content') border-red-500 focus:ring-red-500 @enderror"
+                          placeholder="Tulis konten artikel di sini...">{{ old('content', $blog->content) }}</textarea>
+                @error('content')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="content" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Isi Konten</label>
-            <textarea name="content" id="content" rows="10" required
-                style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">{{ old('content', $blog->content) }}</textarea>
-            @error('content')
-                <small style="color: #dc3545;">{{ $message }}</small>
-            @enderror
-        </div>
+            {{-- Thumbnail --}}
+            <div class="mb-5">
+                <label for="thumbnail_path" class="block text-sm font-medium text-gray-700 mb-1">Thumbnail (Opsional)</label>
+                @if($blog->thumbnail_path)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $blog->thumbnail_path) }}" alt="Thumbnail" class="w-48 h-auto rounded-md object-cover border border-secondary/30">
+                    </div>
+                @endif
+                <input type="file" name="thumbnail_path" id="thumbnail_path" accept="image/*"
+                       class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('thumbnail_path') border-red-500 focus:ring-red-500 @enderror">
+                <small class="mt-1 text-xs text-gray-500">Kosongkan jika tidak ingin mengganti thumbnail.</small>
+                @error('thumbnail_path')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="thumbnail_path" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Thumbnail (Opsional)</label>
-            @if($blog->thumbnail_path)
-                <div style="margin-bottom: 0.5rem;">
-                    <img src="{{ asset('storage/' . $blog->thumbnail_path) }}" alt="Thumbnail" style="max-width: 200px; border-radius: 4px;">
-                </div>
-            @endif
-            <input type="file" name="thumbnail_path" id="thumbnail_path" accept="image/*"
-                style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
-            <small style="color: #666;">Kosongkan jika tidak ingin mengganti thumbnail.</small>
-            @error('thumbnail_path')
-                <small style="color: #dc3545;">{{ $message }}</small>
-            @enderror
-        </div>
+            {{-- Kategori --}}
+            <div class="mb-5">
+                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Kategori (Opsional)</label>
+                <select name="category_id" id="category_id"
+                        class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('category_id') border-red-500 focus:ring-red-500 @enderror">
+                    <option value="">Pilih Kategori</option>
+                    @foreach($categories ?? [] as $category)
+                        <option value="{{ $category->id }}" {{ old('category_id', $blog->category_id) == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('category_id')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="category_id" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Kategori (Opsional)</label>
-            <select name="category_id" id="category_id"
-                style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
-                <option value="">Pilih Kategori</option>
-                @foreach($categories ?? [] as $category)
-                    <option value="{{ $category->id }}" {{ old('category_id', $blog->category_id ?? '') == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+            {{-- Status --}}
+            <div class="mb-6">
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
+                <select name="status" id="status" required
+                        class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('status') border-red-500 focus:ring-red-500 @enderror">
+                    <option value="draft" {{ old('status', $blog->status) === 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="published" {{ old('status', $blog->status) === 'published' ? 'selected' : '' }}>Published</option>
+                    <option value="rejected" {{ old('status', $blog->status) === 'rejected' ? 'selected' : '' }}>Rejected</option>
+                </select>
+                @error('status')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div style="margin-bottom: 1rem;">
-            <label for="status" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Status</label>
-            <select name="status" id="status" required
-                style="width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 4px;">
-                <option value="draft" {{ old('status', $blog->status) === 'draft' ? 'selected' : '' }}>Draft</option>
-                <option value="published" {{ old('status', $blog->status) === 'published' ? 'selected' : '' }}>Published</option>
-                <option value="rejected" {{ old('status', $blog->status) === 'rejected' ? 'selected' : '' }}>Rejected</option>
-            </select>
-            @error('status')
-                <small style="color: #dc3545;">{{ $message }}</small>
-            @enderror
-        </div>
-
-        <div style="display: flex; gap: 1rem;">
-            <button type="submit" style="padding: 0.5rem 1.5rem; background: var(--accent-color); color: #fff; border: none; border-radius: 4px; cursor: pointer;">
-                Perbarui
-            </button>
-            <a href="{{ route('admin.blog.index') }}" style="padding: 0.5rem 1.5rem; background: #fff; color: var(--text-dark); border: 1px solid var(--border-color); border-radius: 4px; text-decoration: none;">
-                Batal
-            </a>
-        </div>
-    </form>
+            {{-- Actions --}}
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <a href="{{ route('admin.blog.index') }}" 
+                   class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                    Batal
+                </a>
+                <button type="submit" 
+                        class="px-4 py-2 bg-primary border border-transparent rounded-md text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                    Perbarui Blog
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection

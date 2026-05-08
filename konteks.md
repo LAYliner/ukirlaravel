@@ -295,7 +295,16 @@
 - Comments System (Blog & Project) — hanya authenticated user, nested replies
 - `welcome.blade.php` di-refactor ke `layouts.main` (tidak ada lagi duplikasi nav/footer)
 - **Dalam Pengerjaan:** 
-  - -
+  - Migrasi UI — dari HTML/CSS murni ke Tailwind sesuai gaya UI FE + Responsif (Admin & Author)
+   - Tujuan Utama
+    - Ganti styling inline/kelas CSS custom dengan utility Tailwind.
+    - Buat komponen UI yang dapat dipakai ulang (Header, Sidebar, Form, Table, Card, Modal, Pagination, Alert, Avatar).
+    - Pastikan aksesibilitas dasar (focus states, aria-labels, keyboard navigation).
+    - Pertahankan tampilan dan perilaku fungsional existing (kecuali bila ada perbaikan UX yang disetujui).
+   - Ruang Lingkup
+    - Halaman Admin: Dashboard, Users, Roles/Permissions, Content Management, Settings, Logs.
+    - Komponen global: layout grid, responsive sidebar, top nav, footers, form controls, data tables, toasts/modals, file-upload UI.
+    - Tidak termasuk refactor backend atau API (kecuali minor markup data-binding).
 - **Pending:** 
 - Media/Upload Service (Polymorphic)
 - Site Settings (Identitas Situs)

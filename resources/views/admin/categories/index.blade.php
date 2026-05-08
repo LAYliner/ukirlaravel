@@ -1,107 +1,117 @@
 @extends('layouts.admin')
-@section('title', 'Kategori')
+
+@section('title', 'Manajemen Kategori')
+@section('page-title', 'Kategori')
 
 @section('content')
-@php
-    $sortDirection = request('sort_direction', 'asc');
-    $nextSortDirection = $sortDirection === 'asc' ? 'desc' : 'asc';
-    $sortIcon = $sortDirection === 'asc' ? '▲' : '▼';
-@endphp
-<div style= "max-width: 1200px; margin: 0 auto;">  <!-- "margin-top: 2rem;">-->
-    <!-- Header Section -->
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-        <h1>Kategori</h1>
-        
-        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
-            <!-- Search Box -->
-            <form method="GET" action="{{ route('admin.categories.index') }}" style="display: flex;">
-                <input 
-                    type="text" 
-                    name="search" 
-                    placeholder="Search" 
-                    value="{{ request('search') }}"
-                    style="padding: 0.5rem 1rem; border: 1px solid #ddd; border-radius: 4px 0 0 4px; outline: none; width: 200px;"
-                >
-                <button 
-                    type="submit" 
-                    style="padding: 0.5rem 1rem; background: #3498db; color: white; border: none; border-radius: 0 4px 4px 0; cursor: pointer;"
-                >
-                    🔍
-                </button>
-            </form>
-            
-            <!-- Create Button -->
-            <a href="{{ route('admin.categories.create') }}" style="background: #3498db; color: white; padding: 0.5rem 1.5rem; text-decoration: none; border-radius: 4px; font-weight: 500;">
-                + Buat Baru
-            </a>
-        </div>
+<div class="space-y-6">
+    {{-- Header & Actions --}}
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 class="text-2xl font-bold text-text">Daftar Kategori</h1>
+        <a href="{{ route('admin.categories.create') }}" 
+           class="inline-flex items-center gap-2 bg-primary text-white hover:bg-primary/90 focus:ring-2 focus:ring-primary/50 px-4 py-2 rounded-md text-sm font-medium transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Buat Baru
+        </a>
     </div>
 
-    <!-- Alert Messages -->
+    {{-- Search & Filter --}}
+    <div class="bg-white p-4 rounded-lg border border-secondary/30 shadow-sm">
+        <form method="GET" action="{{ route('admin.categories.index') }}" class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+                <input type="text" name="search" placeholder="Cari nama kategori..." value="{{ request('search') }}"
+                       class="w-full pl-10 pr-4 py-2 border border-secondary/30 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm">
+                <svg class="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <button type="submit" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition text-sm font-medium">
+                Cari
+            </button>
+        </form>
+    </div>
+
+    {{-- Alerts --}}
     @if(session('success'))
-        <div style="background: #d4edda; color: #155724; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; border-left: 4px solid #28a745;">
+        <div class="p-4 mb-4 text-sm text-green-700 bg-green-50 border-l-4 border-green-500 rounded-r-lg shadow-sm" role="alert">
             {{ session('success') }}
         </div>
     @endif
-    
     @if(session('error'))
-        <div style="background: #f8d7da; color: #721c24; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; border-left: 4px solid #dc3545;">
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-50 border-l-4 border-red-500 rounded-r-lg shadow-sm" role="alert">
             {{ session('error') }}
         </div>
     @endif
 
-    <!-- Table -->
-    <div style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden;">
-        <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057; width: 40%;">
-                        <a href="{{ route('admin.categories.index', array_merge(request()->except('sort_direction'), ['sort_direction' => $nextSortDirection])) }}" 
-                        style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                            Nama 
-                            <span style="font-size: 0.75rem; color: {{ request()->has('sort_direction') ? '#3498db' : '#adb5bd' }};">
-                                {{ $sortIcon }}
-                            </span>
-                        </a>
-                    </th>
-                    <th style="padding: 1rem; text-align: left; font-weight: 600; color: #495057;">Deskripsi</th>
-                    <th style="padding: 1rem; text-align: center; font-weight: 600; color: #495057; width: 150px;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($categories as $category)
-                <tr style="border-bottom: 1px solid #dee2e6; transition: background 0.2s;">
-                    <td style="padding: 1rem; color: #2c3e50;">{{ $category->name }}</td>
-                    <td style="padding: 1rem; color: #6c757d;">{{ Str::limit($category->description, 50) ?? '-' }}</td>
-                    <td style="padding: 1rem; text-align: center;">
-                        <a href="{{ route('admin.categories.edit', $category->id) }}" style="background: #ffc107; color: #000; padding: 0.4rem 0.8rem; text-decoration: none; border-radius: 4px; font-size: 0.875rem; margin-right: 0.25rem;">
-                            Edit
-                        </a>
-                        <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Yakin hapus kategori ini?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" style="background: #dc3545; color: white; padding: 0.4rem 0.8rem; border: none; border-radius: 4px; font-size: 0.875rem; cursor: pointer;">
-                                Hapus
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3" style="padding: 2rem; text-align: center; color: #6c757d;">
-                        Tidak ada kategori. <a href="{{ route('admin.categories.create') }}" style="color: #3498db;">Buat kategori baru</a>
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pagination -->
-    @if(method_exists($categories, 'links'))
-        <div class="pagination" style="margin-top: 1rem;">
-            {{ $categories->appends(request()->except('page'))->links() }}
+    {{-- Table --}}
+    <div class="bg-white rounded-lg border border-secondary/30 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            @php
+                                $currentSort = request('sort_direction', 'asc');
+                                $nextSortDirection = $currentSort === 'asc' ? 'desc' : 'asc';
+                                $sortIcon = $currentSort === 'asc' ? '↑' : '↓';
+                            @endphp
+                            <a href="{{ route('admin.categories.index', array_merge(request()->except('sort_direction'), ['sort_direction' => $nextSortDirection])) }}" 
+                               class="flex items-center gap-1 hover:text-primary transition-colors">
+                                Nama
+                                @if(request()->has('sort_direction'))
+                                    <span class="text-primary">{{ $sortIcon }}</span>
+                                @else
+                                    <span class="text-gray-300">↕</span>
+                                @endif
+                            </a>
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Deskripsi
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Aksi
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @forelse($categories as $category)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
+                                {{ $category->name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ Str::limit($category->description, 50) ?? '-' }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <a href="{{ route('admin.categories.edit', $category->id) }}" 
+                                   class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus kategori ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="px-6 py-10 text-center text-sm text-gray-500">
+                                Tidak ada kategori ditemukan. 
+                                <a href="{{ route('admin.categories.create') }}" class="text-primary hover:underline">Buat baru?</a>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    @endif
+        
+        {{-- Pagination --}}
+        @if(method_exists($categories, 'links'))
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                {{ $categories->appends(request()->except('page'))->links('vendor.pagination.simple') }}
+            </div>
+        @endif
+    </div>
 </div>
 @endsection
