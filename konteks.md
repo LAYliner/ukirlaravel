@@ -350,6 +350,7 @@
 - **Foreign Keys**: Handle cascade di Model Observer (karena Soft Delete)
 - **Collation**: utf8mb4_0900_ai_ci (konsisten semua tabel)
 - **Database**: Manual Schema Management & Database-First Approach
+- **UI dan UX**: Wajib menerapkan Responsive Design. Untuk ukuran layar smartphone, tablet, dan desktop
 
 ## 7. INSTRUKSI SESI INI
 - *(Kosong — akan diisi saat memulai sesi kerja baru)*
