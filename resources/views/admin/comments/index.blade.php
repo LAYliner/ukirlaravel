@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Comment Logs & Moderation')
-@section('page-title', 'Moderasi Komentar')
+@section('title', 'Manajemen Komentar')
+@section('page-title', 'Komentar')
 
 @section('content')
 <div class="space-y-6">

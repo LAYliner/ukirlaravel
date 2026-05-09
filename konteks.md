@@ -327,7 +327,7 @@
 - **Pending:** 
   - Media/Upload Service (Polymorphic)
   - Site Settings (Identitas Situs)
-  - User Management (Admin)
+
 
 ## 5. RIWAYAT MASALAH & KONFIGURASI
 - **Riwayat Masalah & Solusi:**
