@@ -1,4 +1,4 @@
-# KONTEKS PROJECT: UKIR (SKRIPSI)
+# KONTEKS PROJECT: UKIR (SKRIPSI Studi Kasus: Sanggar Ukir Tana Paser)
 
 ## 1. STACK TEKNOLOGI
 - **Local Server:** FlyEnv Version 4.13.6
@@ -36,9 +36,15 @@
         - path: /app/Http/Controllers/Admin
           type: directory
           contents:
+          - path: /app/Http/Controllers/Admin/ProjectController.php
+            type: file
           - path: /app/Http/Controllers/Admin/AdminDashboardController.php
             type: file
+          - path: /app/Http/Controllers/Admin/CommentController.php
+            type: file
           - path: /app/Http/Controllers/Admin/CategoryController.php
+            type: file
+          - path: /app/Http/Controllers/Admin/UserController.php
             type: file
           - path: /app/Http/Controllers/Admin/BlogController.php
             type: file
@@ -54,13 +60,13 @@
         - path: /app/Http/Controllers/Public
           type: directory
           contents:
-          - path: /app/Http/Controllers/Public/BlogController.php
+          - path: /app/Http/Controllers/Public/ProjectController.php
             type: file
           - path: /app/Http/Controllers/Public/CommentController.php
             type: file
-          - path: /app/Http/Controllers/Public/ProjectController.php
-            type: file
           - path: /app/Http/Controllers/Public/HomeController.php
+            type: file
+          - path: /app/Http/Controllers/Public/BlogController.php
             type: file
 
   - `storage` :
@@ -97,6 +103,7 @@
         - path: /storage/app/public
           type: directory
           contents:
+
   - `resources/views`:
     - path: /resources/views
       type: directory
@@ -121,11 +128,11 @@
         contents:
         - path: /resources/views/layouts/admin.blade.php
           type: file
-        - path: /resources/views/layouts/main.blade.php
-          type: file  # Layout utama seluruh halaman publik (nav + footer terpadu)
         - path: /resources/views/layouts/public.blade.php
-          type: file  # ⚠️ DEPRECATED — tidak dipakai oleh view manapun, kandidat hapus
+          type: file
         - path: /resources/views/layouts/auth.blade.php
+          type: file
+        - path: /resources/views/layouts/main.blade.php
           type: file
       - path: /resources/views/errors
         type: directory
@@ -135,6 +142,11 @@
       - path: /resources/views/admin
         type: directory
         contents:
+        - path: /resources/views/admin/users
+          type: directory
+          contents:
+          - path: /resources/views/admin/users/index.blade.php
+            type: file
         - path: /resources/views/admin/categories
           type: directory
           contents:
@@ -152,6 +164,20 @@
           - path: /resources/views/admin/blog/edit.blade.php
             type: file
           - path: /resources/views/admin/blog/index.blade.php
+            type: file
+        - path: /resources/views/admin/comments
+          type: directory
+          contents:
+          - path: /resources/views/admin/comments/index.blade.php
+            type: file
+        - path: /resources/views/admin/projects
+          type: directory
+          contents:
+          - path: /resources/views/admin/projects/create.blade.php
+            type: file
+          - path: /resources/views/admin/projects/edit.blade.php
+            type: file
+          - path: /resources/views/admin/projects/index.blade.php
             type: file
         - path: /resources/views/admin/dashboard.blade.php
           type: file
@@ -203,7 +229,7 @@
   - `slug` (varchar(255), unique, indexed)
   - `content` (longtext, not null)
   - `thumbnail_path` (varchar(255), nullable)
-  - `status` (enum: 'draft', 'published', 'rejected', default: 'draft')
+  - `status` (enum: 'draft', 'published', default: 'draft')
   - `published_at` (datetime, nullable)
   - `views` (int, default: 0)
   - `created_at` (datetime)
@@ -239,7 +265,7 @@
   - `client_name` (varchar(255), nullable)
   - `project_date` (date, nullable)
   - `status` (enum: 'draft', 'published', default: 'draft')
-  - `is_visible` (tinyint(1): `0`, `1`, default: `1`) **Kolom database baru**
+  - `is_visible` (tinyint(1): `0`, `1`, default: `1`)
   - `views` (int, default: 0)
   - `created_at` (datetime)
   - `updated_at` (datetime)
@@ -307,23 +333,27 @@
   - Controller: `App\Http\Controllers\Admin\CommentController`
   - View: `resources/views/admin/comments/index.blade.php`
   - Sidebar link "Komentar" ditambahkan di `layouts/admin.blade.php` (hanya untuk admin)
+- User Management:
+  - View daftar user dengan kolom: Nama, Email, Role (Admin/Author/User), Status (Aktif/Tidak Aktif), Foto Profil, Timestamp (created_at, updated_at)
+  - Pagination (15 user/halaman)
+  - Sorting by nama, email, role, status, created_at, updated_at, ID (asc/desc)
+  - Search by nama, email
+  - Filter by role, status
+  - Toggle status (aktif/tidak aktif) dengan konfirmasi modal
+  - Soft-delete user dengan konfirmasi modal
+  - Restore soft-deleted user
+  - Force delete (permanent) user dengan konfirmasi modal
+  - Upload foto profil (resize otomatis ke 150x150px)
+  - Role management: ubah role user (Admin/Author/User)
+  - Route: `/admin/users` (admin only)
+  - Controller: `App\Http\Controllers\Admin\UserController`
+  - View: `resources/views/admin/users/index.blade.php`
+  - Sidebar link "User" ditambahkan di `layouts/admin.blade.php` (hanya untuk admin)
 - **Dalam Pengerjaan:** 
-  - User Management:
-    - View daftar user dengan kolom: Nama, Email, Role (Admin/Author/User), Status (Aktif/Tidak Aktif), Foto Profil, Timestamp (created_at, updated_at)
-    - Pagination (15 user/halaman)
-    - Sorting by nama, email, role, status, created_at, updated_at, ID (asc/desc)
-    - Search by nama, email
-    - Filter by role, status
-    - Toggle status (aktif/tidak aktif) dengan konfirmasi modal
-    - Soft-delete user dengan konfirmasi modal
-    - Restore soft-deleted user
-    - Force delete (permanent) user dengan konfirmasi modal
-    - Upload foto profil (resize otomatis ke 150x150px)
-    - Role management: ubah role user (Admin/Author/User)
-    - Route: `/admin/users` (admin only)
-    - Controller: `App\Http\Controllers\Admin\UserController`
-    - View: `resources/views/admin/users/index.blade.php`
-    - Sidebar link "User" ditambahkan di `layouts/admin.blade.php` (hanya untuk admin)
+  - Module Blog:
+    - status enum 'rejected' di tabel `blogs` dihapus. Hapus dan ubah logika terkait status `rejected` di controller, model, dan view terkait.
+    - Filter by category_id di module blog dan status di sisi admin.
+    - Sorting by judul, created_at, updated_at dan teks `Menampilkan` dipindah ke atas sejajar dengan sorting seperti yang ada di index.blade.php untuk halaman comments.
 - **Pending:** 
   - Media/Upload Service (Polymorphic)
   - Site Settings (Identitas Situs)

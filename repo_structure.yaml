@@ -157,7 +157,11 @@
             type: file
           - path: /app/Http/Controllers/Admin/AdminDashboardController.php
             type: file
+          - path: /app/Http/Controllers/Admin/CommentController.php
+            type: file
           - path: /app/Http/Controllers/Admin/CategoryController.php
+            type: file
+          - path: /app/Http/Controllers/Admin/UserController.php
             type: file
           - path: /app/Http/Controllers/Admin/BlogController.php
             type: file
@@ -221,6 +225,11 @@
       - path: /resources/views/admin
         type: directory
         contents:
+        - path: /resources/views/admin/users
+          type: directory
+          contents:
+          - path: /resources/views/admin/users/index.blade.php
+            type: file
         - path: /resources/views/admin/categories
           type: directory
           contents:
@@ -238,6 +247,11 @@
           - path: /resources/views/admin/blog/edit.blade.php
             type: file
           - path: /resources/views/admin/blog/index.blade.php
+            type: file
+        - path: /resources/views/admin/comments
+          type: directory
+          contents:
+          - path: /resources/views/admin/comments/index.blade.php
             type: file
         - path: /resources/views/admin/projects
           type: directory
