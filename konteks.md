@@ -409,7 +409,8 @@
 - **UI dan UX**: Wajib menerapkan Responsive Design. Untuk ukuran layar smartphone, tablet, dan desktop
 
 ## 7. INSTRUKSI SESI INI
-- *Integrasi CKEditor ke dalam module blog dan project di sisi admin dan author bagian create.blade.php dan edit.blade.php. Style dan Javacript yang diperlukan ada di dalam folder resources/css/ckeditor.css dan resources/js/ckeditor.js*
-- *Pastikan gambar yang diupload bisa ditampilkan di dalam editor.*
-- *Menerapkan konsistensi UI, UX, dan konsistensi button seperti yang ada di halaman admin dan author bagian project created dan edit.*
-- Skema database baru untuk projects dimana kolom project_date dihapus dan diganti menjadi kolom untuk thumbnail_path
+- *index blade.php di bagian admin projects belum memiliki alert success dan error seperti blog.*
+- *Sesuaikan sorting index.blade.php di module projects (judul dan tanggal) seperti di module blog*
+- *hapus filter `dari tanggal` dan `sampai tanggal` di module projects*
+- *Cek setiap index disetiap module, alert diletakan di bawah judul halaman*
+- *Penempatan 'Menampilkan X - Y dari Z data' dipindah ke bawah sejajar dengan pagination*. 
