@@ -99,14 +99,6 @@ class Blog extends Model
     }
 
     /**
-     * Check if blog is rejected
-     */
-    public function isRejected(): bool
-    {
-        return $this->status === 'rejected';
-    }
-
-    /**
      * Get thumbnail URL with fallback
      */
     public function getThumbnailUrlAttribute(): ?string

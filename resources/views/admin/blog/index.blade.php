@@ -29,6 +29,77 @@
         </div>
     @endif
 
+    {{-- Filters & Search --}}
+    <div class="bg-white p-4 rounded-lg border border-secondary/30 shadow-sm">
+        <form action="{{ route('admin.blog.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {{-- Search --}}
+            <div class="md:col-span-2">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Cari Blog</label>
+                <input type="text"
+                       name="search"
+                       id="search"
+                       value="{{ request('search') }}"
+                       placeholder="Cari judul blog..."
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary text-sm">
+            </div>
+
+            {{-- Category Filter --}}
+            <div>
+                <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                <select name="category_id" id="category_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary text-sm">
+                    <option value="">Semua Kategori</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Status Filter --}}
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" id="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary text-sm">
+                    <option value="">Semua Status</option>
+                    <option value="published" {{ request('status') === 'published' ? 'selected' : '' }}>Published</option>
+                    <option value="draft" {{ request('status') === 'draft' ? 'selected' : '' }}>Draft</option>
+                </select>
+            </div>
+
+            {{-- Submit & Reset --}}
+            <div class="md:col-span-5 flex gap-2">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 focus:ring-2 focus:ring-primary/50 text-sm font-medium transition shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Filter
+                </button>
+                <a href="{{ route('admin.blog.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 text-sm font-medium transition shadow-sm">
+                    Reset
+                </a>
+            </div>
+        </form>
+    </div>
+
+    {{-- Sorting Info --}}
+    <div class="flex items-center justify-between">
+        <p class="text-sm text-gray-600">
+            Menampilkan {{ $blogs->firstItem() ?? 0 }} - {{ $blogs->lastItem() ?? 0 }} dari {{ $blogs->total() }} blog
+        </p>
+        <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-600">Urutkan:</span>
+            <a href="{{ route('admin.blog.index', array_merge(request()->except('direction'), ['sort' => 'title', 'direction' => request('sort') === 'title' && request('direction') === 'desc' ? 'asc' : 'desc'])) }}"
+               class="text-sm {{ request('sort') === 'title' ? 'font-bold text-primary' : 'text-gray-600 hover:text-primary' }}">
+                Judul {{ request('sort') === 'title' ? (request('direction') === 'desc' ? '↓' : '↑') : '' }}
+            </a>
+            <span class="text-gray-300">|</span>
+            <a href="{{ route('admin.blog.index', array_merge(request()->except('direction'), ['sort' => 'created_at', 'direction' => request('sort') === 'created_at' && request('direction') === 'desc' ? 'asc' : 'desc'])) }}"
+               class="text-sm {{ request('sort') === 'created_at' ? 'font-bold text-primary' : 'text-gray-600 hover:text-primary' }}">
+                Tanggal {{ request('sort') === 'created_at' ? (request('direction') === 'desc' ? '↓' : '↑') : '' }}
+            </a>
+        </div>
+    </div>
+
     {{-- Table --}}
     <div class="bg-white rounded-lg border border-secondary/30 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
@@ -36,6 +107,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penulis</th>
@@ -48,11 +120,12 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
                                 {{ $blog->title }}
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ $blog->category->name ?? '-' }}
+                            </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 @if($blog->status === 'published')
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Published</span>
-                                @elseif($blog->status === 'rejected')
-                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Rejected</span>
                                 @else
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Draft</span>
                                 @endif
@@ -75,7 +148,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-10 text-center text-sm text-gray-500">
+                            <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500">
                                 Belum ada blog.
                             </td>
                         </tr>

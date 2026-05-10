@@ -75,8 +75,7 @@
                 <div>
                     <h4 class="text-text font-semibold mb-4">Kontak</h4>
                     <ul class="space-y-2 text-text/80 font-medium">
-                        <li>Jepara, Jawa Tengah</li>
-                        <li>hello@ekaukirmas.com</li>
+                        <li>Tanah Grogot, Kabupaten Paser, Kalimantan Timur</li>
                         <li>+62 812 3456 7890</li>
                     </ul>
                 </div>

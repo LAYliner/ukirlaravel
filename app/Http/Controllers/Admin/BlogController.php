@@ -14,11 +14,46 @@ class BlogController extends Controller
 {
     public function index(Request $request): View
     {
-        $blogs = Blog::with('user')
-            ->latest('created_at')
-            ->paginate(10);
+        $query = Blog::with(['user', 'category']);
 
-        return view('admin.blog.index', compact('blogs'));
+        // Filter by category_id
+        if ($categoryId = $request->input('category_id')) {
+            $query->where('category_id', $categoryId);
+        }
+
+        // Filter by status
+        if ($status = $request->input('status')) {
+            if (in_array($status, ['draft', 'published'])) {
+                $query->where('status', $status);
+            }
+        }
+
+        // Search by title
+        if ($search = $request->input('search')) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        // Sorting
+        $sortField = $request->input('sort', 'created_at');
+        $sortDirection = $request->input('direction', 'desc');
+
+        $allowedSortFields = ['id', 'title', 'created_at'];
+        if (!in_array($sortField, $allowedSortFields)) {
+            $sortField = 'created_at';
+        }
+
+        if (!in_array(strtoupper($sortDirection), ['ASC', 'DESC'])) {
+            $sortDirection = 'desc';
+        }
+
+        $query->orderBy($sortField, $sortDirection);
+
+        $blogs = $query->paginate(15)->withQueryString();
+
+        // Get all categories for filter dropdown
+        $categories = Category::orderBy('name')->get();
+
+        return view('admin.blog.index', compact('blogs', 'categories'));
     }
 
     public function create(): View
@@ -33,7 +68,7 @@ class BlogController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'thumbnail_path' => ['nullable', 'image', 'max:2048'],
-            'status' => ['required', 'in:draft,published,rejected'],
+            'status' => ['required', 'in:draft,published'],
             'category_id' => ['nullable', 'exists:categories,id'],
         ]);
 
@@ -84,7 +119,7 @@ class BlogController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'thumbnail_path' => ['nullable', 'image', 'max:2048'],
-            'status' => ['required', 'in:draft,published,rejected'],
+            'status' => ['required', 'in:draft,published'],
             'category_id' => ['nullable', 'exists:categories,id'],
         ]);
 
