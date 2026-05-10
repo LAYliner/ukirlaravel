@@ -200,7 +200,23 @@
             type: file
           - path: /resources/views/public/projects/index.blade.php
             type: file
-
+  - `resources/css`:
+    - path: /resources/css
+      type: directory
+      contents:
+      - path: /resources/css/ckeditor.css
+        type: file
+      - path: /resources/css/app.css
+        type: file
+    - path: /resources/js
+      type: directory
+      contents:
+      - path: /resources/js/ckeditor.js
+        type: file
+      - path: /resources/js/bootstrap.js
+        type: file
+      - path: /resources/js/app.js
+        type: file
 - `app/Services`: Belum ada saat ini
 - `database/migrations`: Tidak digunakan untuk schema existing untuk `saat ini`
 - **Database Management**: phpMyAdmin (Manual)
@@ -262,8 +278,9 @@
   - `title` (varchar(255), not null)
   - `slug` (varchar(255), unique, indexed)
   - `description` (longtext, not null)
+  - `thumbnail_path` (varchar(255), nullable)
   - `client_name` (varchar(255), nullable)
-  - `project_date` (date, nullable)
+  - `project_date` (date, nullable) **DROPPED**
   - `status` (enum: 'draft', 'published', default: 'draft')
   - `is_visible` (tinyint(1): `0`, `1`, default: `1`)
   - `views` (int, default: 0)
@@ -349,11 +366,12 @@
   - Controller: `App\Http\Controllers\Admin\UserController`
   - View: `resources/views/admin/users/index.blade.php`
   - Sidebar link "User" ditambahkan di `layouts/admin.blade.php` (hanya untuk admin)
-- **Dalam Pengerjaan:** 
-  - Module Blog:
+    - Module Blog:
     - status enum 'rejected' di tabel `blogs` dihapus. Hapus dan ubah logika terkait status `rejected` di controller, model, dan view terkait.
     - Filter by category_id di module blog dan status di sisi admin.
     - Sorting by judul, created_at, updated_at dan teks `Menampilkan` dipindah ke atas sejajar dengan sorting seperti yang ada di index.blade.php untuk halaman comments.
+- **Dalam Pengerjaan:** 
+  - Integrasi CKEditor ke dalam module blog dan project di sisi admin dan author bagian created dan edit. 
 - **Pending:** 
   - Media/Upload Service (Polymorphic)
   - Site Settings (Identitas Situs)
@@ -383,4 +401,8 @@
 - **UI dan UX**: Wajib menerapkan Responsive Design. Untuk ukuran layar smartphone, tablet, dan desktop
 
 ## 7. INSTRUKSI SESI INI
-- *(Kosong — akan diisi saat memulai sesi kerja baru)*
+- *Integrasi CKEditor ke dalam module blog dan project di sisi admin dan author bagian create.blade.php dan edit.blade.php. Style dan Javacript yang diperlukan ada di dalam folder resources/css/ckeditor.css dan resources/js/ckeditor.js*
+- *Pastikan gambar yang diupload bisa ditampilkan di dalam editor.*
+- *Menerapkan konsistensi UI, UX, dan konsistensi button seperti yang ada di halaman admin dan author bagian project created dan edit.*
+- Skema database baru untuk projects dimana kolom project_date dihapus dan diganti menjadi kolom untuk thumbnail_path
+

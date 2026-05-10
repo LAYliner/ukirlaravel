@@ -286,11 +286,15 @@
     - path: /resources/css
       type: directory
       contents:
+      - path: /resources/css/ckeditor.css
+        type: file
       - path: /resources/css/app.css
         type: file
     - path: /resources/js
       type: directory
       contents:
+      - path: /resources/js/ckeditor.js
+        type: file
       - path: /resources/js/bootstrap.js
         type: file
       - path: /resources/js/app.js
