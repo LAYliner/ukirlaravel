@@ -17,6 +17,18 @@
         </a>
     </div>
 
+        {{-- Alerts --}}
+    @if(session('success'))
+        <div class="p-4 mb-4 text-sm text-green-700 bg-green-50 border-l-4 border-green-500 rounded-r-lg shadow-sm" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if(session('error'))
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-50 border-l-4 border-red-500 rounded-r-lg shadow-sm" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
     {{-- Search & Filter --}}
     <div class="bg-white p-4 rounded-lg border border-secondary/30 shadow-sm">
         <form method="GET" action="{{ route('admin.categories.index') }}" class="flex flex-col sm:flex-row gap-3">
@@ -32,18 +44,6 @@
             </button>
         </form>
     </div>
-
-    {{-- Alerts --}}
-    @if(session('success'))
-        <div class="p-4 mb-4 text-sm text-green-700 bg-green-50 border-l-4 border-green-500 rounded-r-lg shadow-sm" role="alert">
-            {{ session('success') }}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="p-4 mb-4 text-sm text-red-700 bg-red-50 border-l-4 border-red-500 rounded-r-lg shadow-sm" role="alert">
-            {{ session('error') }}
-        </div>
-    @endif
 
     {{-- Table --}}
     <div class="bg-white rounded-lg border border-secondary/30 shadow-sm overflow-hidden">

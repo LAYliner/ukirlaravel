@@ -15,13 +15,13 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'        => ['required', 'string', 'max:255'],
-            'slug'         => ['nullable', 'string', 'max:255', Rule::unique('projects', 'slug')],
-            'description'  => ['required', 'string'],
-            'client_name'  => ['nullable', 'string', 'max:255'],
-            'project_date' => ['nullable', 'date'],
-            'status'       => ['nullable', 'string', 'in:draft,published'],
-            'is_visible'   => ['nullable', 'boolean'],
+            'title'          => ['required', 'string', 'max:255'],
+            'slug'           => ['nullable', 'string', 'max:255', Rule::unique('projects', 'slug')],
+            'description'    => ['required', 'string'],
+            'client_name'    => ['nullable', 'string', 'max:255'],
+            'thumbnail_path' => ['nullable', 'image', 'max:2048'],
+            'status'         => ['nullable', 'string', 'in:draft,published'],
+            'is_visible'     => ['nullable', 'boolean'],
         ];
     }
 

@@ -3,6 +3,10 @@
 @section('title', 'Edit Blog')
 @section('page-title', 'Edit Blog')
 
+@push('scripts')
+    @vite(['resources/css/ckeditor.css', 'resources/js/ckeditor.js'])
+@endpush
+
 @section('content')
 <div class="max-w-3xl mx-auto">
     <div class="bg-white rounded-lg border border-secondary/30 shadow-sm p-6">
@@ -24,9 +28,13 @@
             {{-- Isi Konten --}}
             <div class="mb-5">
                 <label for="content" class="block text-sm font-medium text-gray-700 mb-1">Isi Konten <span class="text-red-500">*</span></label>
-                <textarea name="content" id="content" rows="10" required
-                          class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('content') border-red-500 focus:ring-red-500 @enderror"
-                          placeholder="Tulis konten artikel di sini...">{{ old('content', $blog->content) }}</textarea>
+                <div id="editor-container" class="main-container">
+                    <div class="editor-container_classic-editor">
+                        <div class="editor-container__editor">
+                            <textarea name="content" id="editor">{{ old('content', $blog->content) }}</textarea>
+                        </div>
+                    </div>
+                </div>
                 @error('content')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -72,7 +80,6 @@
                         class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('status') border-red-500 focus:ring-red-500 @enderror">
                     <option value="draft" {{ old('status', $blog->status) === 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="published" {{ old('status', $blog->status) === 'published' ? 'selected' : '' }}>Published</option>
-                    <option value="rejected" {{ old('status', $blog->status) === 'rejected' ? 'selected' : '' }}>Rejected</option>
                 </select>
                 @error('status')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

@@ -28,7 +28,7 @@
 
     {{-- Blog Content --}}
     <div class="prose prose-stone prose-primary max-w-none mb-16 text-text/90 font-medium leading-relaxed">
-        {!! nl2br(e($blog->content)) !!}
+        {!! $blog->content !!}
     </div>
 
     {{-- Comments Section --}}

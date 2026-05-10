@@ -18,13 +18,13 @@ class UpdateProjectRequest extends FormRequest
         $projectId = $project instanceof \App\Models\Project ? $project->id : $project;
 
         return [
-            'title'        => ['required', 'string', 'max:255'],
-            'slug'         => ['nullable', 'string', 'max:255', Rule::unique('projects', 'slug')->ignore($projectId, 'id')],
-            'description'  => ['required', 'string'],
-            'client_name'  => ['nullable', 'string', 'max:255'],
-            'project_date' => ['nullable', 'date'],
-            'status'       => ['required', 'string', 'in:draft,published'],
-            'is_visible'   => ['nullable', 'boolean'],
+            'title'          => ['required', 'string', 'max:255'],
+            'slug'           => ['nullable', 'string', 'max:255', Rule::unique('projects', 'slug')->ignore($projectId, 'id')],
+            'description'    => ['required', 'string'],
+            'client_name'    => ['nullable', 'string', 'max:255'],
+            'thumbnail_path' => ['nullable', 'image', 'max:2048'],
+            'status'         => ['required', 'string', 'in:draft,published'],
+            'is_visible'     => ['nullable', 'boolean'],
         ];
     }
 

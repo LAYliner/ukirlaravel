@@ -370,8 +370,9 @@
     - status enum 'rejected' di tabel `blogs` dihapus. Hapus dan ubah logika terkait status `rejected` di controller, model, dan view terkait.
     - Filter by category_id di module blog dan status di sisi admin.
     - Sorting by judul, created_at, updated_at dan teks `Menampilkan` dipindah ke atas sejajar dengan sorting seperti yang ada di index.blade.php untuk halaman comments.
+- Integrasi CKEditor 5 ke dalam form Create/Edit module Blog dan Project, termasuk penanganan layout responsif dan penampilan Rich Text di sisi publik.
 - **Dalam Pengerjaan:** 
-  - Integrasi CKEditor ke dalam module blog dan project di sisi admin dan author bagian created dan edit. 
+  - (Kosong untuk saat ini)
 - **Pending:** 
   - Media/Upload Service (Polymorphic)
   - Site Settings (Identitas Situs)
@@ -383,6 +384,13 @@
   - Thumbnail blog tidak muncul → menjalankan `php artisan storage:link`
   - Duplikasi `<nav>` dan `<footer>` antara `welcome.blade.php` dan `layouts/main.blade.php` → `welcome.blade.php` di-refactor menjadi `@extends('layouts.main')`, konten dideduksi menjadi `@section('content')` saja
   - `layouts/public.blade.php` → **sudah tidak dipakai oleh file apapun** (orphan), kandidat untuk dihapus
+  - Vite gagal memuat aset CKEditor → Mendaftarkan `ckeditor.css` dan `ckeditor.js` secara eksplisit ke dalam *array input* pada `vite.config.js`.
+  - Editor CKEditor error inisialisasi / tertimpa dummy text bawaan Builder → Menghapus konfigurasi `initialData` dan `attachTo` pada `resources/js/ckeditor.js`, lalu menggunakan DOM element sebagai argumen pertama `ClassicEditor.create()`.
+  - Layout CKEditor tumpah/melebar (*overflow*) di form admin → Menghapus *fixed width* (`min-width`/`max-width`: `795px`) di `resources/css/ckeditor.css` dan menggantinya dengan `width: 100%` agar mengikuti lebar kontainer Tailwind.
+  - Hasil teks tampil sebagai kode HTML mentah di halaman *show* (publik) → Mengganti Blade syntax `{{ }}` atau `nl2br(e(...))` dengan sintaks render unescaped `{!! !!}` pada file view publik Blog dan Projects.
+  - Form Create/Edit tidak bisa disubmit (tombol simpan tidak merespon) → Terjadi karena browser mencoba melakukan validasi HTML5 pada elemen `<textarea required>` yang sudah di-*hidden* oleh CKEditor. Solusinya adalah menghapus atribut `required` pada elemen textarea tersebut dan mengandalkan validasi *backend* Laravel.
+  - Elemen Heading dan Lists (HTML) hasil CKEditor tidak memilik gaya visual (tampil rata) di halaman *Show* → Disebabkan oleh *CSS Reset* dari Tailwind CSS. Solusinya adalah menginstal `@tailwindcss/typography` via NPM dan mendaftarkannya pada `app.css` (`@plugin "@tailwindcss/typography";`) agar class `prose` dapat aktif dan me-render ulang gaya tipografi elemen dasar HTML.
+  - Media Embed (YouTube, dll) tidak muncul di halaman *Show* → Secara *default* CKEditor 5 menyimpan Media dalam tag abstrak `<oembed>`. Solusinya adalah menambahkan `mediaEmbed: { previewsInData: true }` di konfigurasi JS CKEditor agar media disimpan secara langsung dalam bentuk kode *iframe* HTML yang utuh.
 - **Konfigurasi Kritis:**
   - `DB_CONNECTION=mysql`
   - `APP_ENV=local`
@@ -405,4 +413,3 @@
 - *Pastikan gambar yang diupload bisa ditampilkan di dalam editor.*
 - *Menerapkan konsistensi UI, UX, dan konsistensi button seperti yang ada di halaman admin dan author bagian project created dan edit.*
 - Skema database baru untuk projects dimana kolom project_date dihapus dan diganti menjadi kolom untuk thumbnail_path
-

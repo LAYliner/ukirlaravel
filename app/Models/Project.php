@@ -25,7 +25,7 @@ class Project extends Model
         'slug',
         'description',
         'client_name',
-        'project_date',
+        'thumbnail_path',
         'status',
         'is_visible',
         'views',
@@ -33,7 +33,7 @@ class Project extends Model
 
     protected $casts = [
         'is_visible' => 'boolean',
-        'project_date' => 'date',
+        'thumbnail_path' => 'string',
         'views' => 'integer',
     ];
 

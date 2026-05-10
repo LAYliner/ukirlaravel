@@ -56,6 +56,10 @@ class ProjectController extends Controller
         $validated['status'] = 'draft';
         $validated['is_visible'] = false;
 
+        if ($request->hasFile('thumbnail_path')) {
+            $validated['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
+        }
+
         Project::create($validated);
 
         return redirect()->route('admin.projects.index')
@@ -98,6 +102,10 @@ class ProjectController extends Controller
             unset($validated['status']);
         }
 
+        if ($request->hasFile('thumbnail_path')) {
+            $validated['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
+        }
+        
         $project->update($validated);
 
         return redirect()->route('admin.projects.index')

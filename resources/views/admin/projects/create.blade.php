@@ -3,6 +3,10 @@
 @section('title', 'Tambah Project')
 @section('page-title', 'Tambah Project Baru')
 
+@push('scripts')
+    @vite(['resources/css/ckeditor.css', 'resources/js/ckeditor.js'])
+@endpush
+
 @section('content')
 <div class="max-w-3xl mx-auto">
     <div class="bg-white rounded-lg border border-secondary/30 shadow-sm p-6">
@@ -46,12 +50,12 @@
                     @enderror
                 </div>
 
-                {{-- Project Date --}}
+                {{-- Thumbnail Path --}}
                 <div>
-                    <label for="project_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Project</label>
-                    <input type="date" name="project_date" id="project_date" value="{{ old('project_date') }}"
-                           class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('project_date') border-red-500 focus:ring-red-500 @enderror">
-                    @error('project_date')
+                    <label for="thumbnail_path" class="block text-sm font-medium text-gray-700 mb-1">Thumbnail (Opsional)</label>
+                    <input type="file" name="thumbnail_path" id="thumbnail_path" accept="image/*"
+                           class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('thumbnail_path') border-red-500 focus:ring-red-500 @enderror">
+                    @error('thumbnail_path')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -60,9 +64,13 @@
             {{-- Description --}}
             <div class="mb-6">
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi <span class="text-red-500">*</span></label>
-                <textarea name="description" id="description" rows="5" required
-                          class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('description') border-red-500 focus:ring-red-500 @enderror"
-                          placeholder="Jelaskan detail project, material, spesifikasi, atau catatan khusus...">{{ old('description') }}</textarea>
+                <div id="editor-container" class="main-container">
+                    <div class="editor-container_classic-editor">
+                        <div class="editor-container__editor">
+                            <textarea name="description" id="editor">{{ old('description') }}</textarea>
+                        </div>
+                    </div>
+                </div>
                 @error('description')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

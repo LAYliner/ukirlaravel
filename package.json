@@ -15,6 +15,7 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
+        "@tailwindcss/typography": "^0.5.19",
         "ckeditor5": "^48.0.1"
     }
 }
