@@ -28,6 +28,7 @@ class Blog extends Model
         'content',           // Rename dari 'isi'
         'thumbnail_path',    // Rename dari 'thumbnail'
         'status',            // Rename dari 'status'
+        'is_visible',        // New
         'published_at',      // New
         'views',             // New
     ];
@@ -40,6 +41,7 @@ class Blog extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
         'views' => 'integer',
+        'is_visible' => 'boolean',
     ];
 
     // ==================== RELASI ====================

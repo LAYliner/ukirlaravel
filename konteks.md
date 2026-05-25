@@ -5,7 +5,7 @@
 - **Framework:** Laravel 12.53.0
 - **Database:** MySQL 8.4.8
 - **Backend Language:** PHP 8.5.3
-- **Frontend:** HTML+CSS dan Migrasi ke Tailwind CSS
+- **Frontend:** Tailwind CSS
 - **Server:** Apache
 
 ## 2. ARSITEKTUR & STRUKTUR
@@ -218,8 +218,8 @@
       - path: /resources/js/app.js
         type: file
 - `app/Services`: Belum ada saat ini
-- `database/migrations`: Tidak digunakan untuk schema existing untuk `saat ini`
-- **Database Management**: phpMyAdmin (Manual)
+- `database/migrations`: Digunakan untuk melacak skema database (dibuat menggunakan `laravel-migrations-generator` sebagai baseline)
+- **Database Management**: Laravel Migrations & phpMyAdmin
 - **Polymorphic Relations**: Tidak memiliki FK constraint di database level
 - **Traditional FK**: `uploaded_by`, `user_id`, `category_id`, `parent_id` memiliki constraint
 - **Relation View phpMyAdmin**: Hanya menampilkan traditional FK, bukan polymorphic
@@ -246,6 +246,7 @@
   - `content` (longtext, not null)
   - `thumbnail_path` (varchar(255), nullable)
   - `status` (enum: 'draft', 'published', default: 'draft')
+  - `is_visible` (tinyint(1): `0`, `1`, default: `1`)
   - `published_at` (datetime, nullable)
   - `views` (int, default: 0)
   - `created_at` (datetime)
@@ -371,6 +372,20 @@
     - Filter by category_id di module blog dan status di sisi admin.
     - Sorting by judul, created_at, updated_at dan teks `Menampilkan` dipindah ke atas sejajar dengan sorting seperti yang ada di index.blade.php untuk halaman comments.
 - Integrasi CKEditor 5 ke dalam form Create/Edit module Blog dan Project, termasuk penanganan layout responsif dan penampilan Rich Text di sisi publik.
+- Fitur Highlight Comment:
+  - Scroll otomatis dan highlight (efek visual transisi warna latar belakang) ke komentar tertentu saat halaman Blog/Project diakses dengan query parameter `highlightComment`.
+  - Route redirect khusus `/content/{contentId}?highlightComment={commentId}` yang ditangani oleh `App\Http\Controllers\Public\ContentHighlightController` untuk mengarahkan pengguna secara dinamis ke halaman Blog atau Project yang sesuai berdasarkan relasi polymorphic `commentable` dari komentar tersebut, sekaligus mendeteksi jika komentar telah dihapus (soft-deleted).
+  - Integrasi di frontend via DOMContentLoaded JavaScript di `resources/views/public/blog/show.blade.php`.
+- **Laravel Migrations Generator Setup:**
+  - Menghapus tabel `users` dan `password_reset_tokens` dari migrasi bawaan Laravel (`0001_01_01_000000_create_users_table.php`) untuk menghindari bentrok, menyisakan tabel `sessions`.
+  - Membuat migrasi basis data dari skema MySQL yang ada menggunakan `kitloong/laravel-migrations-generator` untuk semua tabel (`blogs`, `categories`, `comments`, `media`, `password_reset_tokens`, `projects`, `users`).
+  - Mendaftarkan migrasi hasil generate ke tabel `migrations` sebagai batch `0` (*baseline*).
+  - Menerapkan migrasi tabel bawaan Laravel yang belum ada (`sessions`, `cache`, `jobs`) ke dalam database.
+- **Blog Visibility (Sembunyikan/Tampilkan Blog):**
+  - Menambahkan kolom `is_visible` (boolean, default true) ke tabel `blogs` melalui migrasi baru dan memperbarui model `Blog` (`$fillable` & `$casts`).
+  - Menambahkan rute patch status (`admin.blog.update-status`) dan visibilitas (`admin.blog.toggle-visibility`).
+  - Menerapkan fitur *toggle* visibilitas dan status dropdown bagi admin di daftar blog admin, serupa dengan manajemen proyek.
+  - Memfilter data blog publik di `Public\BlogController` (daftar blog, pencarian, related posts) dan `HomeController` (latest blogs) agar hanya menampilkan blog yang memiliki status `is_visible = true`.
 - **Dalam Pengerjaan:** 
   - (Kosong untuk saat ini)
 - **Pending:** 

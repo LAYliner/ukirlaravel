@@ -89,6 +89,8 @@ class BlogController extends Controller
             'content' => $request->content,
             'slug' => $slug,
             'status' => $request->status,
+            'is_visible' => $request->status === 'published',
+            'published_at' => $request->status === 'published' ? now() : null,
             'user_id' => auth()->id(),
             'category_id' => $request->category_id,
             'thumbnail_path' => null,
@@ -133,11 +135,23 @@ class BlogController extends Controller
             $counter++;
         }
 
+        $is_visible = $blog->is_visible;
+        $published_at = $blog->published_at;
+
+        if ($blog->status !== $request->status) {
+            $is_visible = $request->status === 'published';
+            if ($request->status === 'published') {
+                $published_at = now();
+            }
+        }
+
         $data = [
             'title' => $request->title,
             'content' => $request->content,
             'slug' => $slug,
             'status' => $request->status,
+            'is_visible' => $is_visible,
+            'published_at' => $published_at,
             'category_id' => $request->category_id,
         ];
 
@@ -158,5 +172,54 @@ class BlogController extends Controller
 
         return redirect()->route('admin.blog.index')
             ->with('success', 'Blog berhasil dihapus.');
+    }
+
+    public function toggleVisibility(string $id): RedirectResponse
+    {
+        if (auth()->user()->role !== 'admin') abort(403, 'Akses ditolak.');
+
+        $blog = Blog::findOrFail($id);
+
+        // Blokir toggle pada status draft
+        if ($blog->status !== 'published') {
+            return redirect()->back()->with('error', 'Visibilitas hanya dapat diubah pada blog yang sudah Published.');
+        }
+
+        $blog->update([
+            'is_visible' => !$blog->is_visible,
+            'updated_at' => now(),
+        ]);
+
+        $action = $blog->is_visible ? 'dipublikasikan' : 'diunpublish';
+        return redirect()->back()->with('success', "Blog berhasil {$action}.");
+    }
+
+    public function updateStatus(string $id, Request $request): RedirectResponse
+    {
+        if (auth()->user()->role !== 'admin') abort(403, 'Akses ditolak.');
+
+        $validated = $request->validate([
+            'status' => ['required', 'string', 'in:draft,published'],
+        ]);
+
+        $blog = Blog::findOrFail($id);
+
+        if ($blog->status === $validated['status']) return redirect()->back();
+
+        // Auto-couple visibility dengan status
+        if ($validated['status'] === 'published') {
+            $blog->update([
+                'status' => 'published',
+                'is_visible' => true,
+                'published_at' => now(),
+            ]);
+        } else {
+            $blog->update([
+                'status' => 'draft',
+                'is_visible' => false,
+            ]);
+        }
+
+        return redirect()->back()->with('success', "Status blog berhasil diubah ke {$validated['status']}.");
     }
 }

@@ -13,6 +13,7 @@ class BlogController extends Controller
         // Fix: Relation 'user', Enum 'published'
         $blogs = Blog::with('user')
             ->where('status', 'published')
+            ->where('is_visible', true)
             ->latest('created_at')
             ->paginate(9);
 
@@ -27,11 +28,13 @@ class BlogController extends Controller
             }])
             ->where('slug', $slug)
             ->where('status', 'published')
+            ->where('is_visible', true)
             ->firstOrFail();
 
         // Fix: Column 'id', Relation 'user', Enum 'published'
         $relatedPosts = Blog::with('user')
             ->where('status', 'published')
+            ->where('is_visible', true)
             ->where('id', '!=', $blog->id)
             ->latest('created_at')
             ->limit(3)

@@ -53,6 +53,10 @@ Route::middleware('auth')->group(function () {
 
         // Blog Resource Routes
         Route::resource('blog', AdminBlogController::class);
+        Route::patch('blog/{id}/status', [AdminBlogController::class, 'updateStatus'])
+             ->name('blog.update-status');
+        Route::patch('blog/{id}/toggle-visibility', [AdminBlogController::class, 'toggleVisibility'])
+             ->name('blog.toggle-visibility');
 
         // Category Resource Routes
         Route::resource('categories', CategoryController::class);

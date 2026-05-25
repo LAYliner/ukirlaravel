@@ -22,6 +22,7 @@ class HomeController extends Controller
         // Fetch latest 3 published blogs
         $latestBlogs = Blog::with('user')
             ->where('status', 'published')
+            ->where('is_visible', true)
             ->latest()
             ->take(3)
             ->get();

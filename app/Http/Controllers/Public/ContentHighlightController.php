@@ -37,8 +37,8 @@ class ContentHighlightController extends Controller
             abort(404, 'Konten tidak ditemukan');
         }
 
-        // Fetch komentar dengan relasi lengkap
-        $comment = Comment::with(['commentable', 'user'])->find($commentId);
+        // Fetch komentar dengan relasi lengkap, termasuk data soft-delete
+        $comment = Comment::withTrashed()->with(['commentable', 'user'])->find($commentId);
 
         if (!$comment) {
             abort(404, 'Komentar tidak ditemukan');
@@ -67,15 +67,13 @@ class ContentHighlightController extends Controller
         }
 
         if ($target instanceof \App\Models\Blog) {
-            // Redirect ke blog dengan parameter highlight
+            // Redirect ke blog dengan parameter highlight di URL query string
             return redirect()
-                ->route('blog.show', $target->slug)
-                ->with('highlightComment', $commentId);
+                ->route('blog.show', [$target->slug, 'highlightComment' => $commentId]);
         } elseif ($target instanceof \App\Models\Project) {
-            // Redirect ke project dengan parameter highlight
+            // Redirect ke project dengan parameter highlight di URL query string
             return redirect()
-                ->route('projects.show', $target->slug)
-                ->with('highlightComment', $commentId);
+                ->route('projects.show', [$target->slug, 'highlightComment' => $commentId]);
         }
 
         abort(404, 'Tipe konten tidak dikenali');

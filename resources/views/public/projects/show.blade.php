@@ -74,7 +74,9 @@
         {{-- Daftar Komentar --}}
         <div class="space-y-6">
             @forelse($project->comments as $comment)
-                <div class="bg-white border border-secondary/30 rounded-lg p-6 shadow-sm">
+                <div id="comment-{{ $comment->id }}"
+                     data-comment-id="{{ $comment->id }}"
+                     class="bg-white border border-secondary/30 rounded-lg p-6 shadow-sm comment-container">
                     <div class="flex items-center gap-3 mb-3">
                         <strong class="text-primary">{{ $comment->user->name ?? 'User' }}</strong> 
                         <span class="text-text/70 font-medium text-base">• {{ $comment->created_at->format('d M Y, H:i') }}</span>
@@ -109,7 +111,9 @@
                     @if($comment->replies->count() > 0)
                         <div class="mt-6 pl-6 border-l-2 border-secondary/30 space-y-4">
                             @foreach($comment->replies as $reply)
-                                <div class="bg-secondary/5 border border-secondary/20 rounded p-4">
+                                <div id="comment-{{ $reply->id }}"
+                                     data-comment-id="{{ $reply->id }}"
+                                     class="bg-secondary/5 border border-secondary/20 rounded p-4 comment-container">
                                     <div class="flex items-center gap-3 mb-2">
                                         <strong class="text-primary text-base">{{ $reply->user->name ?? 'User' }}</strong> 
                                         <span class="text-text/70 font-medium text-xs">• {{ $reply->created_at->format('d M Y, H:i') }}</span>
@@ -161,5 +165,30 @@
             form.classList.add('hidden');
         }
     }
+
+    // Auto-scroll dan highlight komentar jika ada parameter highlightComment
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const highlightCommentId = urlParams.get('highlightComment');
+
+        if (highlightCommentId) {
+            const commentElement = document.getElementById('comment-' + highlightCommentId);
+
+            if (commentElement) {
+                // Smooth scroll ke komentar
+                commentElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Tambahkan class highlight
+                setTimeout(() => {
+                    commentElement.classList.add('highlight-active');
+                }, 800);
+
+                // Hapus highlight setelah 4 detik
+                setTimeout(() => {
+                    commentElement.classList.remove('highlight-active');
+                }, 4800);
+            }
+        }
+    });
 </script>
 @endpush

@@ -111,7 +111,7 @@
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penulis</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-64">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -124,10 +124,32 @@
                                 {{ $blog->category->name ?? '-' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                @if($blog->status === 'published')
-                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Published</span>
+                                @if(auth()->user()->role === 'admin')
+                                    <form action="{{ route('admin.blog.update-status', $blog->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        {{-- Preserve query params --}}
+                                        @foreach(request()->except(['page', '_token', '_method']) as $key => $value)
+                                            <input type="hidden" name="{{ $key }}" value="{{ is_array($value) ? implode(',', $value) : $value }}">
+                                        @endforeach
+
+                                        <select name="status"
+                                                onchange="this.form.submit(); this.disabled=true;"
+                                                class="text-xs font-medium rounded-full px-2.5 py-0.5 border-0 cursor-pointer focus:ring-2 focus:ring-primary/50 {{ $blog->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
+                                            <option value="draft" {{ $blog->status === 'draft' ? 'selected' : '' }}>Draft</option>
+                                            <option value="published" {{ $blog->status === 'published' ? 'selected' : '' }}>Published</option>
+                                        </select>
+                                    </form>
+                                    @if($blog->status === 'published' && !$blog->is_visible)
+                                        <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">Hidden</span>
+                                    @endif
                                 @else
-                                    <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Draft</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $blog->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                        {{ ucfirst($blog->status) }}
+                                    </span>
+                                    @if($blog->status === 'published' && !$blog->is_visible)
+                                        <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-100 text-orange-800">Hidden</span>
+                                    @endif
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -137,13 +159,31 @@
                                 {{ $blog->user->name ?? 'N/A' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <a href="{{ route('admin.blog.edit', $blog->id) }}" 
-                                   class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                <form action="{{ route('admin.blog.destroy', $blog->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus blog ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
-                                </form>
+                                <div class="flex justify-end gap-2">
+                                    <a href="{{ route('admin.blog.edit', $blog->id) }}" 
+                                       class="text-indigo-600 hover:text-indigo-900">Edit</a>
+
+                                    @if(auth()->user()->role === 'admin' && $blog->status === 'published')
+                                        <form action="{{ route('admin.blog.toggle-visibility', $blog->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            @foreach(request()->except(['page', '_token', '_method']) as $key => $value)
+                                                <input type="hidden" name="{{ $key }}" value="{{ is_array($value) ? implode(',', $value) : $value }}">
+                                            @endforeach
+                                            <button type="submit"
+                                                    class="text-blue-600 hover:text-blue-900"
+                                                    title="{{ $blog->is_visible ? 'Sembunyikan' : 'Tampilkan' }}">
+                                                {{ $blog->is_visible ? 'Hide' : 'Show' }}
+                                            </button>
+                                        </form>
+                                    @endif
+
+                                    <form action="{{ route('admin.blog.destroy', $blog->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus blog ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
