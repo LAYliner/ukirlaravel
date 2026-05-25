@@ -16,3 +16,40 @@
   --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+
+/* Highlight animation untuk komentar */
+.comment-container {
+  transition: all 0.3s ease-in-out;
+}
+
+.highlight-active {
+  animation: highlight-pulse 2s ease-in-out;
+  background-color: rgba(221, 164, 90, 0.15) !important; /* accent color dengan opacity */
+  border-color: #dda45a !important;
+  box-shadow: 0 0 0 2px rgba(221, 164, 90, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes highlight-pulse {
+  0% {
+    background-color: rgba(221, 164, 90, 0.15);
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.02);
+  }
+  30% {
+    background-color: rgba(221, 164, 90, 0.25);
+    transform: scale(1);
+  }
+  50% {
+    background-color: rgba(221, 164, 90, 0.15);
+  }
+  70% {
+    background-color: rgba(221, 164, 90, 0.25);
+  }
+  100% {
+    background-color: transparent;
+    transform: scale(1);
+  }
+}

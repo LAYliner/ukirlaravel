@@ -10,11 +10,16 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Public\BlogController as PublicBlogController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Public\ContentHighlightController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProjectController as PublicProjectController;
 
 // Root
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Content Highlight Route (untuk redirect ke komentar dengan highlight)
+Route::get('/content/{contentId}', [ContentHighlightController::class, 'redirect'])
+    ->name('content.highlight');
 
 // Public Blog Routes
 Route::get('/blog', [PublicBlogController::class, 'index'])->name('blog.index');
