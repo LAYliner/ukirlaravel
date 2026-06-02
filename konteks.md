@@ -298,6 +298,10 @@
   - `created_at` (datetime)
   - `updated_at` (datetime)
   - `deleted_at` (datetime, nullable)
+-**Table: tags**
+  - `id` (UUID, PK), `name` (string), `slug` (string, unique, indexed), `timestamps`
+-**Table: project_tag**
+  - `id` (UUID, PK), `project_id` (UUID, FK -> projects.id), `tag_id` (UUID, FK -> tags.id), `timestamps`, unique constraint pada `[project_id, tag_id]`
 
 - **Relasi User:**
   - `User` hasMany `Blog` (via user_id)

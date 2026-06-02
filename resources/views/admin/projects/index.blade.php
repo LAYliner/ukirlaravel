@@ -66,6 +66,23 @@
                 </select>
             </div>
 
+            {{-- Tags Filter (Multi-select) --}}
+            <div class="md:col-span-5">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Tags (Pilih beberapa)</label>
+                <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-3 border border-gray-300 rounded-md bg-white">
+                    @foreach($allTags as $tag)
+                        <label class="inline-flex items-center space-x-1.5 cursor-pointer hover:bg-gray-50 px-2 py-1 rounded border border-gray-200">
+                            <input type="checkbox"
+                                   name="tags[]"
+                                   value="{{ $tag->id }}"
+                                   {{ in_array($tag->id, request('tags', [])) ? 'checked' : '' }}
+                                   class="h-3.5 w-3.5 text-primary focus:ring-primary border-gray-300 rounded">
+                            <span class="text-xs text-gray-700">{{ $tag->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
             {{-- Submit & Reset --}}
             <div class="md:col-span-5 flex gap-2">
                 <button type="submit" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 focus:ring-2 focus:ring-primary/50 text-sm font-medium transition shadow-sm">
@@ -123,6 +140,15 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-text">
                                 {{ $project->title }}
+                                @if($project->tags->count() > 0)
+                                    <div class="mt-1 flex flex-wrap gap-1">
+                                        @foreach($project->tags as $tag)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary/10 text-primary">
+                                                {{ $tag->name }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $project->client_name ?? '-' }}

@@ -26,7 +26,7 @@
 
         <form action="{{ route('admin.projects.store') }}" method="POST">
             @csrf
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 {{-- Title --}}
                 <div>
@@ -76,13 +76,34 @@
                 @enderror
             </div>
 
+            {{-- Tags (Multi-select) --}}
+            <div class="mb-6">
+                <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">Tags (Pilih beberapa)</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-64 overflow-y-auto p-3 border border-gray-300 rounded-md bg-white">
+                    @foreach($tags as $tag)
+                        <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded">
+                            <input type="checkbox"
+                                   name="tags[]"
+                                   value="{{ $tag->id }}"
+                                   {{ in_array($tag->id, old('tags', [])) ? 'checked' : '' }}
+                                   class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                            <span class="text-sm text-gray-700">{{ $tag->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('tags')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+                <p class="mt-1 text-xs text-gray-500">Centang tag yang sesuai dengan project ini.</p>
+            </div>
+
             {{-- Actions --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                <a href="{{ route('admin.projects.index') }}" 
+                <a href="{{ route('admin.projects.index') }}"
                    class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                     Batal
                 </a>
-                <button type="submit" 
+                <button type="submit"
                         class="px-4 py-2 bg-primary border border-transparent rounded-md text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                     Simpan Project
                 </button>

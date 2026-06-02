@@ -22,6 +22,8 @@ class StoreProjectRequest extends FormRequest
             'thumbnail_path' => ['nullable', 'image', 'max:2048'],
             'status'         => ['nullable', 'string', 'in:draft,published'],
             'is_visible'     => ['nullable', 'boolean'],
+            'tags'           => ['nullable', 'array'],
+            'tags.*'         => ['string', 'exists:tags,id'],
         ];
     }
 

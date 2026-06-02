@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -20,32 +22,42 @@ class ProjectController extends Controller
 
         $query->filterByStatus($request->string('status')->toString())
             ->filterByAuthor($request->string('author_id')->toString())
-            ->filterByDateRange(
-                $request->string('date_from')->toString(),
-                $request->string('date_to')->toString()
-            )
             ->search($request->string('q')->toString());
+
+        // Filter by multiple tags (AND logic - project harus memiliki semua tag yang dipilih)
+        $tagIds = $request->input('tags', []);
+        if (!empty($tagIds)) {
+            foreach ($tagIds as $tagId) {
+                $query->whereHas('tags', function ($q) use ($tagId) {
+                    $q->where('tags.id', $tagId);
+                });
+            }
+        }
 
         // Fetch author list untuk dropdown (hanya kolom yang diperlukan)
         $authors = User::whereIn('role', ['admin', 'author'])
                     ->orderBy('name')
                     ->get(['id', 'name']);
 
+        // Fetch all tags untuk dropdown filter
+        $allTags = Tag::orderBy('name')->get(['id', 'name']);
+
         $allowedColumns = ['title', 'client_name', 'views', 'created_at', 'updated_at'];
-        $sortField = in_array($request->string('sort')->toString(), $allowedColumns, true) 
-            ? $request->string('sort')->toString() 
+        $sortField = in_array($request->string('sort')->toString(), $allowedColumns, true)
+            ? $request->string('sort')->toString()
             : 'created_at';
-            
+
         $sortDirection = $request->string('dir')->lower()->toString() === 'asc' ? 'asc' : 'desc';
 
         $projects = $query->orderBy($sortField, $sortDirection)->paginate(10)->withQueryString();
 
-        return view('admin.projects.index', compact('projects', 'authors'));
+        return view('admin.projects.index', compact('projects', 'authors', 'allTags'));
     }
 
     public function create(): View
     {
-        return view('admin.projects.create');
+        $tags = Tag::orderBy('name')->get();
+        return view('admin.projects.create', compact('tags'));
     }
 
     public function store(StoreProjectRequest $request): RedirectResponse
@@ -60,7 +72,16 @@ class ProjectController extends Controller
             $validated['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
         }
 
-        Project::create($validated);
+        // Handle tags - sync setelah project dibuat
+        $tagIds = $request->input('tags', []);
+
+        DB::transaction(function () use ($validated, $tagIds) {
+            $project = Project::create($validated);
+
+            if (!empty($tagIds)) {
+                $project->tags()->sync($tagIds);
+            }
+        });
 
         return redirect()->route('admin.projects.index')
                          ->with('success', 'Project berhasil dibuat.');
@@ -79,9 +100,12 @@ class ProjectController extends Controller
     {
         $project = Project::query()
                           ->forAuthenticatedUser(auth()->user())
+                          ->with('tags')
                           ->findOrFail($id);
 
-        return view('admin.projects.edit', compact('project'));
+        $tags = Tag::orderBy('name')->get();
+
+        return view('admin.projects.edit', compact('project', 'tags'));
     }
 
     public function update(UpdateProjectRequest $request, string $id): RedirectResponse
@@ -105,8 +129,14 @@ class ProjectController extends Controller
         if ($request->hasFile('thumbnail_path')) {
             $validated['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
         }
-        
-        $project->update($validated);
+
+        DB::transaction(function () use ($project, $validated, $request) {
+            $project->update($validated);
+
+            // Sync tags
+            $tagIds = $request->input('tags', []);
+            $project->tags()->sync($tagIds);
+        });
 
         return redirect()->route('admin.projects.index')
                          ->with('success', 'Project berhasil diperbarui.');

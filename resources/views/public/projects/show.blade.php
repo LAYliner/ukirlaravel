@@ -4,13 +4,20 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    
+
     {{-- Project Header --}}
     <div class="mb-10 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">{{ $project->title }}</h1>
         <div class="flex flex-wrap justify-center items-center gap-4 text-text/80 font-medium text-base">
-            <span>Diselesaikan pada: {{ $project->project_date ? $project->project_date->format('d M Y') : '-' }}</span>
-            <span>•</span>
+            @if($project->tags && $project->tags->count() > 0)
+                <div class="flex flex-wrap justify-center gap-2 mb-2">
+                    @foreach($project->tags as $tag)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
+                            {{ $tag->name }}
+                        </span>
+                    @endforeach
+                </div>
+            @endif
             <span>Klien: {{ $project->client_name ?? 'Rahasia' }}</span>
             <span>•</span>
             <span>Dilihat: {{ number_format($project->views) }} kali</span>
@@ -36,7 +43,7 @@
     {{-- Comments Section --}}
     <section class="mt-16 pt-10 border-t border-secondary/30">
         <h3 class="text-2xl font-bold text-text mb-8">Komentar ({{ $project->comments->count() + $project->comments->flatMap->replies->count() }})</h3>
-        
+
         @if(session('success'))
             <div class="p-4 bg-green-50 text-green-700 border border-green-200 rounded-lg mb-8">
                 {{ session('success') }}
@@ -78,11 +85,11 @@
                      data-comment-id="{{ $comment->id }}"
                      class="bg-white border border-secondary/30 rounded-lg p-6 shadow-sm comment-container">
                     <div class="flex items-center gap-3 mb-3">
-                        <strong class="text-primary">{{ $comment->user->name ?? 'User' }}</strong> 
+                        <strong class="text-primary">{{ $comment->user->name ?? 'User' }}</strong>
                         <span class="text-text/70 font-medium text-base">• {{ $comment->created_at->format('d M Y, H:i') }}</span>
                     </div>
                     <div class="text-text/90 font-medium leading-relaxed mb-4 whitespace-pre-wrap">{{ $comment->content }}</div>
-                    
+
                     @auth
                         <button onclick="toggleReplyForm('{{ $comment->id }}')" class="text-base font-medium text-primary hover:text-accent transition-colors flex items-center gap-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
@@ -115,7 +122,7 @@
                                      data-comment-id="{{ $reply->id }}"
                                      class="bg-secondary/5 border border-secondary/20 rounded p-4 comment-container">
                                     <div class="flex items-center gap-3 mb-2">
-                                        <strong class="text-primary text-base">{{ $reply->user->name ?? 'User' }}</strong> 
+                                        <strong class="text-primary text-base">{{ $reply->user->name ?? 'User' }}</strong>
                                         <span class="text-text/70 font-medium text-xs">• {{ $reply->created_at->format('d M Y, H:i') }}</span>
                                     </div>
                                     <div class="text-text/90 font-medium leading-relaxed text-base whitespace-pre-wrap">{{ $reply->content }}</div>

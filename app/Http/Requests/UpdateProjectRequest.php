@@ -25,6 +25,8 @@ class UpdateProjectRequest extends FormRequest
             'thumbnail_path' => ['nullable', 'image', 'max:2048'],
             'status'         => ['required', 'string', 'in:draft,published'],
             'is_visible'     => ['nullable', 'boolean'],
+            'tags'           => ['nullable', 'array'],
+            'tags.*'         => ['string', 'exists:tags,id'],
         ];
     }
 
