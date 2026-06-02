@@ -5,55 +5,48 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Tag extends Model
 {
-    use HasFactory;
-
-    protected $table = 'tags';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
         'slug',
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
-    protected static function boot(): void
+    protected static function boot()
     {
         parent::boot();
 
-        static::creating(function (self $model): void {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = Str::uuid()->toString();
+        static::creating(function ($tag) {
+            if (empty($tag->slug)) {
+                $tag->slug = Str::slug($tag->name);
+            }
+        });
+
+        static::updating(function ($tag) {
+            if ($tag->isDirty('name') && empty($tag->slug)) {
+                $tag->slug = Str::slug($tag->name);
             }
         });
     }
 
     /**
-     * Relasi many-to-many dengan Project
+     * Relasi Many-to-Many ke Projects
      */
     public function projects(): BelongsToMany
     {
-        return $this->belongsToMany(Project::class, 'project_tag')
-                    ->withTimestamps();
+        return $this->belongsToMany(Project::class, 'project_tag');
     }
 
     /**
-     * Scope untuk mencari tag berdasarkan keyword
+     * Scope untuk query yang tidak di-delete
      */
-    public function scopeSearch($query, ?string $keyword)
+    public function scopeActive($query)
     {
-        return $query->when($keyword, function ($q, $term) {
-            $q->where('name', 'like', "%{$term}%")
-              ->orWhere('slug', 'like', "%{$term}%");
-        });
+        return $query->whereNull('deleted_at');
     }
 }

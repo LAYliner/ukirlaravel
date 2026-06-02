@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('projects/{id}/status', [ProjectController::class, 'updateStatus'])
      ->name('projects.update-status');
 
+     Route::resource('tags', \App\Http\Controllers\Admin\TagController::class)->names('admin.tags');
+
         // Custom Project Route: Toggle Visibility
         Route::patch('projects/{id}/toggle-visibility', [ProjectController::class, 'toggleVisibility'])
              ->name('projects.toggle-visibility');
