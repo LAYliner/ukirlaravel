@@ -68,6 +68,15 @@
                     </svg>
                     Kategori
                 </a>
+                
+                <!-- Tags -->
+                <a href="{{ route('admin.tags.index') }}"
+                   class="group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.tags.*') ? 'bg-primary/10 text-primary' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <svg class="mr-3 h-5 w-5 flex-shrink-0 {{ request()->routeIs('admin.tags.*') ? 'text-primary' : 'text-gray-400 group-hover:text-gray-500' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M15 7h.01M11 7h.01M7 11h.01M15 11h.01M11 11h.01M7 15h.01M15 15h.01M11 15h.01" />
+                    </svg>
+                    Tags
+                </a>
 
                 <!-- Comments (Admin Only) -->
                 @if(auth()->user()->role === 'admin')

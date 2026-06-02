@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -64,22 +65,22 @@ Route::middleware('auth')->group(function () {
         // Project Resource Routes
         Route::resource('projects', ProjectController::class);
         Route::patch('projects/{id}/status', [ProjectController::class, 'updateStatus'])
-     ->name('projects.update-status');
+            ->name('projects.update-status');
 
-     Route::resource('tags', \App\Http\Controllers\Admin\TagController::class)->names('admin.tags');
+        Route::resource('tags', TagController::class);
 
         // Custom Project Route: Toggle Visibility
         Route::patch('projects/{id}/toggle-visibility', [ProjectController::class, 'toggleVisibility'])
-             ->name('projects.toggle-visibility');
-             
+            ->name('projects.toggle-visibility');
+
         // Comment Management Routes (Admin Only)
         Route::middleware('role:admin')->group(function () {
             Route::get('comments', [AdminCommentController::class, 'index'])->name('comments.index');
             Route::delete('comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
             Route::patch('comments/{id}/restore', [AdminCommentController::class, 'restore'])->name('comments.restore');
             Route::delete('comments/{id}/force-delete', [AdminCommentController::class, 'forceDelete'])->name('comments.force-delete');
-            
-        // User Management Routes (Admin Only)
+
+            // User Management Routes (Admin Only)
             Route::get('users', [UserController::class, 'index'])->name('users.index');
             Route::patch('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
             Route::patch('users/{id}/update-role', [UserController::class, 'updateRole'])->name('users.update-role');

@@ -62,6 +62,7 @@ class TagController extends Controller
      */
     public function edit(Tag $tag): View
     {
+        $tag->loadCount('projects');
         return view('admin.tags.edit', compact('tag'));
     }
 

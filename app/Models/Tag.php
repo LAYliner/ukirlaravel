@@ -12,6 +12,9 @@ class Tag extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'name',
         'slug',
@@ -22,6 +25,9 @@ class Tag extends Model
         parent::boot();
 
         static::creating(function ($tag) {
+            if (empty($tag->id)) {
+                $tag->id = (string) Str::uuid();
+            }
             if (empty($tag->slug)) {
                 $tag->slug = Str::slug($tag->name);
             }
