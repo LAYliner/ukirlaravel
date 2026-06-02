@@ -1,59 +1,55 @@
 <?php
 
-namespace App\Models;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
-
-class Tag extends Model
+return new class extends Migration
 {
-    use HasFactory;
-
-    protected $table = 'tags';
-    protected $primaryKey = 'id';
-    public $incrementing = false;
-    protected $keyType = 'string';
-
-    protected $fillable = [
-        'name',
-        'slug',
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
-    protected static function boot(): void
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        parent::boot();
+        // Tabel tags
+        Schema::create('tags', function (Blueprint $table) {
+            $table->collation = 'utf8mb4_0900_ai_ci';
+            $table->string('id', 36)->primary();
+            $table->string('name', 100)->notNull();
+            $table->string('slug', 150)->unique()->index();
+            $table->timestamps();
+        });
 
-        static::creating(function (self $model): void {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = Str::uuid()->toString();
-            }
+        // Tabel pivot project_tag
+        Schema::create('project_tag', function (Blueprint $table) {
+            $table->collation = 'utf8mb4_0900_ai_ci';
+            $table->string('id', 36)->primary();
+            $table->string('project_id', 36)->index();
+            $table->string('tag_id', 36)->index();
+            $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('project_id')
+                  ->references('id')
+                  ->on('projects')
+                  ->onDelete('cascade');
+
+            $table->foreign('tag_id')
+                  ->references('id')
+                  ->on('tags')
+                  ->onDelete('cascade');
+
+            // Unique constraint untuk mencegah duplikasi tag yang sama pada project yang sama
+            $table->unique(['project_id', 'tag_id']);
         });
     }
 
     /**
-     * Relasi many-to-many dengan Project
+     * Reverse the migrations.
      */
-    public function projects(): BelongsToMany
+    public function down(): void
     {
-        return $this->belongsToMany(Project::class, 'project_tag')
-                    ->withTimestamps();
+        Schema::dropIfExists('project_tag');
+        Schema::dropIfExists('tags');
     }
-
-    /**
-     * Scope untuk mencari tag berdasarkan keyword
-     */
-    public function scopeSearch($query, ?string $keyword)
-    {
-        return $query->when($keyword, function ($q, $term) {
-            $q->where('name', 'like', "%{$term}%")
-              ->orWhere('slug', 'like', "%{$term}%");
-        });
-    }
-}
+};

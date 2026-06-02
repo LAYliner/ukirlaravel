@@ -406,6 +406,7 @@
   - Form Create/Edit tidak bisa disubmit (tombol simpan tidak merespon) → Terjadi karena browser mencoba melakukan validasi HTML5 pada elemen `<textarea required>` yang sudah di-*hidden* oleh CKEditor. Solusinya adalah menghapus atribut `required` pada elemen textarea tersebut dan mengandalkan validasi *backend* Laravel.
   - Elemen Heading dan Lists (HTML) hasil CKEditor tidak memilik gaya visual (tampil rata) di halaman *Show* → Disebabkan oleh *CSS Reset* dari Tailwind CSS. Solusinya adalah menginstal `@tailwindcss/typography` via NPM dan mendaftarkannya pada `app.css` (`@plugin "@tailwindcss/typography";`) agar class `prose` dapat aktif dan me-render ulang gaya tipografi elemen dasar HTML.
   - Media Embed (YouTube, dll) tidak muncul di halaman *Show* → Secara *default* CKEditor 5 menyimpan Media dalam tag abstrak `<oembed>`. Solusinya adalah menambahkan `mediaEmbed: { previewsInData: true }` di konfigurasi JS CKEditor agar media disimpan secara langsung dalam bentuk kode *iframe* HTML yang utuh.
+  - Menambahkan '$table->collation = 'utf8mb4_0900_ai_ci';' di 2026_05_25_150000_create_tags_and_project_tag_tables.php. Untuk mengatasi ketidak cocokan tipe collation pada foreign key antara kolom project_id di tabel project_tag dan kolom id di tabel projects.
 - **Konfigurasi Kritis:**
   - `DB_CONNECTION=mysql`
   - `APP_ENV=local`

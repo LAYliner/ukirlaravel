@@ -63,6 +63,15 @@ class Project extends Model
         return $this->morphMany(Media::class, 'mediable');
     }
 
+    /**
+     * Relasi many-to-many dengan Tag
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'project_tag')
+                    ->withTimestamps();
+    }
+
     public function scopeFilterByStatus(Builder $query, ?string $status): Builder
     {
         $allowed = ['draft', 'published'];
