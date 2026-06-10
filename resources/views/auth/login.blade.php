@@ -21,7 +21,7 @@
                 placeholder="nama@example.com"
             >
             @error('email')
-                <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+                <div class="text-red-500 text-sm mt-1">{!! $message !!}</div>
             @enderror
         </div>
 

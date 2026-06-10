@@ -110,7 +110,7 @@
 
             <!-- User Profile / Logout -->
             <div class="border-t border-secondary/30 p-4 shrink-0">
-                <div class="flex items-center">
+                <a href="{{ route('profile.show') }}" class="flex items-center p-2 -m-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
                     <div class="flex-shrink-0">
                         <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
                             {{ substr(auth()->user()->name, 0, 1) }}
@@ -120,7 +120,7 @@
                         <p class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</p>
                         <p class="text-xs text-gray-500 capitalize">{{ auth()->user()->role }}</p>
                     </div>
-                </div>
+                </a>
                 <form action="{{ route('logout') }}" method="POST" class="mt-4">
                     @csrf
                     <button type="submit" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">

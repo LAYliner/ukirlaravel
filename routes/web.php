@@ -8,9 +8,11 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Public\BlogController as PublicBlogController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Public\ContentHighlightController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProjectController as PublicProjectController;
@@ -36,6 +38,12 @@ Route::middleware(['guest', 'no.auth.cache'])->group(function () {
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'show'])->name('register.show');
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
+    
+    // Email verification routes
+    Route::get('/verify-otp', [VerificationController::class, 'showForm'])->name('verification.notice');
+    Route::post('/verify-otp', [VerificationController::class, 'verify'])->name('verification.verify');
+    Route::post('/resend-otp', [VerificationController::class, 'resend'])->name('verification.resend');
+    Route::get('/verification-success', [VerificationController::class, 'success'])->name('verification.success');
 });
 
 // Authenticated Routes
@@ -47,6 +55,16 @@ Route::middleware('auth')->group(function () {
 
     // Comments (Public but requires Auth)
     Route::post('/comments', [\App\Http\Controllers\Public\CommentController::class, 'store'])->name('comments.store');
+
+    // Profile Routes
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'show'])->name('show');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::post('/change-password', [ProfileController::class, 'changePassword'])
+            ->middleware('throttle:change-password')
+            ->name('change-password');
+        Route::get('/comments', [ProfileController::class, 'comments'])->name('comments');
+    });
 
     // Admin & Author Only
     Route::middleware('role:admin,author')->prefix('admin')->name('admin.')->group(function () {

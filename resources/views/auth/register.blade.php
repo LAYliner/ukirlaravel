@@ -57,6 +57,23 @@
         @enderror
     </div>
 
+    <!-- Role -->
+    <div class="mb-4">
+        <label for="role" class="block mb-2 font-medium text-text">Daftar Sebagai</label>
+        <select 
+            id="role" 
+            name="role" 
+            class="w-full p-3 border border-secondary/30 rounded-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all bg-white" 
+            required
+        >
+            <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>User (Pengunjung / Komentator)</option>
+            <option value="author" {{ old('role') == 'author' ? 'selected' : '' }}>Author (Pembuat Artikel)</option>
+        </select>
+        @error('role')
+            <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+
     <!-- Password -->
     <div class="mb-4">
         <label for="password" class="block mb-2 font-medium text-text">Password</label>

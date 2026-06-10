@@ -31,17 +31,26 @@ class LoginController extends Controller
 
         $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-        if (!$user || !$user->is_active) {
+        if (!$user || !\Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);
         }
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+        if ($user->email_verified_at === null) {
+            session(['pending_verification_email' => $user->email]);
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => 'Silakan verifikasi email Anda terlebih dahulu. <a href="' . url('/verify-otp') . '" class="underline font-semibold text-accent">Klik di sini untuk memasukkan kode OTP.</a>',
             ]);
         }
+
+        if (!$user->is_active) {
+            throw ValidationException::withMessages([
+                'email' => 'Akun Anda dinonaktifkan oleh administrator.',
+            ]);
+        }
+
+        Auth::login($user, $request->boolean('remember'));
 
         $request->session()->regenerate();
 

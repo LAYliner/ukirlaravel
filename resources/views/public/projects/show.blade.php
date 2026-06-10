@@ -5,26 +5,30 @@
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
-    {{-- Project Header --}}
-    <div class="mb-10 text-center">
+    {{-- Judul --}}
+    <div class="mb-6 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">{{ $project->title }}</h1>
-        <div class="flex flex-wrap justify-center items-center gap-4 text-text/80 font-medium text-base">
-            @if($project->tags && $project->tags->count() > 0)
-                <div class="flex flex-wrap justify-center gap-2 mb-2">
-                    @foreach($project->tags as $tag)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
-                            {{ $tag->name }}
-                        </span>
-                    @endforeach
-                </div>
-            @endif
-            <span>Klien: {{ $project->client_name ?? 'Rahasia' }}</span>
-            <span>•</span>
-            <span>Dilihat: {{ number_format($project->views) }} kali</span>
-        </div>
     </div>
 
-    {{-- Image Gallery --}}
+    {{-- Tags --}}
+    @if($project->tags && $project->tags->count() > 0)
+        <div class="flex flex-wrap justify-center gap-2 mb-4">
+            @foreach($project->tags as $tag)
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
+                    {{ $tag->name }}
+                </span>
+            @endforeach
+        </div>
+    @endif
+
+    {{-- Created At & Views --}}
+    <div class="text-center text-text/70 font-medium text-base mb-8">
+        <span>{{ $project->created_at->translatedFormat('d F Y') }}</span>
+        <span class="mx-1">•</span>
+        <span>Dilihat {{ number_format($project->views) }} kali</span>
+    </div>
+
+    {{-- Thumbnail --}}
     <div class="mb-12 rounded-xl overflow-hidden bg-secondary/10 border border-secondary/30 shadow-sm">
         @if($project->media && $project->media->count() > 0)
             <img src="{{ asset('storage/' . $project->media->first()->file_path) }}" alt="{{ $project->title }}" class="w-full h-auto object-cover max-h-[600px]">
@@ -35,7 +39,7 @@
         @endif
     </div>
 
-    {{-- Project Description --}}
+    {{-- Content --}}
     <div class="prose prose-stone prose-primary max-w-none mb-16 text-text/90 font-medium leading-relaxed">
         {!! $project->description !!}
     </div>

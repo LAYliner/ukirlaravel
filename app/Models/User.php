@@ -25,6 +25,9 @@ class User extends Authenticatable
         'role',
         'is_active',
         'remember_token',
+        'profile_picture',
+        'bio',
+        'email_verified_at',
     ];
 
     protected $hidden = [
@@ -87,5 +90,33 @@ class User extends Authenticatable
     public function isActive(): bool
     {
         return $this->is_active === true;
+    }
+
+    // ==================== ACCESSORS & MUTATORS ====================
+
+    /**
+     * Get profile picture URL.
+     */
+    public function getProfilePictureUrlAttribute(): ?string
+    {
+        return $this->profile_picture
+            ? asset('storage/' . $this->profile_picture)
+            : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=885007&background=e1c49d';
+    }
+
+    /**
+     * Accessor for profile_photo_path (compatibility with admin code).
+     */
+    public function getProfilePhotoPathAttribute()
+    {
+        return $this->profile_picture;
+    }
+
+    /**
+     * Mutator for profile_photo_path (compatibility with admin code).
+     */
+    public function setProfilePhotoPathAttribute($value)
+    {
+        $this->attributes['profile_picture'] = $value;
     }
 }

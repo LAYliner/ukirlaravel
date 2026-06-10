@@ -34,8 +34,12 @@
                     <a href="#" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Kontak</a>
                 </div>
 
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-4">
                     @auth
+                        <a href="{{ route('profile.show') }}" class="flex items-center gap-2 group mr-2">
+                            <img src="{{ Auth::user()->profile_picture_url }}" class="w-8 h-8 rounded-full object-cover border border-secondary/50 group-hover:border-primary transition-colors" alt="Avatar">
+                            <span class="text-base font-medium text-text/90 group-hover:text-primary transition-colors">{{ Auth::user()->name }}</span>
+                        </a>
                         <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200">Dashboard</a>
                         <form method="POST" action="{{ route('logout') }}" class="m-0">
                             @csrf
