@@ -41,6 +41,10 @@
             @enderror
         </div>
 
+        <div class="text-right mb-6">
+            <a href="{{ route('password.request') }}" class="text-sm text-accent font-medium hover:underline">Lupa password?</a>
+        </div>
+
         <!-- Submit -->
         <button type="submit" class="w-full py-3 bg-primary text-background font-medium rounded-lg hover:bg-accent transition-colors">Masuk</button>
     </form>

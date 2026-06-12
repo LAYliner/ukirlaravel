@@ -7,7 +7,9 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Public\BlogController as PublicBlogController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +40,20 @@ Route::middleware(['guest', 'no.auth.cache'])->group(function () {
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'show'])->name('register.show');
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
+
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendToken'])
+        ->middleware('throttle:password_request')
+        ->name('password.email');
+    Route::post('/forgot-password/resend', [ForgotPasswordController::class, 'resendToken'])
+        ->middleware('throttle:password_request')
+        ->name('password.resend');
+    Route::get('/password/verify', [ResetPasswordController::class, 'showVerifyForm'])->name('password.verify');
+    Route::post('/password/verify', [ResetPasswordController::class, 'verify'])
+        ->middleware('throttle:token_verify')
+        ->name('password.verify.post');
+    Route::get('/password/reset', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
     
     // Email verification routes
     Route::get('/verify-otp', [VerificationController::class, 'showForm'])->name('verification.notice');
