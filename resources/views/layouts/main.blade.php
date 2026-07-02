@@ -28,7 +28,7 @@
 
                 <div class="hidden md:flex items-center gap-8">
                     <a href="{{ route('home') }}" class="text-base font-medium {{ request()->routeIs('home') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Beranda</a>
-                    <a href="{{ route('projects.index') }}" class="text-base font-medium {{ request()->routeIs('projects.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Karya</a>
+                    <a href="{{ route('projects.index') }}" class="text-base font-medium {{ request()->routeIs('projects.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Proyek</a>
                     <a href="{{ route('blog.index') }}" class="text-base font-medium {{ request()->routeIs('blog.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Blog</a>
                     <a href="#" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
                     <a href="#" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Kontak</a>
@@ -72,7 +72,7 @@
                     <h4 class="text-text font-semibold mb-4">Navigasi</h4>
                     <ul class="space-y-2">
                         <li><a href="{{ route('home') }}" class="text-text/80 font-medium hover:text-primary transition-colors">Beranda</a></li>
-                        <li><a href="{{ route('projects.index') }}" class="text-text/80 font-medium hover:text-primary transition-colors">Karya</a></li>
+                        <li><a href="{{ route('projects.index') }}" class="text-text/80 font-medium hover:text-primary transition-colors">Proyek</a></li>
                         <li><a href="{{ route('blog.index') }}" class="text-text/80 font-medium hover:text-primary transition-colors">Blog</a></li>
                     </ul>
                 </div>

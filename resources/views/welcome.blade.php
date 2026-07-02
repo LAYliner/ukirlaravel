@@ -22,7 +22,7 @@
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
                     <a href="{{ route('projects.index') }}" class="inline-flex justify-center items-center px-8 py-4 text-base font-semibold text-background bg-primary rounded hover:bg-accent transition-colors duration-200 shadow-md">
-                        Lihat Karya Kami
+                        Lihat Proyek Kami
                     </a>
                     <a href="#karya-terbaru" class="inline-flex justify-center items-center px-8 py-4 text-base font-semibold text-primary border border-primary rounded hover:bg-primary/5 transition-colors duration-200">
                         Pelajari Lebih Lanjut
@@ -32,12 +32,12 @@
         </div>
     </section>
 
-    {{-- Karya Terbaru Section --}}
+    {{-- Proyek Terbaru Section --}}
     <section id="karya-terbaru" class="py-24 bg-background">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-end mb-12">
                 <div>
-                    <h2 class="text-3xl font-bold text-text mb-2">Karya Terbaru</h2>
+                    <h2 class="text-3xl font-bold text-text mb-2">Proyek Terbaru</h2>
                     <p class="text-text/90 font-medium leading-relaxed">Beberapa mahakarya terbaru yang telah kami selesaikan.</p>
                 </div>
                 <a href="{{ route('projects.index') }}" class="hidden md:inline-flex items-center text-primary hover:text-accent font-medium transition-colors">

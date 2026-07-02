@@ -1,11 +1,11 @@
 @extends('layouts.main')
 
-@section('title', 'Karya Kami - Sanggar Ukir Tana Paser')
+@section('title', 'Proyek Kami - Sanggar Ukir Tana Paser')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="mb-12 text-center md:text-left">
-        <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">Karya Kami</h1>
+        <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">Proyek Kami</h1>
         <p class="text-xl text-text/90 font-medium leading-relaxed max-w-3xl">Eksplorasi portofolio ukiran terbaik kami yang telah menghiasi berbagai ruang dan bangunan.</p>
     </div>
 
@@ -38,7 +38,7 @@
 
                     <p class="text-text/90 font-medium text-base leading-relaxed mb-6 line-clamp-3 flex-grow">{{ strip_tags($project->description) }}</p>
                     <a href="{{ route('projects.show', $project->slug) }}" class="inline-flex items-center text-base font-medium text-primary hover:text-accent transition-colors mt-auto">
-                        Detail Karya
+                        Detail Proyek
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                     </a>
                 </div>

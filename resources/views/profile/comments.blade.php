@@ -35,7 +35,7 @@
                     Kunjungi Blog
                 </a>
                 <a href="{{ route('projects.index') }}" class="px-6 py-2.5 bg-secondary/25 text-primary border border-secondary/60 font-semibold rounded-lg hover:bg-secondary/40 transition-all text-sm">
-                    Lihat Portofolio Karya
+                    Lihat Portofolio Proyek
                 </a>
             </div>
         </div>
@@ -53,7 +53,7 @@
                                         <span class="px-2 py-0.5 rounded bg-primary/10 text-primary uppercase text-[10px]">Blog</span>
                                         <span class="text-text/70">{{ $comment->commentable->title }}</span>
                                     @elseif($comment->commentable_type === 'App\Models\Project')
-                                        <span class="px-2 py-0.5 rounded bg-accent/20 text-primary uppercase text-[10px]">Karya</span>
+                                        <span class="px-2 py-0.5 rounded bg-accent/20 text-primary uppercase text-[10px]">Proyek</span>
                                         <span class="text-text/70">{{ $comment->commentable->title }}</span>
                                     @endif
                                 @else

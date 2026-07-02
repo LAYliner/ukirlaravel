@@ -179,7 +179,7 @@
 
                             {{-- Timestamps --}}
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                <div class="text-xs">Created: {{ $comment->created_at->format('d M Y, H:i') }}</div>
+                                <div class="text-xs">{{ $comment->created_at->format('d M Y, H:i') }}</div>
                                 @if($comment->updated_at->ne($comment->created_at))
                                     <div class="text-xs">Updated: {{ $comment->updated_at->format('d M Y, H:i') }}</div>
                                 @endif

@@ -144,7 +144,7 @@
     {{-- Related Projects --}}
     @if($relatedProjects->isNotEmpty())
         <section class="mt-20 pt-12 border-t border-secondary/30">
-            <h3 class="text-2xl font-bold text-text mb-8 text-center">Karya Terkait</h3>
+            <h3 class="text-2xl font-bold text-text mb-8 text-center">Proyek Terkait</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 @foreach($relatedProjects as $relProject)
                     <a href="{{ route('projects.show', $relProject->slug) }}" class="group block bg-white border border-secondary/30 rounded-lg overflow-hidden hover:border-accent/50 transition-all duration-300 shadow-sm hover:shadow-md">
