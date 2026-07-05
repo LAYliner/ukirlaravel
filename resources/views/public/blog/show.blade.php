@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    
+
     {{-- Blog Header --}}
     <div class="mb-10 text-center">
         <h1 class="text-4xl md:text-5xl font-bold text-text mb-4">{{ $blog->title }}</h1>
@@ -34,7 +34,7 @@
     {{-- Comments Section --}}
     <section class="mt-16 pt-10 border-t border-secondary/30">
         <h3 class="text-2xl font-bold text-text mb-8">Komentar ({{ $blog->comments->count() + $blog->comments->flatMap->replies->count() }})</h3>
-        
+
         @if(session('success'))
             <div class="p-4 bg-green-50 text-green-700 border border-green-200 rounded-lg mb-8">
                 {{ session('success') }}
@@ -72,21 +72,52 @@
         {{-- Daftar Komentar --}}
         <div class="space-y-6">
             @forelse($blog->comments as $comment)
+                @php
+                    $isDeleted = $comment->deleted_at !== null;
+                    $canDelete = false;
+                    if (auth()->check()) {
+                        $user = auth()->user();
+                        $isOwner = $comment->user_id === $user->id;
+                        $isAdmin = $user->role === 'admin';
+                        $isAuthor = $blog->user_id === $user->id;
+                        $canDelete = $isOwner || $isAdmin || $isAuthor;
+                    }
+                @endphp
                 <div id="comment-{{ $comment->id }}"
                      data-comment-id="{{ $comment->id }}"
-                     class="bg-white border border-secondary/30 rounded-lg p-6 shadow-sm comment-container">
+                     data-is-deleted="{{ $isDeleted ? 'true' : 'false' }}"
+                     class="bg-white border border-secondary/30 rounded-lg p-6 shadow-sm comment-container {{ $isDeleted ? 'opacity-75 bg-gray-50' : '' }}">
                     <div class="flex items-center gap-3 mb-3">
-                        <strong class="text-primary">{{ $comment->user->name ?? 'User' }}</strong> 
-                        <span class="text-text/70 font-medium text-base">• {{ $comment->created_at->format('d M Y, H:i') }}</span>
+                        @if($isDeleted)
+                            <strong class="text-gray-400">[Dihapus]</strong>
+                            <span class="text-text/70 font-medium text-base">• Komentar ini telah dihapus</span>
+                        @else
+                            <strong class="text-primary">{{ $comment->user->name ?? 'User' }}</strong>
+                            <span class="text-text/70 font-medium text-base">• {{ $comment->created_at->format('d M Y, H:i') }}</span>
+                        @endif
                     </div>
-                    <div class="text-text/90 font-medium leading-relaxed mb-4 whitespace-pre-wrap">{{ $comment->content }}</div>
-                    
-                    @auth
-                        <button onclick="toggleReplyForm('{{ $comment->id }}')" class="text-base font-medium text-primary hover:text-accent transition-colors flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
-                            Balas
-                        </button>
-                    @endauth
+                    <div class="text-text/90 font-medium leading-relaxed mb-4 whitespace-pre-wrap">
+                        @if($isDeleted)
+                            <span class="text-gray-400 italic">[Komentar ini telah dihapus]</span>
+                        @else
+                            {{ $comment->content }}
+                        @endif
+                    </div>
+
+                    @if(!$isDeleted && auth()->check())
+                        <div class="flex items-center gap-4">
+                            <button onclick="toggleReplyForm('{{ $comment->id }}')" class="text-base font-medium text-primary hover:text-accent transition-colors flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                                Balas
+                            </button>
+                            @if($canDelete)
+                                <button onclick="confirmDeleteComment('{{ $comment->id }}')" class="text-base font-medium text-red-600 hover:text-red-800 transition-colors flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    Hapus
+                                </button>
+                            @endif
+                        </div>
+                    @endif
 
                     {{-- Form Balasan (Hidden default) --}}
                     <div id="reply-form-{{ $comment->id }}" class="hidden mt-4 pl-4 border-l-2 border-secondary/30">
@@ -109,14 +140,43 @@
                     @if($comment->replies->count() > 0)
                         <div class="mt-6 pl-6 border-l-2 border-secondary/30 space-y-4">
                             @foreach($comment->replies as $reply)
+                                @php
+                                    $isReplyDeleted = $reply->deleted_at !== null;
+                                    $canDeleteReply = false;
+                                    if (auth()->check()) {
+                                        $user = auth()->user();
+                                        $isReplyOwner = $reply->user_id === $user->id;
+                                        $isAdmin = $user->role === 'admin';
+                                        $isAuthor = $blog->user_id === $user->id;
+                                        $canDeleteReply = $isReplyOwner || $isAdmin || $isAuthor;
+                                    }
+                                @endphp
                                 <div id="comment-{{ $reply->id }}"
                                      data-comment-id="{{ $reply->id }}"
-                                     class="bg-secondary/5 border border-secondary/20 rounded p-4 comment-container">
+                                     data-is-deleted="{{ $isReplyDeleted ? 'true' : 'false' }}"
+                                     class="bg-secondary/5 border border-secondary/20 rounded p-4 comment-container {{ $isReplyDeleted ? 'opacity-75 bg-gray-50' : '' }}">
                                     <div class="flex items-center gap-3 mb-2">
-                                        <strong class="text-primary text-base">{{ $reply->user->name ?? 'User' }}</strong> 
-                                        <span class="text-text/70 font-medium text-xs">• {{ $reply->created_at->format('d M Y, H:i') }}</span>
+                                        @if($isReplyDeleted)
+                                            <strong class="text-gray-400 text-base">[Dihapus]</strong>
+                                            <span class="text-text/70 font-medium text-xs">• Komentar ini telah dihapus</span>
+                                        @else
+                                            <strong class="text-primary text-base">{{ $reply->user->name ?? 'User' }}</strong>
+                                            <span class="text-text/70 font-medium text-xs">• {{ $reply->created_at->format('d M Y, H:i') }}</span>
+                                        @endif
                                     </div>
-                                    <div class="text-text/90 font-medium leading-relaxed text-base whitespace-pre-wrap">{{ $reply->content }}</div>
+                                    <div class="text-text/90 font-medium leading-relaxed text-base whitespace-pre-wrap">
+                                        @if($isReplyDeleted)
+                                            <span class="text-gray-400 italic text-sm">[Komentar ini telah dihapus]</span>
+                                        @else
+                                            {{ $reply->content }}
+                                        @endif
+                                    </div>
+                                    @if(!$isReplyDeleted && auth()->check() && $canDeleteReply)
+                                        <button onclick="confirmDeleteComment('{{ $reply->id }}')" class="text-sm font-medium text-red-600 hover:text-red-800 transition-colors flex items-center gap-1 mt-2">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            Hapus
+                                        </button>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
@@ -165,6 +225,121 @@
         } else {
             form.classList.add('hidden');
         }
+    }
+
+    // Modal konfirmasi penghapusan komentar
+    function confirmDeleteComment(commentId) {
+        if (confirm('Apakah Anda yakin ingin menghapus komentar ini?')) {
+            deleteComment(commentId);
+        }
+    }
+
+    // Fungsi untuk menghapus komentar via AJAX
+    function deleteComment(commentId) {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                          document.querySelector('[name="_token"]')?.value;
+
+        fetch(`/comments/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                alert('Silakan login terlebih dahulu.');
+                window.location.href = '/login';
+                return null;
+            }
+            if (response.status === 403) {
+                alert('Anda tidak memiliki izin untuk menghapus komentar ini.');
+                return null;
+            }
+            if (response.status === 404) {
+                alert('Komentar tidak ditemukan.');
+                return null;
+            }
+            if (response.status === 410) {
+                alert('Komentar sudah dihapus sebelumnya.');
+                return null;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.success) {
+                // Update UI tanpa reload
+                updateDeletedCommentUI(commentId);
+
+                // Tampilkan toast/notifikasi
+                showToast('Komentar berhasil dihapus');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting comment:', error);
+            alert('Terjadi kesalahan saat menghapus komentar. Silakan coba lagi.');
+        });
+    }
+
+    // Update tampilan komentar yang telah dihapus
+    function updateDeletedCommentUI(commentId) {
+        const commentElement = document.getElementById('comment-' + commentId);
+        if (!commentElement) return;
+
+        // Update user info
+        const userInfoDiv = commentElement.querySelector('.flex.items-center.gap-3.mb-3') ||
+                           commentElement.querySelector('.flex.items-center.gap-3.mb-2');
+        if (userInfoDiv) {
+            const isReply = userInfoDiv.querySelector('strong.text-base');
+            if (isReply) {
+                userInfoDiv.innerHTML = '<strong class="text-gray-400 text-base">[Dihapus]</strong>' +
+                                       '<span class="text-text/70 font-medium text-xs">• Komentar ini telah dihapus</span>';
+            } else {
+                userInfoDiv.innerHTML = '<strong class="text-gray-400">[Dihapus]</strong>' +
+                                       '<span class="text-text/70 font-medium text-base">• Komentar ini telah dihapus</span>';
+            }
+        }
+
+        // Update content
+        const contentDiv = commentElement.querySelector('.text-text\\/90.font-medium.leading-relaxed');
+        if (contentDiv) {
+            const isReply = commentElement.querySelector('.text-base.whitespace-pre-wrap');
+            if (isReply) {
+                contentDiv.innerHTML = '<span class="text-gray-400 italic text-sm">[Komentar ini telah dihapus]</span>';
+            } else {
+                contentDiv.innerHTML = '<span class="text-gray-400 italic">[Komentar ini telah dihapus]</span>';
+            }
+        }
+
+        // Hide action buttons (Balas, Hapus)
+        const actionsDiv = commentElement.querySelector('.flex.items-center.gap-4');
+        if (actionsDiv) {
+            actionsDiv.style.display = 'none';
+        }
+
+        // Remove delete button for replies
+        const deleteBtn = commentElement.querySelector('button[onclick*="confirmDeleteComment"]');
+        if (deleteBtn) {
+            deleteBtn.remove();
+        }
+
+        // Add visual indicator
+        commentElement.classList.add('opacity-75', 'bg-gray-50');
+        commentElement.setAttribute('data-is-deleted', 'true');
+    }
+
+    // Toast notification sederhana
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-y-0 opacity-100';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
     // Auto-scroll dan highlight komentar jika ada parameter highlightComment

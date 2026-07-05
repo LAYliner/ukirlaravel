@@ -22,7 +22,7 @@ class ProjectController extends Controller
     public function show($slug)
     {
         $project = Project::with(['user', 'tags', 'comments' => function($query) {
-                $query->whereNull('parent_id')->with(['user', 'replies.user'])->latest();
+                $query->whereNull('parent_id')->with(['user', 'replies.user'])->latest()->withTrashed();
             }])
             ->where('slug', $slug)
             ->where('status', 'published')

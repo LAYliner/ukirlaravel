@@ -54,7 +54,7 @@ Route::middleware(['guest', 'no.auth.cache'])->group(function () {
         ->name('password.verify.post');
     Route::get('/password/reset', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-    
+
     // Email verification routes
     Route::get('/verify-otp', [VerificationController::class, 'showForm'])->name('verification.notice');
     Route::post('/verify-otp', [VerificationController::class, 'verify'])->name('verification.verify');
@@ -71,6 +71,7 @@ Route::middleware('auth')->group(function () {
 
     // Comments (Public but requires Auth)
     Route::post('/comments', [\App\Http\Controllers\Public\CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/comments/{id}', [\App\Http\Controllers\Public\CommentController::class, 'destroy'])->name('comments.destroy')->middleware('auth');
 
     // Profile Routes
     Route::prefix('profile')->name('profile.')->group(function () {

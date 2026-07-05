@@ -22,9 +22,9 @@ class BlogController extends Controller
 
     public function show(string $slug): View
     {
-        // Fix: Relation 'user', Enum 'published', Eager load comments
+        // Fix: Relation 'user', Enum 'published', Eager load comments (including soft deleted for proper display)
         $blog = Blog::with(['user', 'comments' => function($query) {
-                $query->whereNull('parent_id')->with(['user', 'replies.user'])->latest();
+                $query->whereNull('parent_id')->with(['user', 'replies.user'])->latest()->withTrashed();
             }])
             ->where('slug', $slug)
             ->where('status', 'published')
