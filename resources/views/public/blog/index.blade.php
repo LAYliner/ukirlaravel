@@ -29,7 +29,7 @@
                         <span>{{ $blog->user->name ?? 'Admin' }}</span>
                     </div>
                     <h3 class="text-xl font-bold text-text mb-2 group-hover:text-primary transition-colors">{{ $blog->title }}</h3>
-                    <p class="text-text/90 font-medium text-base leading-relaxed mb-6 line-clamp-3 flex-grow">{{ Str::limit(strip_tags($blog->content), 150) }}</p>
+                    <p class="text-text/90 font-medium text-base leading-relaxed mb-6 line-clamp-3 flex-grow">{{ Str::limit(html_entity_decode(strip_tags($blog->content)), 150) }}</p>
                     <a href="{{ route('blog.show', $blog->slug) }}" class="inline-flex items-center text-base font-medium text-primary hover:text-accent transition-colors mt-auto">
                         Baca Selengkapnya 
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>

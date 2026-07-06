@@ -30,6 +30,11 @@ Route::get('/content/{contentId}', [ContentHighlightController::class, 'redirect
 Route::get('/blog', [PublicBlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [PublicBlogController::class, 'show'])->name('blog.show');
 
+// Public Contact Route
+Route::get('/contact', function () {
+    return view('public.contact.index');
+})->name('contact');
+
 // Public Project Routes
 Route::get('/projects', [PublicProjectController::class, 'index'])->name('projects.index');
 Route::get('/projects/{slug}', [PublicProjectController::class, 'show'])->name('projects.show');

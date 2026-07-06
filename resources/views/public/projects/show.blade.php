@@ -109,7 +109,7 @@
                             <span class="text-text/70 font-medium text-base">• {{ $comment->created_at->format('d M Y, H:i') }}</span>
                         @endif
                     </div>
-                    <div class="text-text/90 font-medium leading-relaxed mb-4 whitespace-pre-wrap">
+                    <div class="text-text/90 font-medium leading-relaxed mb-4 whitespace-normal">
                         @if($isDeleted)
                             <span class="text-gray-400 italic">[Komentar ini telah dihapus]</span>
                         @else
@@ -177,7 +177,7 @@
                                             <span class="text-text/70 font-medium text-xs">• {{ $reply->created_at->format('d M Y, H:i') }}</span>
                                         @endif
                                     </div>
-                                    <div class="text-text/90 font-medium leading-relaxed text-base whitespace-pre-wrap">
+                                    <div class="text-text/90 font-medium leading-relaxed text-base whitespace-normal">
                                         @if($isReplyDeleted)
                                             <span class="text-gray-400 italic text-sm">[Komentar ini telah dihapus]</span>
                                         @else
@@ -314,7 +314,7 @@
         // Update content
         const contentDiv = commentElement.querySelector('.text-text\\/90.font-medium.leading-relaxed');
         if (contentDiv) {
-            const isReply = commentElement.querySelector('.text-base.whitespace-pre-wrap');
+            const isReply = commentElement.querySelector('.text-base.whitespace-normal');
             if (isReply) {
                 contentDiv.innerHTML = '<span class="text-gray-400 italic text-sm">[Komentar ini telah dihapus]</span>';
             } else {
