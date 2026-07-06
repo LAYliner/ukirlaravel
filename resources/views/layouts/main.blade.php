@@ -14,7 +14,7 @@
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
-    
+
     @stack('styles')
 </head>
 <body class="bg-background text-text font-sans antialiased min-h-screen flex flex-col selection:bg-accent selection:text-background">
@@ -31,8 +31,8 @@
                     <a href="{{ route('home') }}" class="text-base font-medium {{ request()->routeIs('home') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Beranda</a>
                     <a href="{{ route('projects.index') }}" class="text-base font-medium {{ request()->routeIs('projects.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Proyek</a>
                     <a href="{{ route('blog.index') }}" class="text-base font-medium {{ request()->routeIs('blog.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Blog</a>
-                    <a href="#about" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
-                    <a href="{{ route('contact') }}" class="text-base font-medium {{ request()->routeIs('contact') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Kontak</a>
+                    <a href="#" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
+                    <a href="#" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Kontak</a>
                 </div>
 
                 <div class="flex items-center gap-4">
@@ -94,5 +94,91 @@
     </footer>
 
     @stack('scripts')
+
+    {{-- Tag Selector Script --}}
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-tag-selector]').forEach(function (root) {
+            const trigger   = root.querySelector('[data-tag-trigger]');
+            const panel     = root.querySelector('[data-tag-panel]');
+            const label     = root.querySelector('[data-tag-label]');
+            const chevron   = root.querySelector('[data-tag-chevron]');
+            const search    = root.querySelector('[data-tag-search]');
+            const items     = root.querySelectorAll('[data-tag-item]');
+            const checkboxes= root.querySelectorAll('[data-tag-checkbox]');
+            const clearBtn  = root.querySelector('[data-tag-clear]');
+            const applyBtn  = root.querySelector('[data-tag-apply]');
+            const emptyMsg  = root.querySelector('[data-tag-empty]');
+
+            function updateLabel() {
+                const checked = Array.from(checkboxes).filter(cb => cb.checked);
+                if (checked.length === 0) {
+                    // Untuk radio button (kategori), tampilkan "Semua Kategori" jika tidak ada yang dipilih
+                    const radioChecked = Array.from(checkboxes).find(cb => cb.type === 'radio' && cb.checked);
+                    if (radioChecked) {
+                        label.textContent = radioChecked.dataset.tagNameLabel;
+                    } else {
+                        label.textContent = 'Pilih tag';
+                    }
+                } else if (checked[0].type === 'radio') {
+                    // Untuk radio button, ambil yang checked
+                    const radioChecked = Array.from(checkboxes).find(cb => cb.checked);
+                    label.textContent = radioChecked ? radioChecked.dataset.tagNameLabel : 'Pilih tag';
+                } else if (checked.length <= 2) {
+                    label.textContent = checked.map(cb => cb.dataset.tagNameLabel).join(', ');
+                } else {
+                    label.textContent = `${checked.length} tag dipilih`;
+                }
+            }
+
+            function togglePanel(open) {
+                const willOpen = open !== undefined ? open : panel.classList.contains('hidden');
+                panel.classList.toggle('hidden', !willOpen);
+                chevron.classList.toggle('rotate-180', willOpen);
+            }
+
+            trigger.addEventListener('click', () => togglePanel());
+
+            document.addEventListener('click', (e) => {
+                if (!root.contains(e.target)) togglePanel(false);
+            });
+
+            checkboxes.forEach(cb => cb.addEventListener('change', updateLabel));
+
+            if (search) {
+                search.addEventListener('input', () => {
+                    const q = search.value.trim().toLowerCase();
+                    let anyVisible = false;
+                    items.forEach(item => {
+                        const match = item.dataset.tagName.includes(q);
+                        item.classList.toggle('hidden', !match);
+                        if (match) anyVisible = true;
+                    });
+                    emptyMsg.classList.toggle('hidden', anyVisible);
+                });
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    checkboxes.forEach(cb => {
+                        if (cb.type === 'radio') {
+                            // Untuk radio, pilih yang pertama (Semua Kategori)
+                            if (cb.value === '') cb.checked = true;
+                        } else {
+                            cb.checked = false;
+                        }
+                    });
+                    updateLabel();
+                });
+            }
+
+            if (applyBtn) {
+                applyBtn.addEventListener('click', () => togglePanel(false));
+            }
+
+            updateLabel();
+        });
+    });
+    </script>
 </body>
 </html>

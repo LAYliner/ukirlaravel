@@ -18,20 +18,91 @@
                     class="w-full px-4 py-3 border border-secondary/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 text-text bg-white"
                 >
             </div>
-            <div class="sm:w-48">
-                <select
-                    name="tags[]"
-                    multiple
-                    class="w-full px-4 py-3 border border-secondary/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 text-text bg-white h-32"
+
+            {{-- Custom Tag Selector untuk Tags --}}
+            <div class="relative w-full sm:w-64" data-tag-selector>
+                {{-- Trigger button --}}
+                <button
+                    type="button"
+                    data-tag-trigger
+                    class="w-full flex items-center justify-between gap-2 px-4 py-3 border border-secondary/30 rounded-lg bg-white text-left focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 hover:border-primary/40 transition-colors"
                 >
-                    @foreach($tags as $tag)
-                        <option value="{{ $tag->id }}" {{ in_array($tag->id, request('tags', [])) ? 'selected' : '' }}>
-                            {{ $tag->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <p class="text-xs text-text/70 mt-1">Tahan Ctrl/Cmd untuk memilih beberapa tag</p>
+                    <span data-tag-label class="text-sm text-text truncate">
+                        @php
+                            $selectedTags = $tags->filter(fn($tag) => in_array($tag->id, request('tags', [])));
+                        @endphp
+                        @if($selectedTags->count() === 0)
+                            Pilih tag
+                        @elseif($selectedTags->count() <= 2)
+                            {{ $selectedTags->pluck('name')->join(', ') }}
+                        @else
+                            {{ $selectedTags->count() }} tag dipilih
+                        @endif
+                    </span>
+                    <svg data-tag-chevron class="w-4 h-4 text-text/50 shrink-0 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                {{-- Dropdown panel --}}
+                <div
+                    data-tag-panel
+                    class="hidden absolute z-30 mt-2 w-full sm:min-w-64 bg-white border border-secondary/30 rounded-lg shadow-lg overflow-hidden left-0 right-0"
+                >
+                    {{-- Search (muncul otomatis kalau tag > 6) --}}
+                    @if($tags->count() > 6)
+                    <div class="p-2 border-b border-secondary/20">
+                        <input
+                            type="text"
+                            data-tag-search
+                            placeholder="Cari tag..."
+                            class="w-full px-3 py-2 text-sm border border-secondary/30 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/40"
+                        >
+                    </div>
+                    @endif
+
+                    {{-- List tag --}}
+                    <div class="max-h-56 overflow-y-auto p-2" data-tag-list>
+                        @forelse($tags as $tag)
+                            <label
+                                data-tag-item
+                                data-tag-name="{{ Str::lower($tag->name) }}"
+                                class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-primary/5 cursor-pointer select-none"
+                            >
+                                <span class="relative flex items-center justify-center w-4.5 h-4.5 shrink-0">
+                                    <input
+                                        type="checkbox"
+                                        name="tags[]"
+                                        value="{{ $tag->id }}"
+                                        data-tag-checkbox
+                                        data-tag-name-label="{{ $tag->name }}"
+                                        {{ in_array($tag->id, request('tags', [])) ? 'checked' : '' }}
+                                        class="peer appearance-none w-[18px] h-[18px] border-2 border-secondary/40 rounded checked:bg-primary checked:border-primary transition-colors cursor-pointer"
+                                    >
+                                    <svg class="absolute w-3 h-3 text-white pointer-events-none hidden peer-checked:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </span>
+                                <span class="text-sm text-text">{{ $tag->name }}</span>
+                            </label>
+                        @empty
+                            <p class="text-sm text-text/50 px-2.5 py-2">Belum ada tag</p>
+                        @endforelse
+                        <p data-tag-empty class="hidden text-sm text-text/50 px-2.5 py-2">Tag tidak ditemukan</p>
+                    </div>
+
+                    {{-- Footer aksi --}}
+                    <div class="flex items-center justify-between p-2 border-t border-secondary/20 bg-secondary/5">
+                        <button type="button" data-tag-clear class="text-xs font-medium text-text/60 hover:text-red-500 px-2 py-1.5 transition-colors">
+                            Hapus semua
+                        </button>
+                        <button type="button" data-tag-apply class="text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded-md px-3 py-1.5 transition-colors">
+                            Terapkan
+                        </button>
+                    </div>
+                </div>
             </div>
+
             <button
                 type="submit"
                 class="px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors duration-300 flex items-center justify-center gap-2"
