@@ -4,19 +4,40 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Project::with(['user', 'tags'])
-            ->where('status', 'published')
-            ->where('is_visible', true)
-            ->latest()
-            ->paginate(9);
+        // Sanitasi input search dan tags
+        $search = $request->input('search');
+        $tagIds = $request->input('tags', []);
 
-        return view('public.projects.index', compact('projects'));
+        // Pastikan tagIds adalah array
+        if (!is_array($tagIds)) {
+            $tagIds = [$tagIds];
+        }
+
+        // Query project dengan scope published, search, dan filter tags
+        $projects = Project::published()
+            ->with(['user', 'tags'])
+            ->search($search)
+            ->filterByTags($tagIds)
+            ->latest()
+            ->paginate(9)
+            ->appends($request->only('search', 'tags'));
+
+        // Ambil semua tags untuk dropdown filter (hanya yang memiliki project published)
+        $tags = Tag::whereHas('projects', function ($query) {
+                $query->published();
+            })
+            ->active()
+            ->orderBy('name')
+            ->get();
+
+        return view('public.projects.index', compact('projects', 'tags'));
     }
 
     public function show($slug)

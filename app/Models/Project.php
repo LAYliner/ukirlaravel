@@ -113,6 +113,28 @@ class Project extends Model
                      ->where('is_visible', true);
     }
 
+    /**
+     * Scope untuk filter project berdasarkan tags (multiple)
+     */
+    public function scopeFilterByTags(Builder $query, ?array $tagIds): Builder
+    {
+        return $query->when($tagIds && !empty($tagIds), function (Builder $q) use ($tagIds) {
+            $q->whereHas('tags', function ($subQ) use ($tagIds) {
+                $subQ->whereIn('tags.id', $tagIds);
+            });
+        });
+    }
+
+    /**
+     * Scope untuk project yang published dan visible (termasuk tidak di-delete)
+     */
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', 'published')
+                     ->where('is_visible', true)
+                     ->whereNull('deleted_at');
+    }
+
     public function isPublished(): bool
     {
         return $this->status === 'published' && $this->is_visible === true;

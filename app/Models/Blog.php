@@ -107,4 +107,36 @@ class Blog extends Model
     {
         return $this->thumbnail_path ? asset('storage/' . $this->thumbnail_path) : null;
     }
+
+    // ==================== SCOPES ====================
+
+    /**
+     * Scope untuk pencarian blog berdasarkan judul
+     */
+    public function scopeSearch($query, ?string $keyword)
+    {
+        return $query->when($keyword, function ($q, $term) {
+            $q->where('title', 'like', "%{$term}%");
+        });
+    }
+
+    /**
+     * Scope untuk filter blog berdasarkan kategori
+     */
+    public function scopeFilterByCategory($query, ?string $categoryId)
+    {
+        return $query->when($categoryId, function ($q, $id) {
+            $q->where('category_id', $id);
+        });
+    }
+
+    /**
+     * Scope untuk blog yang published dan visible
+     */
+    public function scopePublished($query)
+    {
+        return $query->where('status', 'published')
+                     ->where('is_visible', true)
+                     ->whereNull('deleted_at');
+    }
 }

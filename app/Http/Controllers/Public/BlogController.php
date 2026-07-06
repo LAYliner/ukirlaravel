@@ -4,20 +4,35 @@ namespace App\Http\Controllers\Public;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use App\Models\Category;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 
 class BlogController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        // Fix: Relation 'user', Enum 'published'
-        $blogs = Blog::with('user')
-            ->where('status', 'published')
-            ->where('is_visible', true)
-            ->latest('created_at')
-            ->paginate(9);
+        // Sanitasi input search
+        $search = $request->input('search');
+        $categoryId = $request->input('category');
 
-        return view('public.blog.index', compact('blogs'));
+        // Query blog dengan scope published, search, dan filter kategori
+        $blogs = Blog::published()
+            ->with(['user', 'category'])
+            ->search($search)
+            ->filterByCategory($categoryId)
+            ->latest('created_at')
+            ->paginate(9)
+            ->appends($request->only('search', 'category'));
+
+        // Ambil semua kategori untuk dropdown filter (hanya yang memiliki blog published)
+        $categories = Category::whereHas('blogs', function ($query) {
+                $query->published();
+            })
+            ->orderBy('name')
+            ->get();
+
+        return view('public.blog.index', compact('blogs', 'categories'));
     }
 
     public function show(string $slug): View
