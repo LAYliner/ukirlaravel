@@ -43,7 +43,9 @@
                             <img src="{{ Auth::user()->profile_picture_url }}" class="w-8 h-8 rounded-full object-cover border border-secondary/50 group-hover:border-primary transition-colors" alt="Avatar">
                             <span class="text-base font-medium text-text/90 group-hover:text-primary transition-colors">{{ Auth::user()->name }}</span>
                         </a>
-                        <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200">Dashboard</a>
+                        @if(Auth::user()->role !== 'user')
+                            <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200">Dashboard</a>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}" class="m-0">
                             @csrf
                             <button type="submit" class="px-4 py-2 text-base font-medium text-text/90 hover:text-primary transition-colors">Logout</button>
@@ -77,7 +79,9 @@
                             <img src="{{ Auth::user()->profile_picture_url }}" class="w-8 h-8 rounded-full object-cover border border-secondary/50" alt="Avatar">
                             <span class="text-base font-medium text-text/90">{{ Auth::user()->name }}</span>
                         </a>
-                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200 text-center">Dashboard</a>
+                        @if(Auth::user()->role !== 'user')
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200 text-center">Dashboard</a>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}" class="m-0">
                             @csrf
                             <button type="submit" class="w-full px-4 py-2 text-base font-medium text-text/90 hover:text-primary transition-colors text-left">Logout</button>
