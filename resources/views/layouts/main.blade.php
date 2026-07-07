@@ -24,18 +24,20 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 group">
-                    <span class="text-2xl font-bold text-primary tracking-tight group-hover:text-accent transition-colors uppercase">Sanggar Ukir Tana Paser</span>
+                    <span class="text-lg sm:text-xl md:text-2xl font-bold text-primary tracking-tight group-hover:text-accent transition-colors uppercase truncate max-w-[200px] sm:max-w-none">Sanggar Ukir Tana Paser</span>
                 </a>
 
+                {{-- Desktop Menu --}}
                 <div class="hidden md:flex items-center gap-8">
                     <a href="{{ route('home') }}" class="text-base font-medium {{ request()->routeIs('home') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Beranda</a>
                     <a href="{{ route('projects.index') }}" class="text-base font-medium {{ request()->routeIs('projects.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Proyek</a>
                     <a href="{{ route('blog.index') }}" class="text-base font-medium {{ request()->routeIs('blog.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Blog</a>
-                    <a href="#" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
-                    <a href="#" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Kontak</a>
+                    <a href="#about" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
+                    <a href="{{ route('contact') }}" class="text-base font-medium {{ request()->routeIs('contact') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Kontak</a>
                 </div>
 
-                <div class="flex items-center gap-4">
+                {{-- Desktop Auth Buttons --}}
+                <div class="hidden md:flex items-center gap-4">
                     @auth
                         <a href="{{ route('profile.show') }}" class="flex items-center gap-2 group mr-2">
                             <img src="{{ Auth::user()->profile_picture_url }}" class="w-8 h-8 rounded-full object-cover border border-secondary/50 group-hover:border-primary transition-colors" alt="Avatar">
@@ -50,9 +52,50 @@
                         <a href="{{ route('login.show') }}" class="px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200">Masuk</a>
                     @endauth
                 </div>
+
+                {{-- Mobile Menu Button --}}
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-md text-text hover:text-primary focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile Menu Panel --}}
+        <div id="mobile-menu" class="hidden md:hidden bg-background border-t border-secondary/30">
+            <div class="px-4 py-4 space-y-3">
+                <a href="{{ route('home') }}" class="block text-base font-medium {{ request()->routeIs('home') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Beranda</a>
+                <a href="{{ route('projects.index') }}" class="block text-base font-medium {{ request()->routeIs('projects.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Proyek</a>
+                <a href="{{ route('blog.index') }}" class="block text-base font-medium {{ request()->routeIs('blog.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Blog</a>
+                <a href="#" class="block text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
+                <a href="#" class="block text-base font-medium text-text/90 hover:text-primary transition-colors">Kontak</a>
+
+                <div class="border-t border-secondary/30 pt-4 mt-4 space-y-3">
+                    @auth
+                        <a href="{{ route('profile.show') }}" class="flex items-center gap-3 group">
+                            <img src="{{ Auth::user()->profile_picture_url }}" class="w-8 h-8 rounded-full object-cover border border-secondary/50" alt="Avatar">
+                            <span class="text-base font-medium text-text/90">{{ Auth::user()->name }}</span>
+                        </a>
+                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200 text-center">Dashboard</a>
+                        <form method="POST" action="{{ route('logout') }}" class="m-0">
+                            @csrf
+                            <button type="submit" class="w-full px-4 py-2 text-base font-medium text-text/90 hover:text-primary transition-colors text-left">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login.show') }}" class="block px-4 py-2 text-base font-medium text-primary border border-primary rounded hover:bg-primary hover:text-background transition-all duration-200 text-center">Masuk</a>
+                    @endauth
+                </div>
             </div>
         </div>
     </nav>
+
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
 
     {{-- Main Content --}}
     <main class="flex-grow {{ request()->routeIs('home') ? '' : 'pt-20' }}">

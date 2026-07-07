@@ -53,3 +53,44 @@
     transform: scale(1);
   }
 }
+
+/* Tag Columns - CSS Multi-column untuk tag pills */
+.tag-columns {
+    columns: 180px;
+    column-gap: 8px;
+}
+
+@container (max-width: 480px) {
+    .tag-columns { columns: 3 auto; }
+}
+
+.tag-pill {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+    break-inside: avoid-column;
+    cursor: pointer;
+}
+
+.tag-pill input {
+    display: none;
+}
+
+.tag-pill span {
+    display: block;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-secondary) 10%, transparent);
+    color: var(--color-text);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background .15s, color .15s;
+}
+
+.tag-pill input:checked + span {
+    background: var(--color-primary);
+    color: white;
+}

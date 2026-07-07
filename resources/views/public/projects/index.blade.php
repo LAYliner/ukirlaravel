@@ -62,28 +62,22 @@
                     @endif
 
                     {{-- List tag --}}
-                    <div class="max-h-56 overflow-y-auto p-2" data-tag-list>
+                    <div class="tag-columns max-h-56 overflow-y-auto p-2" data-tag-list style="container-type: inline-size;">
                         @forelse($tags as $tag)
                             <label
                                 data-tag-item
                                 data-tag-name="{{ Str::lower($tag->name) }}"
-                                class="flex items-center gap-2.5 px-2.5 py-2 rounded-md hover:bg-primary/5 cursor-pointer select-none"
+                                class="tag-pill"
                             >
-                                <span class="relative flex items-center justify-center w-4.5 h-4.5 shrink-0">
-                                    <input
-                                        type="checkbox"
-                                        name="tags[]"
-                                        value="{{ $tag->id }}"
-                                        data-tag-checkbox
-                                        data-tag-name-label="{{ $tag->name }}"
-                                        {{ in_array($tag->id, request('tags', [])) ? 'checked' : '' }}
-                                        class="peer appearance-none w-[18px] h-[18px] border-2 border-secondary/40 rounded checked:bg-primary checked:border-primary transition-colors cursor-pointer"
-                                    >
-                                    <svg class="absolute w-3 h-3 text-white pointer-events-none hidden peer-checked:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </span>
-                                <span class="text-sm text-text">{{ $tag->name }}</span>
+                                <input
+                                    type="checkbox"
+                                    name="tags[]"
+                                    value="{{ $tag->id }}"
+                                    data-tag-checkbox
+                                    data-tag-name-label="{{ $tag->name }}"
+                                    {{ in_array($tag->id, request('tags', [])) ? 'checked' : '' }}
+                                >
+                                <span>{{ $tag->name }}</span>
                             </label>
                         @empty
                             <p class="text-sm text-text/50 px-2.5 py-2">Belum ada tag</p>
@@ -153,7 +147,7 @@
                         </div>
                     @endif
 
-                    <p class="text-text/90 font-medium text-base leading-relaxed mb-6 line-clamp-3 flex-grow">{{ strip_tags($project->description) }}</p>
+                    <p class="text-text/90 font-medium text-base leading-relaxed mb-6 line-clamp-3 flex-grow">{{ Str::limit(html_entity_decode(strip_tags($project->description)), 150) }}</p>
                     <a href="{{ route('projects.show', $project->slug) }}" class="inline-flex items-center text-base font-medium text-primary hover:text-accent transition-colors mt-auto">
                         Detail Proyek
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
