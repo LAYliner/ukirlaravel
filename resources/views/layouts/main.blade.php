@@ -68,8 +68,8 @@
                 <a href="{{ route('home') }}" class="block text-base font-medium {{ request()->routeIs('home') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Beranda</a>
                 <a href="{{ route('projects.index') }}" class="block text-base font-medium {{ request()->routeIs('projects.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Proyek</a>
                 <a href="{{ route('blog.index') }}" class="block text-base font-medium {{ request()->routeIs('blog.*') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Blog</a>
-                <a href="#" class="block text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
-                <a href="#" class="block text-base font-medium text-text/90 hover:text-primary transition-colors">Kontak</a>
+                <a href="#about" class="text-base font-medium text-text/90 hover:text-primary transition-colors">Tentang</a>
+                <a href="{{ route('contact') }}" class="text-base font-medium {{ request()->routeIs('contact') ? 'text-primary' : 'text-text/90 hover:text-primary' }} transition-colors">Kontak</a>
 
                 <div class="border-t border-secondary/30 pt-4 mt-4 space-y-3">
                     @auth
