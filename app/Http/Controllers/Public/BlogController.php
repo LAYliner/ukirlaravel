@@ -46,6 +46,9 @@ class BlogController extends Controller
             ->where('is_visible', true)
             ->firstOrFail();
 
+        // Increment view count
+        $blog->incrementViews();
+
         // Fix: Column 'id', Relation 'user', Enum 'published'
         $relatedPosts = Blog::with('user')
             ->where('status', 'published')

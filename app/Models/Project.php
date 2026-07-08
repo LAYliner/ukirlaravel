@@ -139,4 +139,12 @@ class Project extends Model
     {
         return $this->status === 'draft';
     }
+
+    /**
+     * Increment the views count for this project
+     */
+    public function incrementViews(): void
+    {
+        $this->increment('views');
+    }
 }

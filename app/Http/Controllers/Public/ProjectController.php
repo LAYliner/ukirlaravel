@@ -50,6 +50,9 @@ class ProjectController extends Controller
             ->where('is_visible', true)
             ->firstOrFail();
 
+        // Increment view count
+        $project->incrementViews();
+
         // Get related projects by tags (projects that share at least one tag)
         $projectTagIds = $project->tags->pluck('id')->toArray();
 

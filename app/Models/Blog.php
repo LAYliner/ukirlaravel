@@ -99,6 +99,14 @@ class Blog extends Model
         return $this->thumbnail_path ? asset('storage/' . $this->thumbnail_path) : null;
     }
 
+    /**
+     * Increment the views count for this blog
+     */
+    public function incrementViews(): void
+    {
+        $this->increment('views');
+    }
+
     // ==================== SCOPES ====================
 
     /**
