@@ -30,8 +30,8 @@
 
     {{-- Thumbnail --}}
     <div class="mb-12 rounded-xl overflow-hidden bg-secondary/10 border border-secondary/30 shadow-sm">
-        @if($project->media && $project->media->count() > 0)
-            <img src="{{ asset('storage/' . $project->media->first()->file_path) }}" alt="{{ $project->title }}" class="w-full h-auto object-cover max-h-[600px]">
+        @if($project->thumbnail_path)
+            <img src="{{ asset('storage/' . $project->thumbnail_path) }}" alt="{{ $project->title }}" class="w-full h-auto object-cover max-h-[600px]">
         @else
             <div class="flex items-center justify-center w-full h-[400px] text-text/40">
                 Tidak ada gambar
@@ -209,8 +209,8 @@
                 @foreach($relatedProjects as $relProject)
                     <a href="{{ route('projects.show', $relProject->slug) }}" class="group block bg-white border border-secondary/30 rounded-lg overflow-hidden hover:border-accent/50 transition-all duration-300 shadow-sm hover:shadow-md">
                         <div class="aspect-w-16 aspect-h-10 bg-secondary/10 relative">
-                            @if($relProject->media && $relProject->media->count() > 0)
-                                <img src="{{ asset('storage/' . $relProject->media->first()->file_path) }}" alt="{{ $relProject->title }}" class="object-cover w-full h-48 group-hover:scale-105 transition-transform duration-500">
+                            @if($relProject->thumbnail_path)
+                                <img src="{{ asset('storage/' . $relProject->thumbnail_path) }}" alt="{{ $relProject->title }}" class="object-cover w-full h-48 group-hover:scale-105 transition-transform duration-500">
                             @else
                                 <div class="flex items-center justify-center w-full h-48 text-text/40">Tanpa Gambar</div>
                             @endif

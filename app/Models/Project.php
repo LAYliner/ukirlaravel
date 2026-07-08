@@ -59,11 +59,6 @@ class Project extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function media(): MorphMany
-    {
-        return $this->morphMany(Media::class, 'mediable');
-    }
-
     /**
      * Relasi many-to-many dengan Tag
      */

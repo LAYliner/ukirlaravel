@@ -24,6 +24,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 group">
+                    <img src="{{ asset('images/logo_sanggar_ukir.png') }}" alt="Logo Sanggar Ukir Tana Paser" class="h-10 w-auto object-contain">
                     <span class="text-lg sm:text-xl md:text-2xl font-bold text-primary tracking-tight group-hover:text-accent transition-colors uppercase truncate max-w-[200px] sm:max-w-none">Sanggar Ukir Tana Paser</span>
                 </a>
 
@@ -111,7 +112,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="md:col-span-2">
-                    <span class="text-2xl font-bold text-primary tracking-tight uppercase mb-4 block">Sanggar Ukir Tana Paser</span>
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="{{ asset('images/logo_sanggar_ukir.png') }}" alt="Logo Sanggar Ukir Tana Paser" class="h-12 w-auto object-contain">
+                        <span class="text-2xl font-bold text-primary tracking-tight uppercase">Sanggar Ukir Tana Paser</span>
+                    </div>
                     <p class="text-text/90 font-medium max-w-sm leading-relaxed">
                         Melestarikan warisan budaya melalui karya seni ukir yang autentik dan bernilai tinggi.
                     </p>

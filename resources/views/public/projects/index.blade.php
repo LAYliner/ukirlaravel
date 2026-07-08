@@ -124,8 +124,8 @@
         @forelse($projects as $project)
             <div class="bg-white border border-secondary/30 rounded-lg overflow-hidden hover:border-accent/50 transition-all duration-300 group flex flex-col shadow-sm hover:shadow-md">
                 <div class="aspect-w-16 aspect-h-10 bg-secondary/10 relative">
-                    @if($project->media && $project->media->count() > 0)
-                        <img src="{{ asset('storage/' . $project->media->first()->file_path) }}" alt="{{ $project->title }}" class="object-cover w-full h-64 group-hover:scale-105 transition-transform duration-500">
+                    @if($project->thumbnail_path)
+                        <img src="{{ asset('storage/' . $project->thumbnail_path) }}" alt="{{ $project->title }}" class="object-cover w-full h-64 group-hover:scale-105 transition-transform duration-500">
                     @else
                         <div class="flex items-center justify-center w-full h-64 text-text/40">
                             Tidak ada gambar

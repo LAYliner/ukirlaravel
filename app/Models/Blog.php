@@ -73,15 +73,6 @@ class Blog extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
-    /**
-     * Relasi ke Media (Polymorphic)
-     * Blog hasMany Media
-     */
-    public function media()
-    {
-        return $this->morphMany(Media::class, 'mediable');
-    }
-
     // ==================== HELPERS (OPTIONAL) ====================
 
     /**

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         // Tabel tags
         Schema::create('tags', function (Blueprint $table) {
-            $table->collation = 'utf8mb4_0900_ai_ci';
             $table->string('id', 36)->primary();
             $table->string('name', 100)->notNull();
             $table->string('slug', 150)->unique()->index();
@@ -22,7 +21,6 @@ return new class extends Migration
 
         // Tabel pivot project_tag
         Schema::create('project_tag', function (Blueprint $table) {
-            $table->collation = 'utf8mb4_0900_ai_ci';
             $table->string('id', 36)->primary();
             $table->string('project_id', 36)->index();
             $table->string('tag_id', 36)->index();
