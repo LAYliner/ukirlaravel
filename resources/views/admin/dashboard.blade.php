@@ -17,11 +17,11 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Buat Artikel Baru
+                Buat Blog Baru
             </a>
             <a href="{{ route('admin.blog.index') }}" 
                class="inline-flex items-center gap-2 bg-white border border-secondary/30 text-text hover:bg-gray-50 focus:ring-2 focus:ring-primary/50 px-4 py-2 rounded-md text-sm font-medium transition shadow-sm">
-                Lihat Semua Artikel
+                Lihat Semua Blog
             </a>
         </div>
     </div>
@@ -32,7 +32,7 @@
         {{-- Total Blogs --}}
         <div class="bg-white p-6 rounded-lg border border-secondary/30 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-medium text-gray-900 uppercase tracking-wider">Total Artikel</h3>
+                <h3 class="text-base font-medium text-gray-900 uppercase tracking-wider">Total Blog</h3>
                 <span class="p-2 bg-blue-50 text-blue-600 rounded-full">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5L18.5 7H20" />
@@ -40,7 +40,7 @@
                 </span>
             </div>
             <p class="text-3xl font-bold text-text">{{ $totalBlogs ?? 0 }}</p>
-            <p class="text-sm text-gray-800 mt-1">Artikel terpublikasi & draft</p>
+            <p class="text-sm text-gray-800 mt-1">Blog terpublikasi & draft</p>
         </div>
 
         {{-- Total Users --}}

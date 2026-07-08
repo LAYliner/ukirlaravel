@@ -82,11 +82,11 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-end mb-12">
                 <div>
-                    <h2 class="text-3xl font-bold text-text mb-2">Artikel Terbaru</h2>
+                    <h2 class="text-3xl font-bold text-text mb-2">Blog Terbaru</h2>
                     <p class="text-text/90 font-medium leading-relaxed">Inspirasi dan cerita seputar dunia ukir kayu.</p>
                 </div>
                 <a href="{{ route('blog.index') }}" class="hidden md:inline-flex items-center text-primary hover:text-accent font-medium transition-colors">
-                    Lihat Semua Artikel
+                    Lihat Semua Blog
                     <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </a>
             </div>

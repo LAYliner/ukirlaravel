@@ -102,9 +102,13 @@
                      class="bg-white border border-secondary/30 rounded-lg p-6 shadow-sm comment-container {{ $isDeleted ? 'opacity-75 bg-gray-50' : '' }}">
                     <div class="flex items-center gap-3 mb-3">
                         @if($isDeleted)
+                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">
+                                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            </div>
                             <strong class="text-gray-400">[Dihapus]</strong>
                             <span class="text-text/70 font-medium text-base">• Komentar ini telah dihapus</span>
                         @else
+                            <img src="{{ $comment->user->profile_picture_url ?? 'https://ui-avatars.com/api/?name=User&color=885007&background=e1c49d' }}" alt="{{ $comment->user->name ?? 'User' }}" class="w-8 h-8 rounded-full object-cover border border-secondary/30">
                             <strong class="text-primary">{{ $comment->user->name ?? 'User' }}</strong>
                             <span class="text-text/70 font-medium text-base">• {{ $comment->created_at->format('d M Y, H:i') }}</span>
                         @endif
@@ -170,9 +174,13 @@
                                      class="bg-secondary/5 border border-secondary/20 rounded p-4 comment-container {{ $isReplyDeleted ? 'opacity-75 bg-gray-50' : '' }}">
                                     <div class="flex items-center gap-3 mb-2">
                                         @if($isReplyDeleted)
+                                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                            </div>
                                             <strong class="text-gray-400 text-base">[Dihapus]</strong>
                                             <span class="text-text/70 font-medium text-xs">• Komentar ini telah dihapus</span>
                                         @else
+                                            <img src="{{ $reply->user->profile_picture_url ?? 'https://ui-avatars.com/api/?name=User&color=885007&background=e1c49d' }}" alt="{{ $reply->user->name ?? 'User' }}" class="w-8 h-8 rounded-full object-cover border border-secondary/30">
                                             <strong class="text-primary text-base">{{ $reply->user->name ?? 'User' }}</strong>
                                             <span class="text-text/70 font-medium text-xs">• {{ $reply->created_at->format('d M Y, H:i') }}</span>
                                         @endif

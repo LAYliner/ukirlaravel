@@ -36,14 +36,15 @@ class UserController extends Controller
 
         // Filter by status
         if ($status = $request->input('status')) {
-            if ($status === 'inactive') {
+            if ($status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($status === 'inactive') {
                 $query->where('is_active', false);
             } elseif ($status === 'deleted') {
                 $query->onlyTrashed();
             } elseif ($status === 'all') {
                 $query->withTrashed();
             }
-            // Default: active users only (not trashed)
         }
 
         // Sorting
