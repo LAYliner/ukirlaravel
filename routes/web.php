@@ -119,14 +119,16 @@ Route::middleware('auth')->group(function () {
         Route::patch('projects/{id}/toggle-visibility', [ProjectController::class, 'toggleVisibility'])
             ->name('projects.toggle-visibility');
 
-        // Comment Management Routes (Admin Only)
-        Route::middleware('role:admin')->group(function () {
+        // Comment Management Routes (Admin & Author)
+        Route::middleware('role:admin,author')->group(function () {
             Route::get('comments', [AdminCommentController::class, 'index'])->name('comments.index');
             Route::delete('comments/{id}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
             Route::patch('comments/{id}/restore', [AdminCommentController::class, 'restore'])->name('comments.restore');
             Route::delete('comments/{id}/force-delete', [AdminCommentController::class, 'forceDelete'])->name('comments.force-delete');
+        });
 
-            // User Management Routes (Admin Only)
+        // User Management Routes (Admin Only)
+        Route::middleware('role:admin')->group(function () {
             Route::get('users', [UserController::class, 'index'])->name('users.index');
             Route::patch('users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
             Route::patch('users/{id}/update-role', [UserController::class, 'updateRole'])->name('users.update-role');
