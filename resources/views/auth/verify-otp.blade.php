@@ -63,17 +63,15 @@
 <!-- Resend Section -->
 <div class="text-center mt-6 pt-6 border-t border-secondary/30 text-text/80 text-sm">
     @php
-        $secondsLeft = 0;
-        if ($verification && $verification->expires_at) {
-            $secondsLeft = max(0, now()->diffInSeconds($verification->expires_at, false));
-        }
+        $cooldownSeconds = 15;
+        $showCooldown = session('success') || (!$errors->any() && $verification && $verification->expires_at && $verification->expires_at->isFuture());
     @endphp
 
-    <div id="countdown-wrapper" class="{{ $secondsLeft > 0 ? '' : 'hidden' }}">
-        Kirim ulang kode OTP dalam <span id="timer" class="font-bold text-primary">{{ $secondsLeft }}</span> detik
+    <div id="countdown-wrapper" class="{{ $showCooldown ? '' : 'hidden' }}">
+        Kirim ulang kode OTP dalam <span id="timer" class="font-bold text-primary">{{ $cooldownSeconds }}</span> detik
     </div>
 
-    <form id="resend-form" action="{{ route('verification.resend') }}" method="POST" class="{{ $secondsLeft > 0 ? 'hidden' : '' }}">
+    <form id="resend-form" action="{{ route('verification.resend') }}" method="POST" class="{{ $showCooldown ? 'hidden' : '' }}">
         @csrf
         <span>Tidak menerima kode? </span>
         <button type="submit" class="text-accent font-medium hover:underline focus:outline-none {{ $isLocked ? 'cursor-not-allowed opacity-50' : '' }}" {{ $isLocked ? 'disabled' : '' }}>
@@ -85,7 +83,7 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        let secondsLeft = {{ $secondsLeft }};
+        let secondsLeft = {{ $showCooldown ? $cooldownSeconds : 0 }};
         const timerElement = document.getElementById('timer');
         const countdownWrapper = document.getElementById('countdown-wrapper');
         const resendForm = document.getElementById('resend-form');

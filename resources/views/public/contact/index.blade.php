@@ -91,7 +91,6 @@
             <h3 class="text-xl font-bold text-text">Lokasi Kami</h3>
         </div>
         <p class="text-text/90 font-medium text-lg mb-2">Tanah Grogot, Kabupaten Paser, Kalimantan Timur</p>
-        <p class="text-text/80 font-medium">Indonesia</p>
     </div>
 </div>
 @endsection

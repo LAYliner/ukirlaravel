@@ -129,10 +129,9 @@
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-text font-semibold mb-4">Kontak</h4>
+                    <h4 class="text-text font-semibold mb-4">Alamat</h4>
                     <ul class="space-y-2 text-text/80 font-medium">
-                        <li>Tanah Grogot, Kabupaten Paser, Kalimantan Timur</li>
-                        <li>+62 812 3456 7890</li>
+                        <li> Desa Jone, Kecamatan Tanah Grogot, Kabupaten Paser, Kalimantan Timur</li>
                     </ul>
                 </div>
             </div>
