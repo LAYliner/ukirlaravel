@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use App\Models\Category; 
+use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -58,7 +58,7 @@ class BlogController extends Controller
 
     public function create(): View
     {
-        $categories = Category::all(); 
+        $categories = Category::all();
         return view('admin.blog.create', compact('categories'));
     }
 
@@ -157,6 +157,8 @@ class BlogController extends Controller
 
         if ($request->hasFile('thumbnail_path')) {
             $data['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
+        } elseif ($request->input('delete_thumbnail') === '1') {
+            $data['thumbnail_path'] = null;
         }
 
         $blog->update($data);

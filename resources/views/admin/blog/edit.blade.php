@@ -44,9 +44,14 @@
             <div class="mb-5">
                 <label for="thumbnail_path" class="block text-sm font-medium text-gray-700 mb-1">Thumbnail (Opsional)</label>
                 @if($blog->thumbnail_path)
-                    <div class="mb-2">
+                    <div class="mb-2 flex items-center gap-3">
                         <img src="{{ asset('storage/' . $blog->thumbnail_path) }}" alt="Thumbnail" class="w-48 h-auto rounded-md object-cover border border-secondary/30">
+                        <button type="button" id="remove_thumbnail_btn"
+                                class="px-3 py-1.5 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            Hapus Thumbnail
+                        </button>
                     </div>
+                    <input type="hidden" name="delete_thumbnail" id="delete_thumbnail" value="0">
                 @endif
                 <input type="file" name="thumbnail_path" id="thumbnail_path" accept="image/*"
                        class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('thumbnail_path') border-red-500 focus:ring-red-500 @enderror">
@@ -55,6 +60,22 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const removeBtn = document.getElementById('remove_thumbnail_btn');
+                    const deleteInput = document.getElementById('delete_thumbnail');
+
+                    if (removeBtn) {
+                        removeBtn.addEventListener('click', function() {
+                            // Sembunyikan gambar dan tombol
+                            this.parentElement.style.display = 'none';
+                            // Set flag untuk menghapus thumbnail
+                            deleteInput.value = '1';
+                        });
+                    }
+                });
+            </script>
 
             {{-- Kategori --}}
             <div class="mb-5">
@@ -88,11 +109,11 @@
 
             {{-- Actions --}}
             <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                <a href="{{ route('admin.blog.index') }}" 
+                <a href="{{ route('admin.blog.index') }}"
                    class="px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                     Batal
                 </a>
-                <button type="submit" 
+                <button type="submit"
                         class="px-4 py-2 bg-primary border border-transparent rounded-md text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                     Perbarui Blog
                 </button>
