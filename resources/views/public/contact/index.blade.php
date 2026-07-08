@@ -21,8 +21,8 @@
                 <h3 class="text-xl font-bold text-text">WhatsApp</h3>
             </div>
             <p class="text-text/90 font-medium mb-4">Hubungi kami langsung melalui WhatsApp untuk pertanyaan dan pemesanan.</p>
-            <a href="https://wa.me/6281234567890" target="_blank" class="inline-flex items-center text-base font-medium text-primary hover:text-accent transition-colors">
-                +62 812 3456 7890
+            <a href="https://wa.me/6282136605245" target="_blank" class="inline-flex items-center text-base font-medium text-primary hover:text-accent transition-colors">
+                Whatasapp Sanggar Ukir Tana Paser
                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
             </a>
         </div>
@@ -88,9 +88,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
             </div>
-            <h3 class="text-xl font-bold text-text">Lokasi Kami</h3>
-        </div>
-        <p class="text-text/90 font-medium text-lg mb-2">Tanah Grogot, Kabupaten Paser, Kalimantan Timur</p>
     </div>
 </div>
 @endsection

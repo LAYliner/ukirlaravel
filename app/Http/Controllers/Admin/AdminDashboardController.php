@@ -7,6 +7,7 @@ use App\Models\Blog;
 use App\Models\User;
 use App\Models\Comment;
 use App\Models\Category;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
@@ -18,6 +19,9 @@ class AdminDashboardController extends Controller
             'totalUsers' => User::count(),
             'totalComments' => Comment::count(),
             'totalCategories' => Category::count(),
+            'mostViewedBlogs' => Blog::orderBy('views', 'desc')->take(5)->get(),
+            'mostViewedProjects' => Project::orderBy('views', 'desc')->take(5)->get(),
+            'recentComments' => Comment::with(['user', 'commentable'])->orderBy('created_at', 'desc')->take(10)->get(),
         ];
         
         return view('admin.dashboard', $data);
