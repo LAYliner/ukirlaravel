@@ -103,20 +103,4 @@ class User extends Authenticatable
             ? asset('storage/' . $this->profile_picture)
             : 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=885007&background=e1c49d';
     }
-
-    /**
-     * Accessor for profile_photo_path (compatibility with admin code).
-     */
-    public function getProfilePhotoPathAttribute()
-    {
-        return $this->profile_picture;
-    }
-
-    /**
-     * Mutator for profile_photo_path (compatibility with admin code).
-     */
-    public function setProfilePhotoPathAttribute($value)
-    {
-        $this->attributes['profile_picture'] = $value;
-    }
 }

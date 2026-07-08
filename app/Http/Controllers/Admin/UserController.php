@@ -112,41 +112,6 @@ class UserController extends Controller
     }
 
     /**
-     * Upload/update user profile photo.
-     * Note: Resize akan dilakukan via CSS di frontend (150x150px display)
-     */
-    public function uploadPhoto(Request $request, string $id): RedirectResponse
-    {
-        $validated = $request->validate([
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        $user = User::findOrFail($id);
-
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-
-            // Generate unique filename
-            $filename = 'profile_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $path = $file->storeAs('profiles', $filename, 'public');
-
-            // Delete old photo if exists
-            if ($user->profile_photo_path) {
-                Storage::disk('public')->delete($user->profile_photo_path);
-            }
-
-            $user->profile_photo_path = $path;
-            $user->save();
-
-            return redirect()->route('admin.users.index')
-                ->with('success', 'Foto profil berhasil diupload.');
-        }
-
-        return redirect()->route('admin.users.index')
-            ->with('error', 'Gagal mengupload foto profil.');
-    }
-
-    /**
      * Soft delete a user.
      */
     public function destroy(string $id): RedirectResponse
@@ -191,8 +156,8 @@ class UserController extends Controller
         }
 
         // Delete profile photo if exists
-        if ($user->profile_photo_path) {
-            Storage::disk('public')->delete($user->profile_photo_path);
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
         }
 
         $user->forceDelete();

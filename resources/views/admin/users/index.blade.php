@@ -132,8 +132,8 @@
                         <tr class="hover:bg-gray-50 transition-colors {{ $user->trashed() ? 'bg-red-50' : '' }}">
                             {{-- Profile Photo --}}
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($user->profile_photo_path)
-                                    <img src="{{ asset('storage/' . $user->profile_photo_path) }}"
+                                @if($user->profile_picture)
+                                    <img src="{{ asset('storage/' . $user->profile_picture) }}"
                                          alt="{{ $user->name }}"
                                          class="h-12 w-12 rounded-full object-cover border-2 border-gray-200">
                                 @else
@@ -219,14 +219,6 @@
                                         </button>
                                     @endif
 
-                                    {{-- Upload Photo Button --}}
-                                    <button type="button"
-                                            onclick="openPhotoModal('{{ $user->id }}', '{{ $user->name }}')"
-                                            class="text-blue-600 hover:text-blue-900"
-                                            title="Upload Foto">
-                                        Foto
-                                    </button>
-
                                     {{-- Delete Button --}}
                                     @if(auth()->id() !== $user->id)
                                         <button type="button"
@@ -256,39 +248,6 @@
                 {{ $users->appends(request()->except('page'))->links('vendor.pagination.simple') }}
             </div>
         @endif
-    </div>
-</div>
-
-{{-- Photo Upload Modal --}}
-<div id="photoModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        <div class="mt-3">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Upload Foto Profil</h3>
-            <form id="photoForm" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-                <div class="mb-4">
-                    <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">Pilih Foto</label>
-                    <input type="file"
-                           name="photo"
-                           id="photo"
-                           accept="image/*"
-                           required
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary text-sm">
-                    <p class="mt-1 text-xs text-gray-500">Foto akan diresize otomatis ke 150x150px</p>
-                </div>
-                <div class="flex gap-2">
-                    <button type="submit" class="flex-1 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 text-sm font-medium">
-                        Upload
-                    </button>
-                    <button type="button"
-                            onclick="closePhotoModal()"
-                            class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm font-medium">
-                        Batal
-                    </button>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
 
@@ -363,24 +322,5 @@ function confirmToggleStatus(toggleUrl, isActive) {
         form.submit();
     }
 }
-
-function openPhotoModal(userId, userName) {
-    const modal = document.getElementById('photoModal');
-    const form = document.getElementById('photoForm');
-    form.action = '/admin/users/' + userId + '/upload-photo';
-    modal.classList.remove('hidden');
-}
-
-function closePhotoModal() {
-    const modal = document.getElementById('photoModal');
-    modal.classList.add('hidden');
-}
-
-// Close modal when clicking outside
-document.getElementById('photoModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closePhotoModal();
-    }
-});
 </script>
 @endsection
