@@ -12,14 +12,14 @@
             <p class="text-gray-650 mt-1">Kelola artikel, proyek, dan konten blog dari sini.</p>
         </div>
         <div class="flex flex-wrap gap-3">
-            <a href="{{ route('admin.blog.create') }}" 
+            <a href="{{ route('admin.blog.create') }}"
                class="inline-flex items-center gap-2 bg-primary text-white hover:bg-primary/90 focus:ring-2 focus:ring-primary/50 px-4 py-2 rounded-md text-sm font-medium transition shadow-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Buat Blog Baru
             </a>
-            <a href="{{ route('admin.blog.index') }}" 
+            <a href="{{ route('admin.blog.index') }}"
                class="inline-flex items-center gap-2 bg-white border border-secondary/30 text-text hover:bg-gray-50 focus:ring-2 focus:ring-primary/50 px-4 py-2 rounded-md text-sm font-medium transition shadow-sm">
                 Lihat Semua Blog
             </a>
@@ -28,7 +28,7 @@
 
     {{-- Statistics Grid --}}
     <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        
+
         {{-- Total Blogs --}}
         <div class="bg-white p-6 rounded-lg border border-secondary/30 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center justify-between mb-4">
@@ -40,7 +40,21 @@
                 </span>
             </div>
             <p class="text-3xl font-bold text-text">{{ $totalBlogs ?? 0 }}</p>
-            <p class="text-sm text-gray-800 mt-1">Blog terpublikasi & draft</p>
+            <p class="text-sm text-gray-800 mt-1">Blog terpublikasi</p>
+        </div>
+
+        {{-- Total Projects --}}
+        <div class="bg-white p-6 rounded-lg border border-secondary/30 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-medium text-gray-900 uppercase tracking-wider">Total Proyek</h3>
+                <span class="p-2 bg-indigo-50 text-indigo-600 rounded-full">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                </span>
+            </div>
+            <p class="text-3xl font-bold text-text">{{ $totalProjects ?? 0 }}</p>
+            <p class="text-sm text-gray-800 mt-1">Proyek terpublikasi</p>
         </div>
 
         {{-- Total Users --}}
@@ -54,7 +68,7 @@
                 </span>
             </div>
             <p class="text-3xl font-bold text-text">{{ $totalUsers ?? 0 }}</p>
-            <p class="text-sm text-gray-800 mt-1">Admin, Author, & Member</p>
+            <p class="text-sm text-gray-800 mt-1">Pengguna terdaftar</p>
         </div>
 
         {{-- Total Comments --}}
@@ -69,20 +83,6 @@
             </div>
             <p class="text-3xl font-bold text-text">{{ $totalComments ?? 0 }}</p>
             <p class="text-sm text-gray-800 mt-1">Diskusi aktif</p>
-        </div>
-
-        {{-- Total Categories --}}
-        <div class="bg-white p-6 rounded-lg border border-secondary/30 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-base font-medium text-gray-900 uppercase tracking-wider">Kategori</h3>
-                <span class="p-2 bg-purple-50 text-purple-600 rounded-full">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                    </svg>
-                </span>
-            </div>
-            <p class="text-3xl font-bold text-text">{{ $totalCategories ?? 0 }}</p>
-            <p class="text-sm text-gray-800 mt-1">Topik konten</p>
         </div>
 
     </section>
@@ -124,7 +124,7 @@
                         </p>
                         <div class="flex items-center justify-between text-[10px]">
                             <span class="text-gray-400">
-                                Pada: 
+                                Pada:
                                 <span class="font-medium text-gray-500">
                                     @if($comment->commentable_type === 'App\Models\Blog')
                                         Blog ({{ Str::limit($comment->commentable->title ?? '', 15) }})
@@ -135,8 +135,8 @@
                                     @endif
                                 </span>
                             </span>
-                            <a href="{{ $comment->commentable_type === 'App\Models\Blog' ? route('blog.show', $comment->commentable->slug ?? '') : ($comment->commentable_type === 'App\Models\Project' ? route('projects.show', $comment->commentable->slug ?? '') : '#') }}" 
-                               target="_blank" 
+                            <a href="{{ $comment->commentable_type === 'App\Models\Blog' ? route('blog.show', $comment->commentable->slug ?? '') : ($comment->commentable_type === 'App\Models\Project' ? route('projects.show', $comment->commentable->slug ?? '') : '#') }}"
+                               target="_blank"
                                class="text-primary hover:underline font-medium inline-flex items-center gap-1">
                                 Lihat
                                 <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,10 +163,10 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const ctx = document.getElementById('viewsChart').getContext('2d');
-        
+
         const blogViews = {!! json_encode($mostViewedBlogs->pluck('views')) !!};
         const blogTitles = {!! json_encode($mostViewedBlogs->pluck('title')) !!};
-        
+
         const projectViews = {!! json_encode($mostViewedProjects->pluck('views')) !!};
         const projectTitles = {!! json_encode($mostViewedProjects->pluck('title')) !!};
 
