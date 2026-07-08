@@ -39,7 +39,8 @@ import {
     TableToolbar,
     TextTransformation,
     TodoList,
-    Underline
+    Underline,
+    SimpleUploadAdapter
 } from 'ckeditor5';
 
 import 'ckeditor5/ckeditor5.css';
@@ -75,6 +76,7 @@ const editorConfig = {
             'underline',
             '|',
             'link',
+            'insertImage',
             'mediaEmbed',
             'insertTable',
             'blockQuote',
@@ -122,7 +124,8 @@ const editorConfig = {
         TableToolbar,
         TextTransformation,
         TodoList,
-        Underline
+        Underline,
+        SimpleUploadAdapter
     ],
     licenseKey: LICENSE_KEY,
     balloonToolbar: ['bold', 'italic', '|', 'link', '|', 'bulletedList', 'numberedList'],
@@ -196,6 +199,12 @@ const editorConfig = {
     },
     table: {
         contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells']
+    },
+    simpleUpload: {
+        uploadUrl: '/admin/ckeditor/upload',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        }
     }
 };
 

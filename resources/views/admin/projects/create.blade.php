@@ -24,7 +24,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.projects.store') }}" method="POST">
+        <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -55,13 +55,6 @@
                     <label for="thumbnail_path" class="block text-sm font-medium text-gray-700 mb-1">Thumbnail (Opsional)</label>
                     <input type="file" name="thumbnail_path" id="thumbnail_path" accept="image/*"
                            class="w-full px-3 py-2 border border-secondary/30 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary @error('thumbnail_path') border-red-500 focus:ring-red-500 @enderror">
-                    <div class="mt-2 flex items-center">
-                        <input type="checkbox" name="delete_thumbnail" id="delete_thumbnail" value="1"
-                               class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
-                        <label for="delete_thumbnail" class="ml-2 block text-sm text-gray-700">
-                            Hapus thumbnail yang ada
-                        </label>
-                    </div>
                     @error('thumbnail_path')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

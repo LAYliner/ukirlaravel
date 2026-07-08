@@ -22,7 +22,7 @@ class UpdateProjectRequest extends FormRequest
             'slug'           => ['nullable', 'string', 'max:255', Rule::unique('projects', 'slug')->ignore($projectId, 'id')],
             'description'    => ['required', 'string'],
             'client_name'    => ['nullable', 'string', 'max:255'],
-            'thumbnail_path' => ['nullable', 'image', 'max:2048'],
+            'thumbnail_path' => ['nullable', 'file', 'mimes:jpeg,jpg,png,gif,webp', 'max:2048'],
             'status'         => ['required', 'string', 'in:draft,published'],
             'is_visible'     => ['nullable', 'boolean'],
             'tags'           => ['nullable', 'array'],

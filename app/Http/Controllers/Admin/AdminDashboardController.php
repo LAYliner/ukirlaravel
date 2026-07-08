@@ -22,4 +22,27 @@ class AdminDashboardController extends Controller
         
         return view('admin.dashboard', $data);
     }
+
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+        
+            $request->file('upload')->storeAs('uploads/editor', $fileName, 'public');
+            
+            $url = asset('storage/uploads/editor/' . $fileName);
+            return response()->json([
+                'url' => $url
+            ]);
+        }
+        
+        return response()->json([
+            'error' => [
+                'message' => 'No file uploaded.'
+            ]
+        ], 400);
+    }
 }

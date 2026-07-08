@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
     // Admin & Author Only
     Route::middleware('role:admin,author')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+        Route::post('ckeditor/upload', [AdminDashboardController::class, 'uploadImage'])->name('ckeditor.upload');
 
         // Blog Resource Routes
         Route::resource('blog', AdminBlogController::class);
