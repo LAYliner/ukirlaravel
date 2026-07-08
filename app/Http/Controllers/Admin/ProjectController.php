@@ -72,6 +72,7 @@ class ProjectController extends Controller
             $validated['thumbnail_path'] = $request->file('thumbnail_path')->store('thumbnails', 'public');
         } elseif ($request->input('delete_thumbnail') === '1') {
             $validated['thumbnail_path'] = null;
+        }
 
         // Handle tags - sync setelah project dibuat
         $tagIds = $request->input('tags', []);

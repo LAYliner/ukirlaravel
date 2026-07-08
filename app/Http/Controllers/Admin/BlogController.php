@@ -85,14 +85,14 @@ class BlogController extends Controller
 
         $data = [
             'id' => Str::uuid()->toString(),
-            'title' => $request->title,
-            'content' => $request->content,
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
             'slug' => $slug,
-            'status' => $request->status,
-            'is_visible' => $request->status === 'published',
-            'published_at' => $request->status === 'published' ? now() : null,
+            'status' => $request->input('status'),
+            'is_visible' => $request->input('status') === 'published',
+            'published_at' => $request->input('status') === 'published' ? now() : null,
             'user_id' => auth()->id(),
-            'category_id' => $request->category_id,
+            'category_id' => $request->input('category_id'),
             'thumbnail_path' => null,
         ];
 
@@ -146,13 +146,13 @@ class BlogController extends Controller
         }
 
         $data = [
-            'title' => $request->title,
-            'content' => $request->content,
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
             'slug' => $slug,
-            'status' => $request->status,
+            'status' => $request->input('status'),
             'is_visible' => $is_visible,
             'published_at' => $published_at,
-            'category_id' => $request->category_id,
+            'category_id' => $request->input('category_id'),
         ];
 
         if ($request->hasFile('thumbnail_path')) {
