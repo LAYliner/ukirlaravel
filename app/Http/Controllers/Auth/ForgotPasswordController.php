@@ -31,12 +31,13 @@ class ForgotPasswordController extends Controller
 
         if ($user) {
             $this->createAndSendToken($user, $request);
+            return redirect()->route('password.verify')
+                ->with('status', 'Kode verifikasi 6 digit telah dikirim ke email Anda.');
         }
 
-        return back()->with(
-            'status',
-            'Jika alamat email tersebut terdaftar, kami telah mengirimkan kode verifikasi 6 digit.'
-        );
+        return back()->withErrors([
+            'email' => 'Email tidak terdaftar.',
+        ])->withInput();
     }
 
     public function resendToken(Request $request): RedirectResponse

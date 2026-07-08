@@ -31,7 +31,8 @@ class ForgotPasswordTest extends TestCase
 
         $this->post('/forgot-password', [
             'email' => 'user@example.com',
-        ])->assertSessionHas('status');
+        ])->assertRedirect(route('password.verify'))
+          ->assertSessionHas('status');
 
         Mail::assertQueued(ResetPasswordMail::class);
 
@@ -176,5 +177,15 @@ class ForgotPasswordTest extends TestCase
 
         $this->assertDatabaseMissing('password_reset_tokens', ['email' => 'expired@example.com']);
         $this->assertDatabaseHas('password_reset_tokens', ['email' => 'active@example.com']);
+    }
+
+    public function test_unregistered_email_shows_error(): void
+    {
+        $this->post('/forgot-password', [
+            'email' => 'nonexistent@example.com',
+        ])->assertRedirect()
+          ->assertSessionHasErrors(['email' => 'Email tidak terdaftar.']);
+
+        Mail::assertNotQueued(ResetPasswordMail::class);
     }
 }

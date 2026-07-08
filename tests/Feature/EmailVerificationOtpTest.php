@@ -48,6 +48,43 @@ class EmailVerificationOtpTest extends TestCase
         $this->assertEquals('test@example.com', session('pending_verification_email'));
     }
 
+    public function test_registration_ignores_requested_author_role()
+    {
+        $response = $this->post('/register', [
+            'name' => 'Author Request',
+            'email' => 'author-request@example.com',
+            'phone' => '08123456789',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'role' => 'author',
+        ]);
+
+        $response->assertRedirect('/verify-otp');
+        $this->assertDatabaseHas('users', [
+            'email' => 'author-request@example.com',
+            'role' => 'user',
+        ]);
+    }
+
+    public function test_registration_verification_uses_verify_otp_view_with_session_email()
+    {
+        EmailVerification::create([
+            'email' => 'test@example.com',
+            'otp_code' => hash('sha256', '123456'),
+            'attempts' => 0,
+            'is_locked' => false,
+            'expires_at' => now()->addMinutes(10),
+        ]);
+
+        $response = $this->withSession(['pending_verification_email' => 'test@example.com'])
+            ->get('/verify-otp');
+
+        $response->assertOk();
+        $response->assertViewIs('auth.verify-otp');
+        $response->assertSee('test@example.com');
+        $response->assertDontSee('type="email"', false);
+    }
+
     public function test_user_can_verify_otp_successfully()
     {
         // Setup pending registration in session & database

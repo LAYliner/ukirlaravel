@@ -35,6 +35,11 @@ Route::get('/contact', function () {
     return view('public.contact.index');
 })->name('contact');
 
+// Public About Route
+Route::get('/about', function () {
+    return view('public.about.index');
+})->name('about');
+
 // Public Project Routes
 Route::get('/projects', [PublicProjectController::class, 'index'])->name('projects.index');
 Route::get('/projects/{slug}', [PublicProjectController::class, 'show'])->name('projects.show');

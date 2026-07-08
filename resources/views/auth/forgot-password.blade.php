@@ -45,8 +45,6 @@
     </form>
 
     <div class="text-center mt-6 pt-6 border-t border-secondary/30 text-text/80 text-sm">
-        <a href="{{ route('password.verify') }}" class="text-accent font-medium hover:underline">Sudah punya kode?</a>
-        <span class="mx-2">/</span>
         <a href="{{ route('login.show') }}" class="text-accent font-medium hover:underline">Kembali ke login</a>
     </div>
 @endsection

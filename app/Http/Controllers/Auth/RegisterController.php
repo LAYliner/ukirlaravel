@@ -29,7 +29,6 @@ class RegisterController extends Controller
                 'email' => 'required|email',
                 'password' => ['required', 'confirmed', Password::min(8)],
                 'phone' => 'nullable|string|max:20',
-                'role' => 'required|string|in:user,author',
             ]);
 
             Log::info('Register attempt', ['email' => $request->email]);
@@ -46,7 +45,7 @@ class RegisterController extends Controller
                             'name' => $request->name,
                             'phone' => $request->phone,
                             'password' => Hash::make($request->password),
-                            'role' => $request->role,
+                            'role' => 'user',
                         ]);
 
                         // Generate OTP
@@ -66,7 +65,7 @@ class RegisterController extends Controller
                     });
 
                     session(['pending_verification_email' => $request->email]);
-                    return redirect('/verify-otp')->with('success', 'Kode OTP baru telah dikirim ke email Anda.');
+                    return redirect()->route('verification.notice')->with('success', 'Kode OTP baru telah dikirim ke email Anda.');
                 }
             }
 
@@ -77,7 +76,7 @@ class RegisterController extends Controller
                     'email' => $request->email,
                     'phone' => $request->phone,
                     'password' => Hash::make($request->password),
-                    'role' => $request->role,
+                    'role' => 'user',
                     'is_active' => true,
                     'email_verified_at' => null,
                 ]);
@@ -100,7 +99,7 @@ class RegisterController extends Controller
 
             session(['pending_verification_email' => $request->email]);
 
-            return redirect('/verify-otp')->with('success', 'Registrasi berhasil. Silakan masukkan kode OTP yang dikirim ke email Anda.');
+            return redirect()->route('verification.notice')->with('success', 'Registrasi berhasil. Silakan masukkan kode OTP yang dikirim ke email Anda.');
         } catch (\Exception $e) {
             Log::error('Register failed', ['error' => $e->getMessage()]);
             

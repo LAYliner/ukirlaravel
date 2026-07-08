@@ -31,9 +31,15 @@ class LoginController extends Controller
 
         $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-        if (!$user || !\Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password)) {
+        if (!$user) {
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => 'Email tidak terdaftar.',
+            ]);
+        }
+
+        if (!\Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'password' => 'Password salah.',
             ]);
         }
 
@@ -75,10 +81,10 @@ class LoginController extends Controller
     {
         try {
             Auth::logout();
-            
+
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-            
+
             return redirect()->route('login.show')
                 ->with('success', 'Anda telah logout.');
         } catch (\Exception $e) {

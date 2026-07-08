@@ -40,7 +40,13 @@ class VerificationController extends Controller
             }
         }
 
-        return view('auth.verify-otp', compact('email', 'isLocked', 'lockMessage', 'verification'));
+        return view('auth.verify-otp', [
+            'email' => $email,
+            'isLocked' => $isLocked,
+            'lockMessage' => $lockMessage,
+            'verification' => $verification,
+            'verificationContext' => 'registration',
+        ]);
     }
 
     public function verify(Request $request)
