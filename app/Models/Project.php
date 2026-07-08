@@ -99,7 +99,7 @@ class Project extends Model
 
     public function scopeForAuthenticatedUser(Builder $query, User $user): Builder
     {
-        return $user->role !== 'admin' ? $query->where('user_id', $user->id) : $query;
+        return $query;
     }
 
     public function scopeActive(Builder $query): Builder

@@ -124,7 +124,7 @@
                                 {{ $blog->category->name ?? '-' }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                @if(auth()->user()->role === 'admin')
+                                @if(auth()->user()->role === 'admin' || $blog->user_id === auth()->id())
                                     <form action="{{ route('admin.blog.update-status', $blog->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PATCH')
@@ -160,10 +160,12 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('admin.blog.edit', $blog->id) }}" 
-                                       class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                    @if(auth()->user()->role === 'admin' || $blog->user_id === auth()->id())
+                                        <a href="{{ route('admin.blog.edit', $blog->id) }}" 
+                                           class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                    @endif
 
-                                    @if(auth()->user()->role === 'admin' && $blog->status === 'published')
+                                    @if((auth()->user()->role === 'admin' || $blog->user_id === auth()->id()) && $blog->status === 'published')
                                         <form action="{{ route('admin.blog.toggle-visibility', $blog->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('PATCH')
@@ -178,11 +180,13 @@
                                         </form>
                                     @endif
 
-                                    <form action="{{ route('admin.blog.destroy', $blog->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus blog ini?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
-                                    </form>
+                                    @if(auth()->user()->role === 'admin' || $blog->user_id === auth()->id())
+                                        <form action="{{ route('admin.blog.destroy', $blog->id) }}" method="POST" class="inline" onsubmit="return confirm('Hapus blog ini?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>

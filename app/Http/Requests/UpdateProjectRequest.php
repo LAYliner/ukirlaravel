@@ -9,7 +9,21 @@ class UpdateProjectRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return in_array(auth()->user()?->role, ['admin', 'author'], true);
+        $user = auth()->user();
+        if (!$user || !in_array($user->role, ['admin', 'author'], true)) {
+            return false;
+        }
+
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        // Author can only update their own project
+        $project = $this->route('project');
+        $projectId = $project instanceof \App\Models\Project ? $project->id : $project;
+        $ownerId = \App\Models\Project::where('id', $projectId)->value('user_id');
+
+        return $ownerId === $user->id;
     }
 
     public function rules(): array

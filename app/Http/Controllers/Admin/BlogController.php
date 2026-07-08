@@ -109,6 +109,11 @@ class BlogController extends Controller
     public function edit(string $id)//: View
     {
         $blog = Blog::findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $blog->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $categories = Category::all();
         return view('admin.blog.edit', compact('blog', 'categories'));
     }
@@ -116,6 +121,10 @@ class BlogController extends Controller
     public function update(Request $request, string $id): RedirectResponse
     {
         $blog = Blog::findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $blog->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
         $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -170,6 +179,11 @@ class BlogController extends Controller
     public function destroy(string $id): RedirectResponse
     {
         $blog = Blog::findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $blog->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
         $blog->delete();
 
         return redirect()->route('admin.blog.index')
@@ -178,9 +192,11 @@ class BlogController extends Controller
 
     public function toggleVisibility(string $id): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') abort(403, 'Akses ditolak.');
-
         $blog = Blog::findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $blog->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
         // Blokir toggle pada status draft
         if ($blog->status !== 'published') {
@@ -198,13 +214,15 @@ class BlogController extends Controller
 
     public function updateStatus(string $id, Request $request): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') abort(403, 'Akses ditolak.');
+        $blog = Blog::findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $blog->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
         $validated = $request->validate([
             'status' => ['required', 'string', 'in:draft,published'],
         ]);
-
-        $blog = Blog::findOrFail($id);
 
         if ($blog->status === $validated['status']) return redirect()->back();
 

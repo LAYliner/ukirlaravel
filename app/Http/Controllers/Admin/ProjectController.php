@@ -18,7 +18,7 @@ class ProjectController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Project::query()->forAuthenticatedUser(auth()->user());
+        $query = Project::query();
 
         $query->filterByStatus($request->string('status')->toString())
             ->filterByAuthor($request->string('author_id')->toString())
@@ -92,7 +92,6 @@ class ProjectController extends Controller
     public function show(string $id): View
     {
         $project = Project::query()
-                          ->forAuthenticatedUser(auth()->user())
                           ->findOrFail($id);
 
         return view('admin.projects.show', compact('project'));
@@ -101,10 +100,13 @@ class ProjectController extends Controller
     public function edit(string $id): View
     {
         $project = Project::query()
-                          ->forAuthenticatedUser(auth()->user())
-                          ->with('tags')
                           ->findOrFail($id);
 
+        if (auth()->user()->role !== 'admin' && $project->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        $project->load('tags');
         $tags = Tag::orderBy('name')->get();
 
         return view('admin.projects.edit', compact('project', 'tags'));
@@ -113,8 +115,11 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, string $id): RedirectResponse
     {
         $project = Project::query()
-                          ->forAuthenticatedUser(auth()->user())
                           ->findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $project->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
         $validated = $request->validated();
 
@@ -122,10 +127,6 @@ class ProjectController extends Controller
             $validated['slug'] = $this->generateUniqueSlug($validated['title'], $id);
         } else {
             $validated['slug'] = !empty($validated['slug']) ? Str::slug($validated['slug']) : $project->slug;
-        }
-
-        if (auth()->user()->role !== 'admin' && isset($validated['status'])) {
-            unset($validated['status']);
         }
 
         if ($request->hasFile('thumbnail_path')) {
@@ -149,8 +150,11 @@ class ProjectController extends Controller
     public function destroy(string $id): RedirectResponse
     {
         $project = Project::query()
-                          ->forAuthenticatedUser(auth()->user())
                           ->findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $project->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
         $project->delete();
 
@@ -160,9 +164,11 @@ class ProjectController extends Controller
 
     public function toggleVisibility(string $id): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') abort(403, 'Akses ditolak.');
-
         $project = Project::query()->findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $project->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
         // Blokir toggle pada status draft
         if ($project->status !== 'published') {
@@ -180,13 +186,15 @@ class ProjectController extends Controller
 
     public function updateStatus(string $id, Request $request): RedirectResponse
     {
-        if (auth()->user()->role !== 'admin') abort(403, 'Akses ditolak.');
+        $project = Project::query()->findOrFail($id);
+
+        if (auth()->user()->role !== 'admin' && $project->user_id !== auth()->id()) {
+            abort(403, 'Akses ditolak.');
+        }
 
         $validated = $request->validate([
             'status' => ['required', 'string', 'in:draft,published'],
         ]);
-
-        $project = Project::query()->findOrFail($id);
 
         if ($project->status === $validated['status']) return redirect()->back();
 

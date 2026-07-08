@@ -160,7 +160,7 @@
                                 {{ $project->created_at->format('d M Y H:i') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                @if(auth()->user()->role === 'admin')
+                                @if(auth()->user()->role === 'admin' || $project->user_id === auth()->id())
                                     <form action="{{ route('admin.projects.update-status', $project->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PATCH')
@@ -190,10 +190,12 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('admin.projects.edit', $project->id) }}"
-                                       class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                    @if(auth()->user()->role === 'admin' || $project->user_id === auth()->id())
+                                        <a href="{{ route('admin.projects.edit', $project->id) }}"
+                                           class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                    @endif
 
-                                    @if(auth()->user()->role === 'admin' && $project->status === 'published')
+                                    @if((auth()->user()->role === 'admin' || $project->user_id === auth()->id()) && $project->status === 'published')
                                         <form action="{{ route('admin.projects.toggle-visibility', $project->id) }}" method="POST" class="inline">
                                             @csrf
                                             @method('PATCH')
@@ -208,11 +210,13 @@
                                         </form>
                                     @endif
 
-                                    <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST" class="inline" onsubmit="return confirm('Pindahkan project ke trash? Data dapat dipulihkan.');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
-                                    </form>
+                                    @if(auth()->user()->role === 'admin' || $project->user_id === auth()->id())
+                                        <form action="{{ route('admin.projects.destroy', $project->id) }}" method="POST" class="inline" onsubmit="return confirm('Pindahkan project ke trash? Data dapat dipulihkan.');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
+                                        </form>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
