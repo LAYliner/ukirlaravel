@@ -1,338 +1,438 @@
-  - path: /package-lock.json
-    type: file
-  - path: /bootstrap
+- path: /app
+  type: directory
+  contents:
+  - path: /app/Http
     type: directory
     contents:
-    - path: /bootstrap/providers.php
-      type: file
-    - path: /bootstrap/app.php
-      type: file
-    - path: /bootstrap/cache
+    - path: /app/Http/Controllers
       type: directory
       contents:
-  - path: /jamu.txt
-    type: file
-  - path: /composer.lock
-    type: file
-  - path: /README.md
-    type: file
-  - path: /konteks.md
-    type: file
-  - path: /package.json
-    type: file
-  - path: /tests
+      - path: /app/Http/Controllers/Controller.php
+        type: file
+      - path: /app/Http/Controllers/ProfileController.php
+        type: file
+      - path: /app/Http/Controllers/Admin
+        type: directory
+        contents:
+        - path: /app/Http/Controllers/Admin/AdminDashboardController.php
+          type: file
+        - path: /app/Http/Controllers/Admin/BlogController.php
+          type: file
+        - path: /app/Http/Controllers/Admin/CategoryController.php
+          type: file
+        - path: /app/Http/Controllers/Admin/CommentController.php
+          type: file
+        - path: /app/Http/Controllers/Admin/ProjectController.php
+          type: file
+        - path: /app/Http/Controllers/Admin/TagController.php
+          type: file
+        - path: /app/Http/Controllers/Admin/UserController.php
+          type: file
+      - path: /app/Http/Controllers/Auth
+        type: directory
+        contents:
+        - path: /app/Http/Controllers/Auth/ForgotPasswordController.php
+          type: file
+        - path: /app/Http/Controllers/Auth/LoginController.php
+          type: file
+        - path: /app/Http/Controllers/Auth/RegisterController.php
+          type: file
+        - path: /app/Http/Controllers/Auth/ResetPasswordController.php
+          type: file
+        - path: /app/Http/Controllers/Auth/VerificationController.php
+          type: file
+      - path: /app/Http/Controllers/Public
+        type: directory
+        contents:
+        - path: /app/Http/Controllers/Public/BlogController.php
+          type: file
+        - path: /app/Http/Controllers/Public/CommentController.php
+          type: file
+        - path: /app/Http/Controllers/Public/ContentHighlightController.php
+          type: file
+        - path: /app/Http/Controllers/Public/HomeController.php
+          type: file
+        - path: /app/Http/Controllers/Public/ProjectController.php
+          type: file
+    - path: /app/Http/Middleware
+      type: directory
+      contents:
+      - path: /app/Http/Middleware/CheckRole.php
+        type: file
+      - path: /app/Http/Middleware/PreventAuthPageCache.php
+        type: file
+    - path: /app/Http/Requests
+      type: directory
+      contents:
+      - path: /app/Http/Requests/ChangePasswordRequest.php
+        type: file
+      - path: /app/Http/Requests/StoreProjectRequest.php
+        type: file
+      - path: /app/Http/Requests/StoreTagRequest.php
+        type: file
+      - path: /app/Http/Requests/UpdateProfileRequest.php
+        type: file
+      - path: /app/Http/Requests/UpdateProjectRequest.php
+        type: file
+      - path: /app/Http/Requests/UpdateTagRequest.php
+        type: file
+  - path: /app/Mail
     type: directory
     contents:
-    - path: /tests/Feature
-      type: directory
-      contents:
-      - path: /tests/Feature/ExampleTest.php
-        type: file
-    - path: /tests/Unit
-      type: directory
-      contents:
-      - path: /tests/Unit/ExampleTest.php
-        type: file
-    - path: /tests/TestCase.php
+    - path: /app/Mail/OtpMail.php
       type: file
-  - path: /phpunit.xml
+    - path: /app/Mail/ResetPasswordMail.php
+      type: file
+  - path: /app/Models
+    type: directory
+    contents:
+    - path: /app/Models/Blog.php
+      type: file
+    - path: /app/Models/Category.php
+      type: file
+    - path: /app/Models/Comment.php
+      type: file
+    - path: /app/Models/EmailVerification.php
+      type: file
+    - path: /app/Models/PasswordResetToken.php
+      type: file
+    - path: /app/Models/Project.php
+      type: file
+    - path: /app/Models/ProjectTag.php
+      type: file
+    - path: /app/Models/Tag.php
+      type: file
+    - path: /app/Models/User.php
+      type: file
+  - path: /app/Providers
+    type: directory
+    contents:
+    - path: /app/Providers/AppServiceProvider.php
+      type: file
+- path: /bootstrap
+  type: directory
+  contents:
+  - path: /bootstrap/app.php
     type: file
-  - path: /routes
-    type: directory
-    contents:
-    - path: /routes/web.php
-      type: file
-    - path: /routes/console.php
-      type: file
-  - path: /vite.config.js
+  - path: /bootstrap/providers.php
     type: file
-  - path: /artisan
+- path: /config
+  type: directory
+  contents:
+  - path: /config/app.php
     type: file
-  - path: /storage
-    type: directory
-    contents:
-    - path: /storage/framework
-      type: directory
-      contents:
-      - path: /storage/framework/views
-        type: directory
-        contents:
-      - path: /storage/framework/testing
-        type: directory
-        contents:
-      - path: /storage/framework/sessions
-        type: directory
-        contents:
-      - path: /storage/framework/cache
-        type: directory
-        contents:
-        - path: /storage/framework/cache/data
-          type: directory
-          contents:
-    - path: /storage/logs
-      type: directory
-      contents:
-    - path: /storage/app
-      type: directory
-      contents:
-      - path: /storage/app/private
-        type: directory
-        contents:
-      - path: /storage/app/public
-        type: directory
-        contents:
-  - path: /database
-    type: directory
-    contents:
-    - path: /database/seeders
-      type: directory
-      contents:
-      - path: /database/seeders/DatabaseSeeder.php
-        type: file
-    - path: /database/migrations
-      type: directory
-      contents:
-      - path: /database/migrations/0001_01_01_000000_create_users_table.php
-        type: file
-      - path: /database/migrations/0001_01_01_000001_create_cache_table.php
-        type: file
-      - path: /database/migrations/0001_01_01_000002_create_jobs_table.php
-        type: file
-    - path: /database/factories
-      type: directory
-      contents:
-      - path: /database/factories/UserFactory.php
-        type: file
-  - path: /composer.json
+  - path: /config/auth.php
     type: file
-  - path: /log.txt
+  - path: /config/cache.php
     type: file
-  - path: /app
+  - path: /config/database.php
+    type: file
+  - path: /config/filesystems.php
+    type: file
+  - path: /config/logging.php
+    type: file
+  - path: /config/mail.php
+    type: file
+  - path: /config/queue.php
+    type: file
+  - path: /config/services.php
+    type: file
+  - path: /config/session.php
+    type: file
+- path: /database
+  type: directory
+  contents:
+  - path: /database/factories
     type: directory
     contents:
-    - path: /app/Providers
-      type: directory
-      contents:
-      - path: /app/Providers/AppServiceProvider.php
-        type: file
-    - path: /app/Models
-      type: directory
-      contents:
-      - path: /app/Models/User.php
-        type: file
-      - path: /app/Models/Comment.php
-        type: file
-      - path: /app/Models/Category.php
-        type: file
-      - path: /app/Models/Blog.php
-        type: file
-      - path: /app/Models/Project.php
-        type: file
-      - path: /app/Models/Media.php
-        type: file
-    - path: /app/Http
-      type: directory
-      contents:
-      - path: /app/Http/Middleware
-        type: directory
-        contents:
-        - path: /app/Http/Middleware/PreventAuthPageCache.php
-          type: file
-        - path: /app/Http/Middleware/CheckRole.php
-          type: file
-      - path: /app/Http/Requests
-        type: directory
-        contents:
-        - path: /app/Http/Requests/StoreProjectRequest.php
-          type: file
-        - path: /app/Http/Requests/UpdateProjectRequest.php
-          type: file
-      - path: /app/Http/Controllers
-        type: directory
-        contents:
-        - path: /app/Http/Controllers/Admin
-          type: directory
-          contents:
-          - path: /app/Http/Controllers/Admin/ProjectController.php
-            type: file
-          - path: /app/Http/Controllers/Admin/AdminDashboardController.php
-            type: file
-          - path: /app/Http/Controllers/Admin/CommentController.php
-            type: file
-          - path: /app/Http/Controllers/Admin/CategoryController.php
-            type: file
-          - path: /app/Http/Controllers/Admin/UserController.php
-            type: file
-          - path: /app/Http/Controllers/Admin/BlogController.php
-            type: file
-        - path: /app/Http/Controllers/Auth
-          type: directory
-          contents:
-          - path: /app/Http/Controllers/Auth/LoginController.php
-            type: file
-          - path: /app/Http/Controllers/Auth/RegisterController.php
-            type: file
-        - path: /app/Http/Controllers/Controller.php
-          type: file
-        - path: /app/Http/Controllers/Public
-          type: directory
-          contents:
-          - path: /app/Http/Controllers/Public/ProjectController.php
-            type: file
-          - path: /app/Http/Controllers/Public/CommentController.php
-            type: file
-          - path: /app/Http/Controllers/Public/HomeController.php
-            type: file
-          - path: /app/Http/Controllers/Public/BlogController.php
-            type: file
-  - path: /resources
+    - path: /database/factories/UserFactory.php
+      type: file
+  - path: /database/migrations
     type: directory
     contents:
-    - path: /resources/views
-      type: directory
-      contents:
-      - path: /resources/views/vendor
-        type: directory
-        contents:
-        - path: /resources/views/vendor/pagination
-          type: directory
-          contents:
-          - path: /resources/views/vendor/pagination/simple.blade.php
-            type: file
-      - path: /resources/views/auth
-        type: directory
-        contents:
-        - path: /resources/views/auth/register.blade.php
-          type: file
-        - path: /resources/views/auth/login.blade.php
-          type: file
-      - path: /resources/views/layouts
-        type: directory
-        contents:
-        - path: /resources/views/layouts/admin.blade.php
-          type: file
-        - path: /resources/views/layouts/public.blade.php
-          type: file
-        - path: /resources/views/layouts/auth.blade.php
-          type: file
-        - path: /resources/views/layouts/main.blade.php
-          type: file
-      - path: /resources/views/errors
-        type: directory
-        contents:
-        - path: /resources/views/errors/419.blade.php
-          type: file
-      - path: /resources/views/admin
-        type: directory
-        contents:
-        - path: /resources/views/admin/users
-          type: directory
-          contents:
-          - path: /resources/views/admin/users/index.blade.php
-            type: file
-        - path: /resources/views/admin/categories
-          type: directory
-          contents:
-          - path: /resources/views/admin/categories/create.blade.php
-            type: file
-          - path: /resources/views/admin/categories/edit.blade.php
-            type: file
-          - path: /resources/views/admin/categories/index.blade.php
-            type: file
-        - path: /resources/views/admin/blog
-          type: directory
-          contents:
-          - path: /resources/views/admin/blog/create.blade.php
-            type: file
-          - path: /resources/views/admin/blog/edit.blade.php
-            type: file
-          - path: /resources/views/admin/blog/index.blade.php
-            type: file
-        - path: /resources/views/admin/comments
-          type: directory
-          contents:
-          - path: /resources/views/admin/comments/index.blade.php
-            type: file
-        - path: /resources/views/admin/projects
-          type: directory
-          contents:
-          - path: /resources/views/admin/projects/create.blade.php
-            type: file
-          - path: /resources/views/admin/projects/edit.blade.php
-            type: file
-          - path: /resources/views/admin/projects/index.blade.php
-            type: file
-        - path: /resources/views/admin/dashboard.blade.php
-          type: file
-      - path: /resources/views/welcome.blade.php
-        type: file
-      - path: /resources/views/public
-        type: directory
-        contents:
-        - path: /resources/views/public/blog
-          type: directory
-          contents:
-          - path: /resources/views/public/blog/show.blade.php
-            type: file
-          - path: /resources/views/public/blog/index.blade.php
-            type: file
-        - path: /resources/views/public/projects
-          type: directory
-          contents:
-          - path: /resources/views/public/projects/show.blade.php
-            type: file
-          - path: /resources/views/public/projects/index.blade.php
-            type: file
-    - path: /resources/css
-      type: directory
-      contents:
-      - path: /resources/css/ckeditor.css
-        type: file
-      - path: /resources/css/app.css
-        type: file
-    - path: /resources/js
-      type: directory
-      contents:
-      - path: /resources/js/ckeditor.js
-        type: file
-      - path: /resources/js/bootstrap.js
-        type: file
-      - path: /resources/js/app.js
-        type: file
-  - path: /config
+    - path: /database/migrations/0001_01_01_000000_create_users_table.php
+      type: file
+    - path: /database/migrations/0001_01_01_000001_create_cache_table.php
+      type: file
+    - path: /database/migrations/0001_01_01_000002_create_jobs_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143706_create_users_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143706_create_categories_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143706_create_blogs_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143706_create_projects_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143706_create_comments_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143706_create_media_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143706_create_password_reset_tokens_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143709_add_foreign_keys_to_blogs_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143709_add_foreign_keys_to_comments_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143709_add_foreign_keys_to_media_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_143709_add_foreign_keys_to_projects_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_145153_add_is_visible_to_blogs_table.php
+      type: file
+    - path: /database/migrations/2026_05_25_150000_create_tags_and_project_tag_tables.php
+      type: file
+    - path: /database/migrations/2026_06_02_110934_add_deleted_at_to_tags_table.php
+      type: file
+    - path: /database/migrations/2026_06_06_012907_add_profile_fields_to_users_table.php
+      type: file
+    - path: /database/migrations/2026_06_10_084713_add_email_verified_at_to_users_table.php
+      type: file
+    - path: /database/migrations/2026_06_10_084719_create_email_verifications_table.php
+      type: file
+    - path: /database/migrations/2026_06_10_121252_drop_unused_laravel_default_tables.php
+      type: file
+    - path: /database/migrations/2026_06_12_080000_update_password_reset_tokens_table.php
+      type: file
+    - path: /database/migrations/2026_07_08_000000_drop_media_table.php
+      type: file
+  - path: /database/seeders
     type: directory
     contents:
-    - path: /config/filesystems.php
+    - path: /database/seeders/DatabaseSeeder.php
       type: file
-    - path: /config/mail.php
-      type: file
-    - path: /config/auth.php
-      type: file
-    - path: /config/services.php
-      type: file
-    - path: /config/database.php
-      type: file
-    - path: /config/cache.php
-      type: file
-    - path: /config/queue.php
-      type: file
-    - path: /config/session.php
-      type: file
-    - path: /config/app.php
-      type: file
-    - path: /config/logging.php
-      type: file
-  - path: /public
+- path: /public
+  type: directory
+  contents:
+  - path: /public/css
     type: directory
     contents:
-    - path: /public/robots.txt
+    - path: /public/css/admin.css
       type: file
-    - path: /public/index.php
+  - path: /public/favicon.ico
+    type: file
+  - path: /public/index.php
+    type: file
+  - path: /public/robots.txt
+    type: file
+- path: /resources
+  type: directory
+  contents:
+  - path: /resources/css
+    type: directory
+    contents:
+    - path: /resources/css/app.css
       type: file
-    - path: /public/css
+    - path: /resources/css/ckeditor.css
+      type: file
+  - path: /resources/js
+    type: directory
+    contents:
+    - path: /resources/js/app.js
+      type: file
+    - path: /resources/js/bootstrap.js
+      type: file
+    - path: /resources/js/ckeditor.js
+      type: file
+  - path: /resources/views
+    type: directory
+    contents:
+    - path: /resources/views/admin
       type: directory
       contents:
-      - path: /public/css/admin.css
+      - path: /resources/views/admin/dashboard.blade.php
         type: file
-    - path: /public/favicon.ico
+      - path: /resources/views/admin/blog
+        type: directory
+        contents:
+        - path: /resources/views/admin/blog/create.blade.php
+          type: file
+        - path: /resources/views/admin/blog/edit.blade.php
+          type: file
+        - path: /resources/views/admin/blog/index.blade.php
+          type: file
+      - path: /resources/views/admin/categories
+        type: directory
+        contents:
+        - path: /resources/views/admin/categories/create.blade.php
+          type: file
+        - path: /resources/views/admin/categories/edit.blade.php
+          type: file
+        - path: /resources/views/admin/categories/index.blade.php
+          type: file
+      - path: /resources/views/admin/comments
+        type: directory
+        contents:
+        - path: /resources/views/admin/comments/index.blade.php
+          type: file
+      - path: /resources/views/admin/projects
+        type: directory
+        contents:
+        - path: /resources/views/admin/projects/create.blade.php
+          type: file
+        - path: /resources/views/admin/projects/edit.blade.php
+          type: file
+        - path: /resources/views/admin/projects/index.blade.php
+          type: file
+      - path: /resources/views/admin/tags
+        type: directory
+        contents:
+        - path: /resources/views/admin/tags/create.blade.php
+          type: file
+        - path: /resources/views/admin/tags/edit.blade.php
+          type: file
+        - path: /resources/views/admin/tags/index.blade.php
+          type: file
+      - path: /resources/views/admin/users
+        type: directory
+        contents:
+        - path: /resources/views/admin/users/index.blade.php
+          type: file
+    - path: /resources/views/auth
+      type: directory
+      contents:
+      - path: /resources/views/auth/login.blade.php
+        type: file
+      - path: /resources/views/auth/register.blade.php
+        type: file
+      - path: /resources/views/auth/forgot-password.blade.php
+        type: file
+      - path: /resources/views/auth/reset-password.blade.php
+        type: file
+      - path: /resources/views/auth/verify-otp.blade.php
+        type: file
+      - path: /resources/views/auth/verify-token.blade.php
+        type: file
+      - path: /resources/views/auth/verification-success.blade.php
+        type: file
+      - path: /resources/views/auth/emails
+        type: directory
+        contents:
+        - path: /resources/views/auth/emails/otp.blade.php
+          type: file
+        - path: /resources/views/auth/emails/reset-password.blade.php
+          type: file
+    - path: /resources/views/errors
+      type: directory
+      contents:
+      - path: /resources/views/errors/419.blade.php
+        type: file
+    - path: /resources/views/layouts
+      type: directory
+      contents:
+      - path: /resources/views/layouts/admin.blade.php
+        type: file
+      - path: /resources/views/layouts/auth.blade.php
+        type: file
+      - path: /resources/views/layouts/main.blade.php
+        type: file
+    - path: /resources/views/profile
+      type: directory
+      contents:
+      - path: /resources/views/profile/show.blade.php
+        type: file
+      - path: /resources/views/profile/comments.blade.php
+        type: file
+    - path: /resources/views/public
+      type: directory
+      contents:
+      - path: /resources/views/public/about
+        type: directory
+        contents:
+        - path: /resources/views/public/about/index.blade.php
+          type: file
+      - path: /resources/views/public/blog
+        type: directory
+        contents:
+        - path: /resources/views/public/blog/index.blade.php
+          type: file
+        - path: /resources/views/public/blog/show.blade.php
+          type: file
+      - path: /resources/views/public/contact
+        type: directory
+        contents:
+        - path: /resources/views/public/contact/index.blade.php
+          type: file
+      - path: /resources/views/public/projects
+        type: directory
+        contents:
+        - path: /resources/views/public/projects/index.blade.php
+          type: file
+        - path: /resources/views/public/projects/show.blade.php
+          type: file
+    - path: /resources/views/vendor
+      type: directory
+      contents:
+      - path: /resources/views/vendor/pagination
+        type: directory
+        contents:
+        - path: /resources/views/vendor/pagination/simple.blade.php
+          type: file
+    - path: /resources/views/welcome.blade.php
       type: file
+- path: /routes
+  type: directory
+  contents:
+  - path: /routes/web.php
+    type: file
+  - path: /routes/console.php
+    type: file
+- path: /storage
+  type: directory
+  contents:
+  - path: /storage/app
+    type: directory
+    contents:
+    - path: /storage/app/private
+      type: directory
+    - path: /storage/app/public
+      type: directory
+  - path: /storage/framework
+    type: directory
+    contents:
+    - path: /storage/framework/cache
+      type: directory
+      contents:
+      - path: /storage/framework/cache/data
+        type: directory
+    - path: /storage/framework/sessions
+      type: directory
+    - path: /storage/framework/testing
+      type: directory
+    - path: /storage/framework/views
+      type: directory
+  - path: /storage/logs
+    type: directory
+- path: /tests
+  type: directory
+  contents:
+  - path: /tests/Feature
+    type: directory
+    contents:
+    - path: /tests/Feature/ExampleTest.php
+      type: file
+  - path: /tests/Unit
+    type: directory
+    contents:
+    - path: /tests/Unit/ExampleTest.php
+      type: file
+  - path: /tests/TestCase.php
+    type: file
+- path: /artisan
+  type: file
+- path: /composer.json
+  type: file
+- path: /composer.lock
+  type: file
+- path: /konteks.md
+  type: file
+- path: /package.json
+  type: file
+- path: /package-lock.json
+  type: file
+- path: /phpunit.xml
+  type: file
+- path: /README.md
+  type: file
+- path: /vite.config.js
+  type: file
